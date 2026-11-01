@@ -22,13 +22,30 @@ Staging Worker: `oostrinotime-staging-qa` · Firebase: `trinotime-staging-qa` ·
 
 **November 1 Bio Break fix:** Bio Break report remains centered when scrolling through many records. A scoped CSS rule prevents the global active-scroller optimization from canceling the modal centering transform. No Attendance records, roles, API, bio-break timers, search or dates changed. Production remains untouched.
 
-## Collaborative staging development — VS Code + private GitHub
+## Collaborative staging development — VS Code, branches and Live Share
 
-This package can be shared through a **separate private** GitHub repository named `J-Celo/OOS-STAGING`. Never add a production remote or deploy from this repo to `J-Celo/OOS`.
+**Private repository:** `J-Celo/OOS-STAGING-Trinotime` (NOT `J-Celo/OOS`). The initial GitHub repository is already created. **Do not rerun `SETUP-STAGING-COLLAB.ps1` or initialize another Git repository.**
 
-- In the staging root, run the **one-time** `SETUP-STAGING-COLLAB.ps1` from PowerShell. It requires Git and an authenticated GitHub CLI (`gh`) to create the private repo and push staging source. If `gh` is unavailable, the script shows a safe manual fallback. It never installs software or requests your password.
-- Keep the repo **private**. The owner can invite a trusted collaborator through GitHub **Settings → Collaborators**. Friend clones `J-Celo/OOS-STAGING` into VS Code, creates a feature branch, and opens a PR for review. The friend does **not** receive Cloudflare, Firebase, GitHub production or Admin credentials.
-- For same-time editing, both install the VS Code extension **Microsoft Live Share**; the owner starts a Live Share session and sends the invite link privately. Never share a writable terminal or debug session; Live Share hosts can read/open source available to the shared session.
-- The original `CURRENT-STAGING-RULES.json` is intentionally excluded from the shared package because it contains employee-specific rules. The owner may keep their existing local copy privately for specialized offline security tests. It must not be committed. Ordinary `cloudflare` staging preflight is unaffected.
-- All normal staging development uses **only** the staging Worker and staging Firebase. Owner alone deploys from the approved staging branch by running inside `cloudflare`: `npm install`, `npm run staging:preflight`, `npm run deploy:staging`. Changes in a developer branch do **not** auto-deploy.
-- When approved for production, still deliver a complete, clean production ZIP and use the owner's existing **GitHub Desktop → J-Celo/OOS** workflow. Never link this staging repo to production deployment.
+### Branch workflow
+
+- `main` — owner-reviewed, deployable STAGING source only. **Never push development directly to `main`.** No connection to production.
+- `develop` — staging integration branch. Merge reviewed feature PRs here first; owner tests before proposing `develop` → `main`.
+- `feature/agent-metrics` — reserved for the owner's Agent Metrics UI work.
+- `feature/attendance-ui` — reserved for Jerry's Attendance and Bio Break UI work.
+- For additional work, create new `feature/<short-topic>` branches from updated `develop`. Avoid editing each other's feature branch unless coordinating in Live Share.
+
+### Each change
+
+1. Fetch/pull the latest `develop` before starting a new feature branch. Commit only the related source and test changes.
+2. Push the feature branch and open a **pull request to `develop`**. Explain the change, tests, UI screenshots if helpful, and security/data impact.
+3. Owner reviews and merges the PR after relevant regression checks. **No direct merges to `main` by collaborators.**
+4. When several changes are accepted, owner opens/reviews a **PR from `develop` to `main`**, runs staging preflight, and merges.
+5. Owner alone deploys staging from `main` using `npm install`, `npm run staging:preflight`, `npm run deploy:staging` inside `cloudflare`. No production deployment from this repository.
+
+### Live Share
+
+Use Live Share while both people are online, ideally on a **feature branch**. Share only the source editors needed; do not grant writable terminals, secrets, production accounts or privileged debug access. Agree who commits shared edits to avoid double commits. Jerry must accept his private repo invitation before independent Git access.
+
+### Safety
+
+Never commit production credentials, `.env`, `.wrangler`, `node_modules`, local Firebase private rule snapshots or employee data. Keep the repo private. Test with synthetic staging accounts. Existing `.gitignore` protects common local files; review the staged Git diff before pushing. `J-Celo/OOS` production remains owner-controlled through GitHub Desktop and one complete clean production ZIP.
