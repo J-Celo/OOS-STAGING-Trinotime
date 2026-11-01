@@ -1,0 +1,30 @@
+/* TrinoTime v1.1.128 RC86 — Real-production closure.
+   Presentation-only header repair: RC84 removed the redundant account chevron,
+   while older Premium/Standard rules could still reserve its structural slot.
+   Collapse the parent slot in every signed-in edition without touching session state. */
+
+html[data-trino-tier='premium'] body[data-trino-role] #appRoot > .band .action-rail > #sessionMeta,
+html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail > #sessionMeta,
+html[data-trino-tier='normal'] body[data-trino-role] #appRoot > .band .action-rail > #sessionMeta,
+html[data-trino-custom-workspace='standard'] body[data-trino-role] #appRoot > .band .action-rail > #sessionMeta,
+body[data-trino-role] #appRoot > .band .action-rail > #sessionMeta {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  flex: 0 0 0 !important;
+  flex-basis: 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+html[data-trino-tier] body[data-trino-role] #appRoot > .band .action-rail #sessionMetaToggle,
+html[data-trino-custom-workspace] body[data-trino-role] #appRoot > .band .action-rail #sessionMetaToggle {
+  display: none !important;
+}

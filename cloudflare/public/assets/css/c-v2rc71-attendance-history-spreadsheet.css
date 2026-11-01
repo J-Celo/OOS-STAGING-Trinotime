@@ -1,0 +1,104 @@
+/* V 2.0.1 RC71 — Attendance History month navigation + dedicated Spreadsheet density pass.
+   Performance rule: presentation/event-driven only. No timers, observers, polling, hidden month builds or roster scans. */
+
+/* Attendance Log historical month access lives inside the existing quickbar, so it adds no new vertical band. */
+#attendanceLogMonthNav.attendance-month-nav {
+  display:flex; align-items:center; gap:5px; min-width:0; padding:2px 5px;
+  border:1px solid rgba(148,163,184,.22); border-radius:10px; background:rgba(255,255,255,.72);
+}
+#attendanceLogMonthNav .attendance-month-nav-label {
+  margin:0 2px; color:var(--muted); font:700 9px/1 'IBM Plex Mono',monospace; letter-spacing:.08em; text-transform:uppercase;
+}
+#attendanceLogMonthNav .attendance-month-input {
+  width:136px; height:28px; min-height:28px; box-sizing:border-box; padding:0 7px;
+  border:1px solid rgba(148,163,184,.24); border-radius:8px; background:var(--card); color:var(--ink); font:650 10.5px/1.1 inherit;
+}
+#attendanceLogMonthNav .attendance-month-step,
+#attendanceLogMonthNav .attendance-month-current {
+  height:28px; min-height:28px; border:1px solid rgba(148,163,184,.24); border-radius:8px; background:var(--card); color:var(--ink); cursor:pointer; font-weight:750;
+}
+#attendanceLogMonthNav .attendance-month-step { width:28px; padding:0; font-size:17px; line-height:1; }
+#attendanceLogMonthNav .attendance-month-current { padding:0 8px; font-size:9.5px; }
+#attendanceLogMonthNav button:hover:not(:disabled),#attendanceLogMonthNav button:focus-visible,#attendanceLogMonthNav input:focus-visible { border-color:rgba(36,88,214,.44); outline:none; box-shadow:0 0 0 2px rgba(36,88,214,.10); }
+#attendanceLogMonthNav button:disabled { opacity:.42; cursor:default; }
+#attendanceLogMonthNav .attendance-month-mode { padding:3px 6px; border-radius:999px; background:rgba(36,88,214,.08); color:#2458d6; font-size:8.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+#attendanceLogMonthNav .attendance-month-mode[data-mode="historical"] { background:rgba(197,140,25,.11); color:#8a5c00; }
+#attendanceLogMonthNav .attendance-month-mode[data-mode="custom"] { background:rgba(100,116,139,.11); color:#596579; }
+body.dark-mode #attendanceLogMonthNav.attendance-month-nav { background:rgba(17,27,43,.72); border-color:rgba(198,210,227,.14); }
+body.dark-mode #attendanceLogMonthNav .attendance-month-input,body.dark-mode #attendanceLogMonthNav button { background:#172333; color:#edf3fb; border-color:rgba(183,199,220,.16); }
+body.dark-mode #attendanceLogMonthNav .attendance-month-mode { color:#8ebeff; background:rgba(78,124,194,.16); }
+body.dark-mode #attendanceLogMonthNav .attendance-month-mode[data-mode="historical"] { color:#f3c76c; background:rgba(240,195,95,.12); }
+body.dark-mode #attendanceLogMonthNav .attendance-month-mode[data-mode="custom"] { color:#c4cfdd; background:rgba(183,199,220,.09); }
+@media (max-width:1180px){ #attendanceLogMonthNav .attendance-month-nav-label,#attendanceLogMonthNav .attendance-month-mode{display:none} #attendanceLogMonthNav .attendance-month-input{width:126px} }
+@media (max-width:900px){ #attendanceLogMonthNav{order:3;width:100%;justify-content:flex-start} }
+/* A historical month is a record-review surface, so the Today-only summary is hidden instead of showing unrelated current-day metrics. */
+#tableWrap[data-attendance-month-mode="historical"] #attendanceTodaySummary { display:none !important; }
+
+/* Dedicated Spreadsheet: remove RC70's duplicate history shortcut band and give the grid nearly all height. */
+#monthlyTimesheetOverlay .tt-month-history-bar { display:none !important; }
+#monthlyTimesheetOverlay .tt-month-grid-box {
+  gap:4px !important;
+  padding:max(6px,env(safe-area-inset-top)) max(9px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-left)) !important;
+}
+#monthlyTimesheetOverlay .tt-month-grid-head { min-height:28px !important; height:28px; padding:0 78px 0 1px !important; gap:6px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-head .modal-title { font-size:16px !important; line-height:1 !important; }
+#monthlyTimesheetOverlay .tt-month-grid-kicker { display:none !important; }
+#monthlyTimesheetOverlay .tt-month-grid-scope { display:none !important; }
+#monthlyTimesheetOverlay .tt-month-grid-head>.tt-tab-modal-actions { top:max(6px,env(safe-area-inset-top)) !important; right:max(9px,env(safe-area-inset-right)) !important; }
+#monthlyTimesheetCloseBtn { min-height:28px !important; height:28px !important; padding:3px 10px !important; border-radius:8px !important; font-size:10px !important; }
+
+#monthlyTimesheetOverlay .tt-month-grid-summary { display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:4px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-summary article {
+  height:30px !important; min-height:30px !important; box-sizing:border-box; padding:2px 8px !important; border-radius:8px !important; box-shadow:none !important;
+  display:flex !important; align-items:center; justify-content:space-between; gap:8px;
+}
+#monthlyTimesheetOverlay .tt-month-grid-summary span { font-size:8px !important; letter-spacing:.05em !important; }
+#monthlyTimesheetOverlay .tt-month-grid-summary strong { margin:0 !important; font-size:14px !important; line-height:1 !important; }
+#monthlyTimesheetOverlay .tt-month-grid-summary small { display:none !important; }
+
+#monthlyTimesheetOverlay .tt-month-grid-toolbar {
+  grid-template-columns:auto minmax(150px,1fr) minmax(135px,185px) auto !important; gap:4px !important; align-items:end !important;
+}
+#monthlyTimesheetOverlay .tt-month-grid-toolbar label>span { position:absolute!important; width:1px!important; height:1px!important; overflow:hidden!important; clip:rect(0 0 0 0)!important; white-space:nowrap!important; }
+#monthlyTimesheetOverlay .tt-month-grid-toolbar input,#monthlyTimesheetOverlay .tt-month-grid-toolbar select { min-height:29px !important; height:29px !important; padding:0 8px !important; border-radius:8px !important; font-size:10.5px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-month-nav { grid-template-columns:29px minmax(132px,150px) 29px !important; gap:3px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-icon-btn,#monthlyTimesheetOverlay .tt-month-grid-export,#monthlyTimesheetOverlay .tt-month-grid-refresh { min-height:29px !important; height:29px !important; border-radius:8px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-icon-btn { font-size:17px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-export,#monthlyTimesheetOverlay .tt-month-grid-refresh { padding:0 9px !important; font-size:9.5px !important; box-shadow:none !important; }
+#monthlyTimesheetOverlay .tt-month-grid-actions { gap:4px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-status-row { min-height:14px !important; height:14px; gap:6px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-status { min-height:11px !important; line-height:11px !important; font-size:8px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-pager { font-size:8px !important; gap:3px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-pager button { width:22px !important; min-width:22px !important; height:18px !important; border-radius:6px !important; font-size:13px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-legend { display:none !important; }
+#monthlyTimesheetOverlay .tt-month-grid-legend span { gap:3px !important; white-space:nowrap; }
+#monthlyTimesheetOverlay .tt-month-grid-legend span::before { width:6px !important; height:6px !important; }
+
+/* The spreadsheet itself gets the saved space; slightly denser rows reveal more agents without changing data/model math. */
+#monthlyTimesheetOverlay .tt-month-grid-scroll { border-radius:10px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-table { font-size:10.5px !important; }
+#monthlyTimesheetOverlay .tt-month-grid-table thead th { height:40px !important; padding:0 6px !important; }
+#monthlyTimesheetOverlay .tt-mtg-day-cell { height:47px !important; padding:2px !important; }
+#monthlyTimesheetOverlay .tt-mtg-day-cell button { height:41px !important; border-radius:8px !important; gap:1px !important; }
+#monthlyTimesheetOverlay .tt-mtg-day-cell strong { font-size:10.5px !important; }
+#monthlyTimesheetOverlay .tt-mtg-day-cell small { font-size:7px !important; }
+#monthlyTimesheetOverlay tbody .tt-mtg-agent-col { padding:5px 8px !important; }
+#monthlyTimesheetOverlay .tt-mtg-avatar { width:28px !important; height:28px !important; flex-basis:28px !important; }
+#monthlyTimesheetOverlay tbody .tt-mtg-agent-col strong { font-size:11.5px !important; }
+#monthlyTimesheetOverlay .tt-mtg-total-col strong { font-size:12px !important; }
+#monthlyTimesheetOverlay .tt-mtg-total-col small { margin-top:2px !important; font-size:7.5px !important; }
+@media (max-height:760px) and (min-width:681px){
+  #monthlyTimesheetOverlay .tt-month-grid-scope{display:none!important}
+  #monthlyTimesheetOverlay .tt-month-grid-head{height:27px;min-height:27px!important}
+  #monthlyTimesheetOverlay .tt-month-grid-summary article{min-height:27px!important;padding:3px 7px!important}
+  #monthlyTimesheetOverlay .tt-month-grid-legend{display:none!important}
+}
+@media (max-width:680px){
+  #monthlyTimesheetOverlay .tt-month-grid-box{gap:5px!important;padding:7px!important}
+  #monthlyTimesheetOverlay .tt-month-grid-head{height:auto;min-height:30px!important}
+  #monthlyTimesheetOverlay .tt-month-grid-summary{grid-template-columns:1fr 1fr!important}
+  #monthlyTimesheetOverlay .tt-month-grid-toolbar{grid-template-columns:1fr!important}
+  #monthlyTimesheetOverlay .tt-month-grid-month-nav{grid-template-columns:29px minmax(120px,1fr) 29px!important}
+  #monthlyTimesheetOverlay .tt-month-grid-actions{display:grid!important;grid-template-columns:1fr 1fr!important}
+  #monthlyTimesheetOverlay .tt-month-grid-legend{display:none!important}
+}

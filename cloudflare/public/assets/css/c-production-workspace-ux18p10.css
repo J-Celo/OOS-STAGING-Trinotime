@@ -1,0 +1,638 @@
+/* UX18P10 — Production-ported consolidated workspace and attendance controls.
+   Updated in place, instead of stacking another stylesheet over UX18P8.
+   All selectors are scoped to the authenticated customized workspace.
+   Attendance, permissions, Tracker, and backend logic are unchanged. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) {
+  --tt-ux18p8-sidebar: var(--tt-dash-sidebar);
+}
+/* Legacy screenshot-fidelity CSS still hard-codes 266px/282px margins at
+   >=1281px; those survive sidebar collapse unless explicitly reset.
+   Keep all three roles anchored to the currently rendered sidebar width. */
+@media (min-width:1281px) {
+  html[data-trino-custom-workspace="enabled"] body.tt-premium-sidebar-collapsed:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #appRoot > .band {
+    margin-left:var(--tt-dash-sidebar) !important;
+    width:calc(100% - var(--tt-dash-sidebar)) !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent.wrap {
+    margin-left:calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter)) !important;
+  }
+}
+/* Avoid a second centered 1360px canvas leaving a large unused strip
+   beside the actual collapsed navigation. Limit growth on ultrawide screens. */
+@media (min-width: 981px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) > .band-inner.wrap {
+    max-width: min(1680px, 100%) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot),
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #mainContent.wrap {
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  /* A collapsed sidebar must reserve its actual 78px, not its former 266px. */
+  html[data-trino-custom-workspace="enabled"] body.tt-premium-sidebar-collapsed:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) {
+    --tt-dash-sidebar:78px;
+  }
+  /* Keep the Agent's Quick Actions in the right-hand rail at usable widths.
+     The existing narrow rail layout is still used below the real threshold. */
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) {
+    --tt-dash-right:316px;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #mainContent.wrap {
+    margin-right:calc(var(--tt-dash-right) + var(--tt-dash-gutter)) !important;
+    overflow-x:visible;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #ttPremiumRightRail {
+    position:absolute !important;
+    right:var(--tt-dash-gutter) !important;
+    width:var(--tt-dash-right) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    grid-template-columns:none !important;
+    margin:0 !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #ttPremiumRightRail .tt-right-card:nth-child(3) {
+    grid-column:auto !important;
+  }
+}
+/* Scoped to the Attendance Log: allow controls to wrap according to their
+   actual parent panel, not browser width alone. No absolute-position hacks. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section {
+  min-width:0;
+}
+/* Predictable two-tier attendance controls: filter fields on the first line,
+   review actions together on the second. UX18P8's auto-fit columns and
+   flex-basis:720px were creating uneven orphaned rows at desktop widths. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls {
+  container: tt-attendance-toolbar / inline-size;
+  padding: 12px 14px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15,23,42,.055);
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-sticky-main {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-items:start;
+  gap:9px;
+  width:100%;
+  min-width:0;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters {
+  display:grid;
+  grid-template-columns:minmax(130px,1.2fr) minmax(125px,1fr) repeat(2,minmax(125px,1fr)) minmax(64px,.45fr) minmax(90px,.55fr);
+  gap:9px;
+  align-items:stretch;
+  width:100%;
+  min-width:0;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters > :not([hidden]) {
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters :is(select,input,button) {
+  min-height:38px;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+  font-size:12.5px;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #clearFilters { padding-inline:8px; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-review-actions {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex-wrap:wrap;
+  width:100%;
+  min-width:0;
+  gap:6px;
+  padding-top:8px;
+  border-top:1px solid var(--line);
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls :is(.attendance-review-actions button,.attendance-density-control) { flex-shrink:0; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-review-btn {
+  min-height:31px;
+  padding:6px 10px;
+  font-family:inherit;
+  font-size:11.5px;
+  letter-spacing:0;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-density-control { margin-left:auto; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #exportMenuWrap { position:relative; z-index:2; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #exportMenuBtn { min-height:38px; width:100%; }
+/* UX18P10: The old container queries had lower selector specificity than
+   the desktop six-column rule. At narrower panel widths the browser kept
+   the six minimum-width tracks, clipping controls and orphaning Export.
+   Match the parent selector's specificity in every responsive override. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters > [hidden] { display:none !important; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #attendanceStreakReviewBtn:not([hidden]) { grid-column: 1 / -1; justify-self:start; width:auto; max-width:100%; }
+@container tt-attendance-toolbar (max-width: 920px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters {
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #clearFilters { grid-column:1 / span 2; }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #exportMenuWrap { grid-column:3 / span 2; }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-density-control { margin-left:0; }
+}
+@container tt-attendance-toolbar (max-width: 700px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #clearFilters { grid-column:1; }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #exportMenuWrap { grid-column:2; }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-review-actions { justify-content:flex-start; }
+}
+@container tt-attendance-toolbar (max-width: 370px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters { grid-template-columns:minmax(0,1fr); }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #clearFilters,
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #exportMenuWrap { grid-column:1; }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-density-control { width:100%; }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-density-btn { flex:1 1 0; }
+}
+/* Treat the Attendance section as a single compact review workspace,
+   rather than letting the navigation form multiple uneven text rows. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section .log-head { min-width:0; max-width:100%; margin-bottom:10px; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section #logTabs {
+  display:flex;
+  flex-wrap:nowrap;
+  max-width:100%;
+  min-width:0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  gap:4px;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-inline:contain;
+  padding-bottom:5px;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section #logTabs > .log-tab { flex:0 0 auto; white-space:nowrap; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-review-actions { row-gap:7px; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-sticky-main { min-width:0; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #clearFilters { white-space:nowrap; }
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls #logFilters #exportMenuWrap { min-width:0; }
+/* Horizontal table navigation remains available, but no table child may
+   impose a page-wide minimum width on the log review surface. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section .table-card,
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section #tableWrap,
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section .attendance-table-shell { min-width:0; max-width:100%; }
+/* Contain wide attendance tables within a scrollable region, not the page. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #desktopTableContainer {
+  max-width:100%; min-width:0; overflow-x:auto;
+}
+/* Keep wide tables inside the existing horizontal table scrollbar rather
+   than extending the page at intermediate notebook widths. */
+@media (min-width: 681px) and (max-width: 1280px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent.wrap {
+    overflow-x:clip !important;
+  }
+}
+
+/* Finishing touches: preserve information density, avoid oversize controls. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #desktopTableContainer {
+  overscroll-behavior-inline:contain;
+  scrollbar-width:thin;
+  scrollbar-color: #A6B4C8 transparent;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-filter-chips:empty {display:none;}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-filter-chips {min-height:0;}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #attendanceStickyControls .attendance-review-actions .attendance-density-btn {
+  min-height:27px;
+  padding:5px 9px;
+}
+/* UX18P11 — large desktop canvas. Preserve the reference Agent composition
+   on large laptops, external monitors, 4K and browser zoom changes.
+   Center ONE shared lane (hero, attendance, right rail), not separate cards.
+   Only changes CSS on the authenticated Agent desktop; no DOM/JS/auth/punch/
+   tracker changes. At smaller widths the existing UX18P10 rules stay active. */
+@media (min-width: 1440px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] {
+    --tt-ux18p11-canvas: 1496px;
+    --tt-ux18p11-rail: clamp(316px, 22vw, 376px);
+    --tt-ux18p11-gap: 24px;
+    /* After reserving the ACTUAL expanded/collapsed sidebar, center the
+       remaining workspace without turning the sidebar into a fake column. */
+    --tt-ux18p11-outer-space: max(0px, calc((100% - var(--tt-dash-sidebar) - var(--tt-dash-gutter) - var(--tt-dash-gutter) - var(--tt-ux18p11-canvas)) / 2));
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) {
+    width: calc(100% - var(--tt-dash-sidebar)) !important;
+    margin-left: var(--tt-dash-sidebar) !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) > .band-inner.wrap {
+    width: 100% !important;
+    max-width: var(--tt-ux18p11-canvas) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    grid-template-columns: minmax(0, 1fr) var(--tt-ux18p11-rail) !important;
+    column-gap: var(--tt-ux18p11-gap) !important;
+    grid-template-areas: "actions profile" "clock profile" !important;
+    min-width: 0 !important;
+  }
+  /* Same horizontal origin as the header main column, same end edge as the
+     profile lane. This also covers the expanded sidebar and narrow JS class. */
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #mainContent.wrap,
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #mainContent.wrap {
+    width: auto !important;
+    max-width: none !important;
+    margin-left: calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter) + var(--tt-ux18p11-outer-space)) !important;
+    margin-right: calc(var(--tt-dash-gutter) + var(--tt-ux18p11-outer-space) + var(--tt-ux18p11-rail) + var(--tt-ux18p11-gap)) !important;
+    position: relative !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #ttPremiumRightRail,
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #ttPremiumRightRail {
+    position: absolute !important;
+    inset-inline-start: auto !important;
+    right: calc(var(--tt-dash-gutter) + var(--tt-ux18p11-outer-space)) !important;
+    width: var(--tt-ux18p11-rail) !important;
+    max-width: var(--tt-ux18p11-rail) !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) .header-profile-slot {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    align-self: start !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) .clock-box,
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) #attendanceTopActions {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+
+/* UX18P12 — Smart Adaptive Agent Workspace (production UI port (from staging UX18P12)).
+   After authenticating as Agent, the existing right-rail cards move IN FLOW
+   immediately above the Attendance Log. A full-width log now occupies its
+   own row: there is no permanently reserved, mostly empty right column.
+   TL/Admin retain their existing layouts, and narrow Agent widths retain
+   the existing stacked rail. The primary clock/profile/calendar/coaching
+   header is a separate balanced region. No tracking/punch/report logic. */
+@media (min-width: 981px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive {
+    --tt-ux18p12-workspace-max: 2048px;
+    /* Center a bounded workspace without wasting a side-column reservation;
+       use percent of the real scroll-containing block (not 100vw). */
+    --tt-ux18p12-outer: max(0px, calc((100% - var(--tt-dash-sidebar) - var(--tt-dash-gutter) - var(--tt-dash-gutter) - var(--tt-ux18p12-workspace-max)) / 2));
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap,
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive.tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #mainContent.wrap {
+    margin-left: calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter) + var(--tt-ux18p12-outer)) !important;
+    margin-right: calc(var(--tt-dash-gutter) + var(--tt-ux18p12-outer)) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    overflow-x: visible !important;
+    box-sizing: border-box !important;
+  }
+  /* UX18P11’s old pseudo-background assumed the rail occupied another column. */
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap::before {
+    right: calc(-1 * var(--tt-dash-gutter)) !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap > #ttPremiumRightRail,
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive.tt-premium-workspace-narrow:not(.tt-ux18p8-rail-stacked) #mainContent.wrap > #ttPremiumRightRail {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: clamp(12px, 1.2vw, 20px) !important;
+    margin: 14px 0 20px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap > #ttPremiumRightRail > .tt-right-card {
+    grid-column: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap > #ttPremiumRightRail .tt-quick-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap .log-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #mainContent.wrap :is(#attendanceStickyControls, #desktopTableContainer, .attendance-table-shell, .table-card) {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  /* Use full control row when it fits, keeping Clear and Export compact. */
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #attendanceStickyControls #logFilters {
+    grid-template-columns: minmax(150px, 1.25fr) minmax(145px, 1.15fr) repeat(2, minmax(145px, 1fr)) minmax(80px, .5fr) minmax(110px, .65fr);
+    gap: 10px;
+  }
+}
+/* Header remains a familiar two-column composition, with useful additional
+   width for the attendance actions but no giant clock typography or buttons. */
+@media (min-width: 1440px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #appRoot > .band:has(#ttAttendanceHeroSlot) > .band-inner.wrap {
+    max-width: min(1840px, calc(100% - 2 * var(--tt-dash-gutter))) !important;
+    grid-template-columns: minmax(0, 1fr) clamp(316px, 22vw, 390px) !important;
+    column-gap: clamp(16px, 1.5vw, 28px) !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #appRoot > .band:has(#ttAttendanceHeroSlot) #attendanceTopActions .punch-grid {
+    max-width: 1180px !important;
+    margin-inline: auto !important;
+  }
+}
+/* Container responsive controls must override the six-track Agent desktop
+   rule above, even though the viewport itself may be very wide. */
+@container tt-attendance-toolbar (max-width: 920px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #attendanceStickyControls #logFilters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+@container tt-attendance-toolbar (max-width: 700px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #attendanceStickyControls #logFilters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container tt-attendance-toolbar (max-width: 440px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-ux18p12-adaptive #attendanceStickyControls #logFilters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* =======================================================================
+   UX18P13 — Unified Premium Workspace (production UI port)
+   Shared design tokens and responsive layout ownership, not a new patch
+   stylesheet. Scoped to authenticated custom Agent, TL and Admin workspaces.
+   Never hides existing controls or changes data, role, or tracker handling.
+   ======================================================================= */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) {
+  --tt-ux18p13-inset: clamp(12px, 1.25vw, 24px);
+  --tt-ux18p13-card-gap: clamp(12px, 1.05vw, 20px);
+  --tt-ux18p13-panel-radius: 18px;
+  --tt-ux18p13-control-height: 38px;
+  --tt-ux18p13-data-max: 2680px;
+  /* Do not widen operational UI indefinitely on 4K monitors. On normal
+     desktops the outer inset is zero and useful information occupies space. */
+  --tt-ux18p13-data-outer: max(0px, calc((100% - var(--tt-dash-sidebar) - var(--tt-dash-gutter) - var(--tt-dash-gutter) - var(--tt-ux18p13-data-max)) / 2));
+}
+/* Shared card rhythm with existing role colors, elevation and semantics. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+  #mainContent .log-section,
+  #ttPremiumRightRail .tt-right-card,
+  .tt-coverage-panel,
+  .tt-confirmation-task-panel,
+  .tt-so-hub .tt-so-overview,
+  .tt-so-hub .tt-sp-panel,
+  .tt-admin-hub
+) {
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* Prevent action rows from overflowing narrow panels; never change button
+   visibility/disabled states or force the attendance punch buttons to shrink. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+  .tt-coverage-toolbar,
+  .tt-so-hub .tt-so-export-controls,
+  .tt-admin-hub-actions,
+  .tt-confirmation-root .tt-coverage-toolbar
+) {
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: clamp(7px, .65vw, 12px);
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+  .tt-coverage-root, .tt-confirmation-root, .tt-metrics-root,
+  .tt-so-hub, .tt-admin-hub, .tt-coverage-panel
+) {min-width: 0; box-sizing: border-box;}
+/* The three operational tools share a purpose-built wide data canvas. They
+   already anchor to the sidebar; center all their sibling roots in unison. */
+@media (min-width: 1600px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+    .tt-coverage-root,
+    .tt-coverage-workspace-tabs
+  ) {
+    width: auto !important;
+    max-width: none !important;
+    margin-left: calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    margin-right: calc(var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  /* TL/Admin primary console follows exactly the same horizontal origin
+     when the sidebar expands; do not override the UX18P12 Agent canvas. */
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent.wrap {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    margin-right: calc(var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    box-sizing: border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="admin"] #ttAdminCommandBar {
+    margin-left: calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    margin-right: calc(var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+  }
+}
+/* Keep narrow viewports controlled by existing UX18P10/P12 role-specific
+   breakpoints: no fixed desktop columns below the actual working width. */
+@media (min-width: 1180px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="teamleader"],[data-trino-role="admin"]) .tt-coverage-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--tt-ux18p13-card-gap);
+    align-items: stretch;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="admin"] .tt-admin-snapshot-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+    gap: var(--tt-ux18p13-card-gap);
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="admin"] .tt-admin-hub-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: var(--tt-ux18p13-card-gap);
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="teamleader"],[data-trino-role="admin"]) .tt-so-hub .tt-so-stats {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr));
+    gap: var(--tt-ux18p13-card-gap);
+  }
+}
+/* Data-heavy tables are intentionally wider than cards; preserve every
+   column and the existing table-level scrollbar rather than clipping data. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+  .tt-coverage-table-wrap, .tt-ops-table-scroll, .tt-si-table-wrap,
+  .tt-pilot-delivery-table-wrap, .tt-bio-table-wrap, #desktopTableContainer
+) {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+/* Stable table controls, no line wrapping into oversized actions. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+  .tt-coverage-workspace-tabs, .tt-so-hub .tt-so-tabs, .tt-admin-command-tabs
+) {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+  .tt-coverage-workspace-tab, .tt-so-hub .tt-so-tab, .tt-admin-command-tab,
+  #logTabs .log-tab
+) {white-space: nowrap; flex-shrink: 0;}
+/* Respect direct-user Zoom and motion preferences; no responsive JS polling. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) :is(
+    .tt-coverage-workspace-tab, .tt-so-hub .tt-so-tab, .tt-admin-command-tab
+  ) {transition: none !important;}
+}
+
+/* Nine Coverage counters fit one balanced row on wider screens. At lower
+   widths the three-column grid creates full rows without lone cards. */
+@media (min-width: 1900px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="teamleader"],[data-trino-role="admin"]) .tt-coverage-metrics {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+}
+
+
+/* =======================================================================
+   UX18P14 — Supervisor Attendance layout repair (production UI port).
+   At wide CSS viewports including 80% desktop zoom, the legacy Admin/TL
+   right rail was absolutely positioned at top:342px and overlaid Attendance
+   Logs. Place the existing three cards in document flow ABOVE the log and
+   reclaim the permanently empty right-hand lane. This is scoped to the
+   verified JS presentation class; no record, punch, role or API changes.
+   ======================================================================= */
+@media (min-width:981px) {
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap {
+    width:auto !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin-left:calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    margin-right:calc(var(--tt-dash-gutter) + var(--tt-ux18p13-data-outer)) !important;
+    padding-inline:0 !important;
+    box-sizing:border-box !important;
+    overflow-x:visible !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap::before {
+    right:calc(-1 * var(--tt-dash-gutter)) !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap > #ttPremiumRightRail {
+    position:relative !important;
+    inset:auto !important;
+    top:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    left:auto !important;
+    display:grid !important;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)) !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:14px 0 20px !important;
+    padding:0 !important;
+    gap:clamp(12px,1.05vw,20px) !important;
+    height:auto !important;
+    align-items:stretch !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+    background:transparent !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap > #ttPremiumRightRail > .tt-right-card {
+    display:block;
+    grid-column:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    width:auto !important;
+    margin:0 !important;
+    height:auto !important;
+    box-sizing:border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap > #ttPremiumRightRail .tt-quick-grid {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:10px !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap > .log-section {
+    position:relative;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-top:16px !important;
+    clear:both;
+    box-sizing:border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap :is(#attendanceStickyControls,#desktopTableContainer,.attendance-table-shell,.table-card) {
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="admin"],[data-trino-role="teamleader"]).tt-ux18p14-supervisor-flow #mainContent.wrap #desktopTableContainer {
+    overflow-x:auto !important;
+    overflow-y:visible;
+  }
+}
+/* UX18P15: placement remains in flow below the desktop breakpoint too. */
+@media (max-width:980px) {
+  html[data-trino-custom-workspace="enabled"] body.tt-ux18p14-supervisor-flow #mainContent.wrap > #ttPremiumRightRail {
+    position:relative !important;
+    inset:auto !important;
+    transform:none !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:14px 0 20px !important;
+    display:grid !important;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)) !important;
+    gap:14px !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body.tt-ux18p14-supervisor-flow #ttPremiumRightRail > .tt-right-card {
+    grid-column:auto !important;
+    min-width:0 !important;
+  }
+}
+/* Sidebar uses one scroll surface. Footer cards must participate in flow:
+   the old absolute theme button covered late-added Tracker/Pilot links. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="admin"],[data-trino-role="teamleader"]) #ttPremiumSidebar {
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  height:100dvh;
+  box-sizing:border-box;
+}
+html[data-trino-custom-workspace="enabled"] body #ttPremiumSidebar > * {
+  flex-shrink:0;
+}
+html[data-trino-custom-workspace="enabled"] body #ttPremiumSidebar .tt-premium-nav {
+  flex:0 0 auto;
+  overflow:visible;
+}
+html[data-trino-custom-workspace="enabled"] body #ttPremiumSidebar :is(.tt-theme-switch,.tt-server-card) {
+  position:relative !important;
+  inset:auto !important;
+  flex-shrink:0 !important;
+}
+html[data-trino-custom-workspace="enabled"] body:not(.tt-premium-sidebar-collapsed) #ttPremiumSidebar .tt-theme-switch {
+  width:100% !important;
+  margin:14px 0 0 !important;
+}

@@ -1,0 +1,199 @@
+/* TrinoTime v1.1.93 — Production Polish & UX Refinement
+   Presentation/accessibility only. No workforce, billing, auth, entitlement or chat data logic. */
+:root{
+  --tt-polish-focus:#b7800b;
+  --tt-polish-focus-shadow:rgba(183,128,11,.2);
+  --tt-polish-surface:#fff;
+  --tt-polish-soft:#f8fafc;
+  --tt-polish-line:#dce4ed;
+  --tt-polish-text:#172033;
+  --tt-polish-muted:#64748b;
+}
+body.dark-mode{
+  --tt-polish-focus:#f2ca78;
+  --tt-polish-focus-shadow:rgba(242,202,120,.2);
+  --tt-polish-surface:#172338;
+  --tt-polish-soft:#101b2d;
+  --tt-polish-line:#42536b;
+  --tt-polish-text:#edf2fa;
+  --tt-polish-muted:#bac7d9;
+}
+
+/* Keyboard users can bypass the access chrome and land on the application. */
+.tt-skip-link{position:fixed;left:14px;top:10px;z-index:2147483647;transform:translateY(-150%);padding:10px 14px;border-radius:10px;background:#172033;color:#fff!important;font:800 12px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;text-decoration:none;box-shadow:0 10px 30px rgba(15,23,42,.25);transition:transform .16s ease}
+.tt-skip-link:focus{transform:translateY(0);outline:3px solid #f2ca78;outline-offset:2px}
+
+/* A consistent high-contrast keyboard focus language across legacy + modern surfaces. */
+:where(button,[role="button"],a[href],input,select,textarea,summary):focus-visible{outline:3px solid var(--tt-polish-focus)!important;outline-offset:2px!important;box-shadow:0 0 0 5px var(--tt-polish-focus-shadow)}
+:where(button,[role="button"],a[href],input,select,textarea){touch-action:manipulation}
+:where(button,input,select,textarea):disabled,[aria-disabled="true"]{cursor:not-allowed!important;filter:saturate(.7);opacity:.58}
+
+/* Calm, readable empty/loading states without changing their markup or control flow. */
+:where(.announce-empty,.sync-audit-empty,.tt-wm-empty,.tt-admin-inspector-empty,.loading-note){border-radius:13px;color:var(--tt-polish-muted)}
+:where(.announce-empty,.sync-audit-empty,.tt-admin-inspector-empty){border:1px dashed var(--tt-polish-line);background:color-mix(in srgb,var(--tt-polish-soft) 86%,transparent)}
+.loading-note{position:relative;isolation:isolate}
+.loading-note::after{content:"";display:inline-block;width:6px;height:6px;margin-left:7px;border-radius:50%;background:currentColor;vertical-align:middle;animation:ttV1193Loading 1.1s ease-in-out infinite}
+@keyframes ttV1193Loading{0%,100%{opacity:.28;transform:scale(.76)}50%{opacity:1;transform:scale(1)}}
+
+/* Slightly clearer interactive elevation, scoped to current Admin + Messaging surfaces. */
+.tt-admin-command-tab,.tt-admin-command-action,.tt-admin-hub-grid button,.tt-admin-tool-tile,.tt-admin-quick-menu button,.tt-wm-conv,.tt-wm-icon-btn,.tt-wm-newdm,.tt-wm-send,.tt-wm-history-button{transition:background-color .14s ease,border-color .14s ease,color .14s ease,box-shadow .14s ease,transform .14s ease}
+@media (hover:hover){
+  .tt-admin-hub-grid button:hover,.tt-admin-tool-tile:hover{transform:translateY(-1px)}
+  .tt-wm-conv:hover,.tt-wm-newdm:hover{transform:translateY(-1px)}
+}
+
+/* Keep horizontal module lanes clean while remaining keyboard-scrollable. */
+#ttAdminCommandBar .tt-admin-command-tabs,.settings-tabs,.notification-center-tabs{scrollbar-width:thin;overscroll-behavior-inline:contain}
+
+/* Offline/reconnect status is deliberately passive; it never blocks application controls. */
+#ttConnectivityBanner{position:fixed;left:50%;top:max(12px,env(safe-area-inset-top));z-index:2147483000;max-width:min(560px,calc(100vw - 28px));transform:translate(-50%,-140%);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid #d7a740;border-radius:13px;background:#fff8df;color:#594005;font:750 12px/1.45 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:0 16px 42px rgba(15,23,42,.18);transition:transform .2s ease,opacity .2s ease}
+#ttConnectivityBanner.is-visible{transform:translate(-50%,0);opacity:1}
+#ttConnectivityBanner.is-online{border-color:#79b991;background:#eefbf3;color:#165c33}
+body.dark-mode #ttConnectivityBanner{border-color:#89703c;background:#44361c;color:#fff0c5}
+body.dark-mode #ttConnectivityBanner.is-online{border-color:#3a795d;background:#163a2c;color:#a7f3c5}
+
+/* Small-screen polish: safe-area aware actions and reliable touch targets. */
+@media(max-width:760px){
+  :where(.modal-btn,.settings-tab-btn,.notification-center-tab,.tt-admin-command-tab,.tt-admin-command-action,.tt-admin-quick-menu button,.tt-wm-icon-btn,.tt-wm-gif-btn,.tt-wm-emoji-btn,.tt-wm-plus-btn,.tt-wm-send){min-height:42px}
+  .tt-wm-topbar{padding-top:max(12px,env(safe-area-inset-top))}
+  .tt-wm-composer-wrap{padding-bottom:max(10px,env(safe-area-inset-bottom))}
+  .tt-admin-inspector-body,.settings-modal-body,.announce-modal-body{overscroll-behavior:contain}
+}
+
+/* Respect OS accessibility choices globally, including older legacy animations. */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .loading-note::after{animation:none!important;opacity:.65}
+  #ttConnectivityBanner{transition:none!important}
+}
+@media(prefers-contrast:more){
+  :where(.modal-box,.settings-modal,.announce-modal,.tt-wm-shell,.tt-admin-hub,.tt-admin-tools-modal,.tt-admin-inspector){border-color:currentColor!important}
+  :where(button,[role="button"],input,select,textarea){border-width:2px!important}
+}
+
+
+/* UX18P43 — Attendance Log: readable primary navigation and compact review bar.
+   Existing authorized tools, filters, controls and table remain intact. */
+.log-section.tt-log-clean .log-head { display:block; margin-bottom:12px; }
+.log-section.tt-log-clean .log-head>div:first-child { width:100%; min-width:0; }
+.log-section.tt-log-clean .log-title { margin:0 0 13px; letter-spacing:-.025em; font-size:clamp(23px,2vw,28px); text-transform:none; }
+.log-section.tt-log-clean #logTabs {
+  width:100%; max-width:100%; display:flex; flex-wrap:wrap; align-items:center;
+  gap:7px; padding:7px; margin:0; background:var(--tt-polish-soft);
+  border:1px solid var(--tt-polish-line); border-radius:14px;
+  overflow:visible; box-sizing:border-box;
+}
+.log-section.tt-log-clean #logTabs>.log-tab,
+.log-section.tt-log-clean .tt-log-more-toggle {
+  min-height:40px; flex:0 0 auto; border-radius:9px; padding:9px 15px;
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:12.5px; font-weight:680;
+  line-height:1.2; white-space:nowrap; color:var(--tt-polish-muted);
+}
+.log-section.tt-log-clean #logTabs>.log-tab.active { color:var(--tt-polish-text); background:var(--tt-polish-surface); }
+.log-section.tt-log-clean .tt-log-more { position:relative; margin-left:auto; min-width:0; z-index:28; }
+.log-section.tt-log-clean .tt-log-more[hidden],
+.log-section.tt-log-clean .tt-log-more-menu[hidden] { display:none !important; }
+.log-section.tt-log-clean .tt-log-more-toggle {
+  border:1px solid var(--tt-polish-line); background:var(--tt-polish-surface); cursor:pointer;
+  color:var(--tt-polish-text); display:inline-flex; align-items:center; gap:10px;
+}
+.log-section.tt-log-clean .tt-log-more-toggle::after { content:'▾'; opacity:.7; font-size:13px; }
+.log-section.tt-log-clean .tt-log-more.is-open .tt-log-more-toggle { border-color:#94b5da; }
+.log-section.tt-log-clean .tt-log-more-menu {
+  position:absolute; top:calc(100% + 7px); right:0; z-index:30;
+  display:flex; flex-direction:column; align-items:stretch; gap:3px;
+  min-width:220px; max-width:min(315px,calc(100vw - 36px)); max-height:min(65vh,460px);
+  padding:7px; overflow-y:auto; overscroll-behavior:contain;
+  border:1px solid var(--tt-polish-line); border-radius:13px;
+  background:var(--tt-polish-surface); box-shadow:0 16px 36px rgba(15,23,42,.14);
+}
+.log-section.tt-log-clean .tt-log-more-menu .log-tab {
+  width:100%; min-height:39px; padding:10px 12px; flex:0 0 auto; border-radius:8px;
+  text-align:left; font-family:'Plus Jakarta Sans',system-ui,sans-serif; font-size:12.5px;
+  font-weight:650; white-space:normal; color:var(--tt-polish-text);
+}
+.log-section.tt-log-clean .tt-log-more-menu .log-tab:hover,
+.log-section.tt-log-clean .tt-log-more-menu .log-tab:focus-visible { background:var(--tt-polish-soft); }
+.log-section.tt-log-clean .attendance-sticky-controls {
+  margin:10px 0 14px; padding:12px; border-radius:15px;
+  border-color:var(--tt-polish-line); background:var(--tt-polish-surface);
+  box-shadow:0 5px 18px rgba(15,23,42,.045); backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+.log-section.tt-log-clean .attendance-sticky-main { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; }
+/* Core uses inline display:flex/none to manage Log visibility. Respect hidden state. */
+.log-section.tt-log-clean #logFilters[style*="display: none"] { display:none !important; }
+.log-section.tt-log-clean #logFilters:not([style*="display: none"]) {
+  display:grid !important;
+  grid-template-columns:minmax(145px,1.25fr) minmax(143px,1fr) minmax(128px,.9fr) minmax(128px,.9fr) 85px 116px;
+  align-items:center; gap:8px; padding:0; margin:0; width:100%; min-width:0;
+}
+.log-section.tt-log-clean #logFilters>select,
+.log-section.tt-log-clean #logFilters>input { width:100%; min-width:0; min-height:40px; box-sizing:border-box; border-radius:10px; }
+.log-section.tt-log-clean #logFilters #clearFilters { width:100%; min-height:40px; border-radius:10px; }
+.log-section.tt-log-clean #logFilters .export-menu-wrap { width:100%; min-width:0; }
+.log-section.tt-log-clean #logFilters .export-menu-trigger { width:100%; min-height:40px; border-radius:10px; }
+.log-section.tt-log-clean #logFilters #attendanceStreakReviewBtn[hidden] { display:none !important; }
+.log-section.tt-log-clean #logFilters #attendanceStreakReviewBtn:not([hidden]) { grid-column:1 / -1; justify-self:start; }
+.log-section.tt-log-clean .attendance-review-actions { display:flex; flex-wrap:wrap; justify-content:flex-start; gap:6px; }
+.log-section.tt-log-clean .attendance-review-btn,
+.log-section.tt-log-clean .attendance-density-btn { min-height:36px; padding:8px 12px; font-size:11px; border-radius:9px; }
+.log-section.tt-log-clean .attendance-density-control { margin-left:auto; }
+.log-section.tt-log-clean .attendance-filter-chips:empty { display:none; }
+.log-section.tt-log-clean .attendance-sticky-controls.is-hidden { display:none !important; }
+body.dark-mode .log-section.tt-log-clean .tt-log-more-menu .log-tab.active { background:#253751; color:#f8fafc; }
+body.dark-mode .log-section.tt-log-clean #logTabs>.log-tab.active { color:#f8fafc; background:#26354b; }
+@media(max-width:1160px) {
+  .log-section.tt-log-clean #logFilters:not([style*="display: none"]) {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .log-section.tt-log-clean #logFilters #attendanceStreakReviewBtn:not([hidden]) { grid-column:auto; }
+}
+@media(max-width:640px) {
+  .log-section.tt-log-clean #logTabs { padding:6px; gap:4px; }
+  .log-section.tt-log-clean #logTabs>.log-tab,
+  .log-section.tt-log-clean .tt-log-more-toggle { min-height:39px; padding:9px 10px; font-size:11.5px; }
+  .log-section.tt-log-clean #logFilters:not([style*="display: none"]) { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .log-section.tt-log-clean #logFilters>select { grid-column:1 / -1; }
+  .log-section.tt-log-clean #logFilters>input { grid-column:auto; }
+  .log-section.tt-log-clean #logFilters #clearFilters,
+  .log-section.tt-log-clean #logFilters .export-menu-wrap { width:100% !important; }
+  .log-section.tt-log-clean .attendance-density-control { margin-left:0; }
+}
+
+
+/* UX18P44 — More tools dropdown stacking fix.
+   The original .log-head was z-index:1 while the following Attendance filter card
+   has z-index:24, so raising only the dropdown to z-index:30 was ineffective.
+   Elevate the entire navigation stacking context *only while open*. */
+.log-section.tt-log-clean.tt-log-menu-open .log-head {
+  position:relative;
+  z-index:80;
+  overflow:visible;
+}
+/* The adaptive-workspace stylesheet gives #logTabs overflow-x:auto and
+   overflow-y:hidden with a highly specific selector. That clips absolute
+   dropdown children, even if their z-index is high. */
+html[data-trino-custom-workspace="enabled"] body:is([data-trino-role="agent"],[data-trino-role="teamleader"],[data-trino-role="admin"]) #mainContent .log-section.tt-log-clean.tt-log-menu-open #logTabs,
+.log-section.tt-log-clean.tt-log-menu-open #logTabs {
+  overflow:visible !important;
+  flex-wrap:wrap !important;
+}
+.log-section.tt-log-clean.tt-log-menu-open .tt-log-more {
+  z-index:81;
+}
+.log-section.tt-log-clean.tt-log-menu-open .tt-log-more-menu {
+  z-index:82;
+}
+
+/* UX18P45 — explicit Admin hourly-rate editing without number spinners or blur-save. */
+#totalsOverlay .hourly-rate-field .hourly-rate-input { min-width:82px; width:82px; font-variant-numeric:tabular-nums; }
+#totalsOverlay .hourly-rate-input[aria-invalid="true"] { color:#b42318; }
+#totalsOverlay .hourly-rate-actions { display:inline-flex; gap:4px; margin:3px 0 0 5px; vertical-align:middle; }
+#totalsOverlay .hourly-rate-actions[hidden] { display:none !important; }
+#totalsOverlay .hourly-rate-actions button { font-family:inherit; font-size:11px; line-height:1.2; font-weight:700; border-radius:7px; padding:7px 9px; cursor:pointer; }
+#totalsOverlay .hourly-rate-save { color:#fff; background:#1469c5; border:1px solid #1469c5; }
+#totalsOverlay .hourly-rate-cancel { color:var(--ink); background:var(--card); border:1px solid var(--line); }
+#totalsOverlay .hourly-rate-feedback:not(:empty) { display:block; font-size:10px; line-height:1.5; margin-top:4px; color:var(--muted); white-space:normal; }
+#totalsOverlay .rate-is-editing { background:rgba(37,99,235,.06); }
+#totalsOverlay .hourly-rate-actions button:focus-visible { outline:2px solid #2563eb; outline-offset:2px; }

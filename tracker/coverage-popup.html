@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Coverage Tracker — STAGING QA</title>
+  <link rel="stylesheet" href="coverage-popup.css">
+</head>
+<body><div style="padding:8px 10px;margin:8px;border:1px solid #fed7aa;border-radius:9px;background:#fff7ed;color:#9a3412;font:800 11px/1.3 system-ui;text-align:center">TRINOTIME QC TRACKER · STAGING QA</div><nav style="padding:8px;font:13px system-ui"><a href="popup.html">← QC Tracker</a> · <a href="confirmation-popup.html">Confirmation</a></nav>
+<main>
+  <header>
+    <div><p class="eyebrow">AUGMOTO · TRINOTIME</p><h1>Coverage Tracker <span style="font-size:11px;color:#c2410c">STAGING QA</span></h1></div>
+    <div class="headerActions"><span id="siteState" class="pill on">TRACKING</span><button id="popupToggle" class="popupToggle" type="button" title="Minimize tracker panel" aria-label="Minimize tracker panel">−</button></div>
+  </header>
+  <section id="compactSummary" class="compactSummary" hidden><span id="compactState">READY</span><strong id="compactBridge">Not connected</strong></section>
+
+    <section class="rtaCompact" aria-label="RTA assigned store (local plan)"><span>RTA ASSIGNED STORE · LOCAL QA</span><strong id="rtaCompactCurrent">Checking…</strong><small id="rtaCompactNext">This is not an Augmoto-observed store</small></section>
+
+  <section class="job"><span>TrinoTime shift</span><strong id="shiftState">Checking shift…</strong><small id="shiftMeta">Time In starts tracking · Time Out locks totals</small></section>
+
+  <section class="job">
+    <span>Current job</span>
+    <strong id="job">No active job</strong>
+    <small id="trackerState">Tracker ready</small>
+  </section>
+
+  <section class="metrics">
+    <div><span>Created</span><b id="created">0</b></div>
+    <div><span>Blurred</span><b id="blurred">0</b></div>
+    <div><span>Deleted</span><b id="deleted">0</b></div>
+    <div><span>No Match</span><b id="noMatch">0</b></div>
+  </section>
+
+  <section class="submit">
+    <div class="submitHead">
+      <span>Submitted today</span>
+      <div class="submitControls">
+        <button id="submittedMinus" class="adjust" type="button" title="Manual submitted correction −1" aria-label="Decrease submitted total by 1">−</button>
+        <strong><b id="submitted">0</b> / <span id="goalText">300</span></strong>
+        <button id="submittedPlus" class="adjust" type="button" title="Manual submitted correction +1" aria-label="Increase submitted total by 1">+</button>
+      </div>
+    </div>
+    <div class="submitMeta" id="submitMeta">Confirmed 0 · Manual ±0</div>
+    <details id="unverifiedQa" hidden style="margin-top:5px;padding:8px;border:1px solid #facc15;border-radius:8px;background:#fefce8;color:#854d0e;font-size:11px;line-height:1.5;">
+      <summary style="cursor:pointer;font-weight:800">Needs QA review: <strong id="unverifiedQaCount">0</strong> unverified Submit attempt(s)</summary>
+      <p>These are <b>not confirmed submissions</b> and were not added to your totals. A return to the Jobs list does not prove Augmoto accepted the task. Compare with actual Augmoto work history before requesting an authorized correction.</p>
+      <ol id="unverifiedQaList" style="padding-left:19px"></ol>
+      <button type="button" id="unverifiedQaCopy" style="padding:6px 9px;border-radius:7px;border:1px solid #ca8a04;background:white;color:#854d0e;font-weight:700">Copy QA details</button>
+    </details>
+    <div class="bar"><i id="progress"></i></div>
+    <div class="time"><span>Active <b id="active">0m</b></span><span>Idle <b id="idle">0m</b></span><span>Away <b id="away">0m</b></span></div>
+    <div class="liveIdle" id="liveIdle" hidden>Live idle <b id="liveIdleValue">0:00</b></div>
+  </section>
+
+  <section class="bridge">
+    <div class="sectionHead"><div><span>TrinoTime</span><strong id="bridgeState">Not connected</strong></div><span id="syncState" class="dot"></span></div>
+    <div id="bridgeIdentity" class="bridgeIdentity" hidden><span>Signed in Agent</span><strong id="bridgeAgentName">Agent</strong></div>
+    <p id="bridgeMeta">Open TrinoTime STAGING QA and sign in as the QA Agent, then connect this tracker.</p>
+    <div class="actions"><button id="connect" class="primary">Connect to TrinoTime</button><button id="sync" disabled>Sync now</button><button id="disconnect" class="danger" hidden>Disconnect local</button></div>
+  </section>
+
+  <section class="settings">
+    <label class="managedRow"><span>Tracking</span><strong>Managed on</strong></label>
+    <label><span>Daily submit goal</span><input id="dailyGoal" type="number" min="1" max="100000"></label>
+    <label class="managedRow"><span>Idle policy</span><strong>5 minutes</strong></label>
+    <label><span>HUD position</span><select id="hudPosition"><option value="bottom-left">Bottom left</option><option value="bottom-right">Bottom right</option><option value="top-left">Top left</option><option value="top-right">Top right</option></select></label>
+    <label><span>HUD size</span><button id="hudToggle" type="button">Minimize HUD</button></label>
+    <label><span>Tracker popup</span><button id="popupToggleSecondary" type="button">Minimize panel</button></label>
+    <p class="managedNote">Managed workforce mode: tracking and the 5-minute idle threshold cannot be disabled or changed by the Agent. Hidden/unfocused Coverage is reported as Away.</p>
+  </section>
+
+  <footer><span id="status">Detector uses confirmed Augmoto state changes. No typed content or screen images are captured.</span></footer>
+</main>
+<script src="coverage-popup.js"></script>
+<script src="store-queue-core.js"></script>
+<script src="store-queue-compact.js"></script>
+</body>
+</html>

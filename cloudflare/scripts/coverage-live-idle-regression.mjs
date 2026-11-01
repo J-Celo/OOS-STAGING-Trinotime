@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const worker=read('../src/worker.js');
+const client=read('../public/assets/js/j-coverage-dashboard-rc20.js');
+const css=read('../public/assets/css/c-coverage-dashboard-v1.css');
+const html=read('../public/index.html');
+const must=(ok,msg)=>{if(!ok){console.error('FAIL — '+msg);process.exitCode=1}else console.log('PASS — '+msg)};
+must(worker.includes('WORKFORCE_COVERAGE_IDLE_THRESHOLD_MS = 5 * 60 * 1000'),'server owns the 5-minute Coverage idle threshold');
+must(worker.includes('idleSinceAt')&&worker.includes('awaySinceAt')&&worker.includes('presenceUpdatedAt'),'server sanitizes and returns live idle/away presence timestamps');
+must(worker.includes("'paused'")&&worker.includes('idleThresholdMs:WORKFORCE_COVERAGE_IDLE_THRESHOLD_MS'),'server exposes managed tracker state and authoritative idle threshold');
+must(client.includes('fmtLiveDuration')&&client.includes('presenceView(row)'),'dashboard computes live presence timers locally between API refreshes');
+must(client.includes('data-coverage-idle-now')&&client.includes('data-coverage-status-detail'),'Agent rows expose live idle/away duration details');
+must(client.includes('No input ${fmtLiveDuration(noInput)}')&&client.includes('Away ${fmtLiveDuration(awayMs)}'),'idle and away presentation is explicit instead of conflating states');
+must(client.includes('Presence policy:')&&client.includes('No typed content or screen images are collected'),'dashboard documents the monitoring policy and privacy boundary');
+must(client.includes('setInterval(()=>{if(state.active)updateLiveChrome();},1000)'),'live idle timers repaint once per second without one-second server polling');
+must(css.includes('RC8 live idle / away presence')&&css.includes('tt-coverage-idle-cell'),'RC8 live idle styling is present');
+must(html.includes('coverage-rc23'),'RC23 Coverage assets are cache-busted');
+if(process.exitCode)process.exit(process.exitCode);

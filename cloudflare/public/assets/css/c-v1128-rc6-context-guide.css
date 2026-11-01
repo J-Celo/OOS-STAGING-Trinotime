@@ -1,0 +1,17 @@
+/* TrinoTime v1.1.128 RC6 — contextual Help / Guide closure.
+   Contextual Settings Help must render above the modal that launched it while preserving
+   the dedicated Workspace Messaging overlay above both. */
+.settings-overlay.open.help-context-open {
+  z-index: 2147482400 !important;
+  display: flex !important;
+  pointer-events: auto !important;
+}
+.modal-overlay.open.help-source-suspended {
+  z-index: 2147481700 !important;
+  pointer-events: none !important;
+}
+.settings-overlay.help-context-open > .settings-modal {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}

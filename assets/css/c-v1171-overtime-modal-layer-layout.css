@@ -1,0 +1,65 @@
+/* TrinoTime v1.1.72 - Overtime Modal Body Portal + Layout Fix */
+
+:root {
+  --z-overtime-child-modal: 12000;
+}
+
+/*
+ * Overtime Management (#otTabOverlay) lives directly under <body>, while the
+ * OT child dialogs were originally nested inside #appRoot. The Premium
+ * workspace intentionally gives #appRoot isolation:isolate, which creates a
+ * stacking context. No child z-index can escape that context to outrank a
+ * body-level sibling. v1.1.72 portals these four dialogs to <body> in JS.
+ * Keep this explicit body-level layer as the presentation contract.
+ */
+body > :is(#otOverlay, #tlOtRequestOverlay, #tlOtReviewOverlay, #tlOtCorrectionOverlay)[data-overtime-modal-portal="body"] {
+  z-index: var(--z-overtime-child-modal) !important;
+  isolation: isolate;
+}
+
+/* Fallback layer if the portal marker is delayed for a frame. */
+:is(#otOverlay, #tlOtRequestOverlay, #tlOtReviewOverlay, #tlOtCorrectionOverlay) {
+  z-index: var(--z-overtime-child-modal) !important;
+}
+
+/* The host receives a complete .ot-hours-breakdown grid from JavaScript. */
+#tlOtRequestBreakdown {
+  width: 100%;
+  min-width: 0;
+}
+
+#tlOtRequestBreakdown > .ot-hours-breakdown {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#tlOtRequestBreakdown .ot-hours-breakdown > span {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#tlOtRequestBreakdown .ot-hours-breakdown small {
+  display: block;
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  line-height: 1.2;
+  letter-spacing: .045em;
+}
+
+#tlOtRequestBreakdown .ot-hours-breakdown strong {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 560px) {
+  #tlOtRequestBreakdown > .ot-hours-breakdown {
+    grid-template-columns: 1fr;
+  }
+}

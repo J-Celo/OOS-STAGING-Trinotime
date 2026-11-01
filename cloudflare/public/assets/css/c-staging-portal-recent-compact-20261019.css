@@ -1,0 +1,126 @@
+/* Section 22 · Compact recently-used workspace shortcut, staging only.
+ * Keep selection handlers, roster/POD authority, and Staff Access unchanged. */
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 16px !important;
+  align-items: center !important;
+  width: min(100%, 620px) !important;
+  max-width: 620px !important;
+  min-height: 0 !important;
+  margin: 12px auto 4px !important;
+  padding: 12px 14px !important;
+  border: 1px solid #d5e3ed !important;
+  border-radius: 16px !important;
+  background: #f7fafc !important;
+  box-shadow: 0 3px 14px rgba(19, 48, 74, .04) !important;
+  box-sizing: border-box !important;
+}
+/* The old stylesheet forced display:grid!important and could reveal an empty card. */
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used[style*="display: none"] {
+  display: none !important;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-copy {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  min-height: 40px !important;
+  margin: 0 !important;
+  padding: 0 0 0 48px !important;
+  gap: 4px !important;
+  line-height: 1.3 !important;
+  color: #34485b !important;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-copy::before {
+  content: "↶";
+  position: absolute;
+  display: grid;
+  place-items: center;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: #e5f0f8;
+  color: #226583;
+  font: 700 26px/1 'Plus Jakarta Sans', sans-serif;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod .tt-recent-label {
+  font: 700 10px/1.25 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #627589;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod .tt-recent-target {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font: 600 13px/1.4 'Plus Jakarta Sans', sans-serif;
+  color: #243b52;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .tt-recent-target b {
+  color: inherit !important;
+  font-weight: 700 !important;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-link {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  justify-self: end !important;
+  gap: 7px !important;
+  min-height: 44px !important;
+  padding: 0 16px !important;
+  margin: 0 !important;
+  white-space: nowrap;
+  font: 700 12px/1 'Plus Jakarta Sans', sans-serif !important;
+  border-radius: 999px !important;
+  color: #87520b !important;
+  background: #fff3dc !important;
+  box-shadow: inset 0 0 0 1px #efd4a5 !important;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-link:hover {
+  background: #ffe8bb !important;
+}
+.gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-link:focus-visible {
+  outline: 3px solid #2563eb !important;
+  outline-offset: 3px !important;
+}
+/* Keep release information below the shortcut rather than floating right. */
+.gate-overlay[data-gate-step="selection"] .gate-card > .auth-version-label {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: 13px auto 2px !important;
+  font: 500 10px/1.5 'IBM Plex Mono', monospace !important;
+  letter-spacing: .11em !important;
+  text-transform: uppercase !important;
+  color: #748396 !important;
+}
+body.dark-mode .gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used {
+  background: #152534 !important;
+  border-color: #334b60 !important;
+  box-shadow: none !important;
+}
+body.dark-mode .gate-overlay[data-gate-step="selection"] #mostUsedPod .tt-recent-label,
+body.dark-mode .gate-overlay[data-gate-step="selection"] .gate-card > .auth-version-label { color: #aabaca !important; }
+body.dark-mode .gate-overlay[data-gate-step="selection"] #mostUsedPod .tt-recent-target { color: #ebf2fa !important; }
+body.dark-mode .gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-copy::before { background: #24475e; color: #acd9ef; }
+@media (max-width: 560px) {
+  .gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 12px !important;
+  }
+  .gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used .most-used-link {
+    justify-self: stretch !important;
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gate-overlay[data-gate-step="selection"] #mostUsedPod.most-used * { transition: none !important; }
+}

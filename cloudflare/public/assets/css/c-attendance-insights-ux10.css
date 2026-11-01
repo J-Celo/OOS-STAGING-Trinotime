@@ -1,0 +1,12 @@
+/* Staging UX10: add trustworthy attendance provenance without extra panels or API reads. */
+#tableWrap #attendanceTodaySummary .attendance-summary-provenance {display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:9px 0 6px;font-size:11px;line-height:1.4;font-weight:600;}
+#tableWrap #attendanceTodaySummary .attendance-summary-provenance>span{display:inline-flex;align-items:center;min-width:0;max-width:100%;padding:5px 10px;border:1px solid rgba(255,255,255,.26);border-radius:999px;color:#f1f5f9;background:rgba(15,23,42,.26);}
+#tableWrap #attendanceSummaryTrust[data-state='fresh']{border-color:rgba(110,231,183,.5);color:#b8f7d8;background:rgba(16,185,129,.13);}
+#tableWrap #attendanceSummaryTrust[data-state='stale']{border-color:rgba(253,230,138,.55);color:#ffe7a6;background:rgba(245,158,11,.11);}
+#tableWrap #attendanceTodaySummary #attendanceSummaryTlCoaching[hidden],#tableWrap #attendanceTodaySummary #attendanceSummaryRosterWarning[hidden]{display:none!important;}
+#tableWrap #attendanceTodaySummary .attendance-summary-meaning {margin:0 0 10px;font-size:11px;line-height:1.4;color:rgba(255,255,255,.72);}
+#tableWrap #attendanceTodaySummary .attendance-summary-roster-warning {margin:6px 0 8px;padding:8px 11px;border:1px solid rgba(253,230,138,.45);border-radius:10px;background:rgba(245,158,11,.12);font-size:11px;line-height:1.4;color:#ffedb4;}
+@media(max-width:640px){#tableWrap #attendanceTodaySummary .attendance-summary-provenance{font-size:10px;gap:6px;}#tableWrap #attendanceTodaySummary .attendance-summary-provenance>span{padding:4px 7px;}#tableWrap #attendanceTodaySummary .attendance-summary-meaning{font-size:10px;}}
+@media(prefers-reduced-motion:reduce){#tableWrap #attendanceTodaySummary .attendance-summary-provenance *{transition:none!important;}}
+
+#tableWrap #attendanceSummaryTrust[data-state='pending']{border-color:rgba(253,230,138,.55);color:#ffe7a6;background:rgba(245,158,11,.11);}

@@ -1,0 +1,72 @@
+/* ========================================================================== */
+/* TrinoTime v1.0.69 - Pearl / Light mode text contrast repair               */
+/* Presentation only. Restores dark readable typography on bright Pearl       */
+/* navigation and management glass surfaces. Runtime behavior is unchanged.   */
+/* ========================================================================== */
+
+/* The solo POD label inherited the Obsidian white treatment even when the
+   navigation glass changed to Pearl. Keep the large current-POD label crisp
+   against the light glass and remove the heavy dark-mode text glow. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #podTabs .pod-tab-solo,
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #podTabs .pod-tab-solo:hover {
+  color: #26313F !important;
+  -webkit-text-fill-color: #26313F !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.94), 0 5px 16px rgba(51,65,85,.12) !important;
+}
+
+/* Leadership headings were defined by the shared Obsidian-first premium layer
+   with forced white text. Pearl needs explicit dark overrides at the same or
+   greater specificity so titles such as "My POD · Agent Passwords" remain
+   readable on the light frosted panels. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(
+  .admin-ops-head h2,
+  .agent-security-head h2,
+  #agentSecurityTitle,
+  .admin-recovery-head h3,
+  .admin-review-head h3,
+  .system-health-head h3
+) {
+  color: #17202B !important;
+  -webkit-text-fill-color: #17202B !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.86), 0 4px 14px rgba(51,65,85,.08) !important;
+}
+
+/* Supporting management copy and card metrics use a slate hierarchy instead
+   of low-contrast white/gray inherited from Obsidian. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(
+  .admin-ops-eyebrow,
+  .agent-security-eyebrow
+) {
+  color: #7A623C !important;
+  -webkit-text-fill-color: #7A623C !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(
+  .admin-ops-head p,
+  .agent-security-sub,
+  .admin-recovery-head p,
+  .system-health-overview,
+  .system-health-foot,
+  .agent-security-search-wrap label,
+  .agent-security-search-wrap span,
+  .admin-review-summary span,
+  .agent-security-summary span
+) {
+  color: #667085 !important;
+  -webkit-text-fill-color: #667085 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(
+  .admin-review-summary strong,
+  .agent-security-summary strong
+) {
+  color: #1F2937 !important;
+  -webkit-text-fill-color: #1F2937 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+/* Preserve readable control text inside the Pearl security header. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot .agent-security-toggle {
+  color: #3E4A59 !important;
+  -webkit-text-fill-color: #3E4A59 !important;
+}

@@ -1,0 +1,21 @@
+/* RC32 — first-party QC Tracker download placement for Standard + Premium navigation. */
+.tt-tracker-download-standard{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:46px;padding-inline:12px!important;white-space:nowrap}
+.tt-tracker-download-standard svg{width:17px;height:17px;flex:none}
+.tt-tracker-download-standard-label{font-weight:800}
+.tt-tracker-download-status,.tt-tracker-download-badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:rgba(245,158,11,.13);color:#a04c0d;border:1px solid rgba(245,158,11,.24);font:900 8px/1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;padding:4px 5px}
+.tt-tracker-download-premium{position:relative}
+.tt-tracker-download-premium .tt-tracker-download-badge{margin-left:auto;flex:none}
+.tt-tracker-download-premium svg{color:inherit}
+.tt-tracker-download-toast{position:fixed;right:22px;bottom:22px;z-index:10020;display:flex;align-items:center;gap:11px;max-width:min(420px,calc(100vw - 32px));padding:13px 15px;border:1px solid rgba(16,185,129,.28);border-radius:14px;background:rgba(248,250,252,.97);color:#0f172a;box-shadow:0 18px 60px rgba(15,23,42,.22);backdrop-filter:blur(18px);opacity:0;visibility:hidden;transform:translateY(10px);transition:.2s ease;pointer-events:none}
+.tt-tracker-download-toast.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
+.tt-tracker-download-toast-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#0f766e;color:#fff;flex:none}.tt-tracker-download-toast-icon svg{width:18px;height:18px}
+.tt-tracker-download-toast span:last-child{display:grid;gap:3px}.tt-tracker-download-toast strong{font:800 13px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.tt-tracker-download-toast small{color:#64748b;font:600 11px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body.dark-mode .tt-tracker-download-status,body.dark-mode .tt-tracker-download-badge{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.22);color:#f4c66f}
+body.dark-mode .tt-tracker-download-toast{background:rgba(15,23,42,.97);border-color:rgba(52,211,153,.25);color:#f8fafc;box-shadow:0 18px 60px rgba(0,0,0,.38)}body.dark-mode .tt-tracker-download-toast small{color:#a8b6c8}
+body.tt-premium-sidebar-collapsed .tt-tracker-download-premium .tt-tracker-download-badge{position:absolute;right:-3px;top:3px;padding:3px 4px;font-size:6px}
+@media(max-width:860px){.tt-tracker-download-standard-label{display:none}.tt-tracker-download-standard{padding-inline:10px!important}.tt-tracker-download-status{display:none}.tt-tracker-download-toast{right:12px;bottom:12px}}
+@media(prefers-reduced-motion:reduce){.tt-tracker-download-toast{transition:none}}
+
+/* Chrome Web Store CTA: preserve the original sidebar button appearance for links. */
+a.tt-tracker-store-link{cursor:pointer;text-decoration:none!important}
+a.tt-tracker-store-link:focus-visible{outline:2px solid currentColor;outline-offset:3px}

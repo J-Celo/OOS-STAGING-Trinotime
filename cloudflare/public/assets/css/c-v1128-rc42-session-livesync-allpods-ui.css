@@ -1,0 +1,31 @@
+/* TrinoTime v1.1.128 RC42 — Session Live-Sync & All Pods UI Closure
+   Presentation-only All Pods cleanup: the Admin attendance search/shift controls
+   sit directly on the workspace canvas instead of inside an additional outer card.
+   Child status, stepper and action surfaces retain their own affordances. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='admin'] #punchCard {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='admin'] #punchCard::before,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='admin'] #punchCard::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Keep the controls visually aligned with the status bar below after the outer
+   card padding is removed. The row remains responsive through the inherited grid. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='admin'] #punchCard .row-select {
+  margin-inline: 0 !important;
+}
+
+@media (max-width: 760px) {
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='admin'] #punchCard {
+    padding: 0 !important;
+  }
+}

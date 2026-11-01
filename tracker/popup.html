@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TrinoTime QC Tracker — staging</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="shell">
+    <div class="stageBar"><span class="stageDot"></span><strong>STAGING QA</strong><span>Secure staging sync</span></div>
+
+    <header class="brandHeader">
+      <div class="brandMark"><img src="trinotime-icon-128.png" alt="" aria-hidden="true"></div>
+      <div class="brandCopy">
+        <span>TRINOTIME</span>
+        <h1>QC Tracker</h1>
+      </div>
+      <span id="trackerVersion" class="version">v2.3.10</span>
+    </header>
+
+    <section id="connectionPanel" class="connectionPanel" data-state="checking" aria-label="TrinoTime account connection">
+      <div class="connectionOverview">
+        <div class="connectionCopy">
+          <span class="kicker">ACCOUNT CONNECTION</span>
+          <strong id="connectionTitle">Checking connection…</strong>
+          <small id="connectionSubtitle">Coverage + Confirmation · STAGING QA</small>
+        </div>
+        <span id="connectionPill" class="connectionPill">CHECKING</span>
+      </div>
+      <button id="connect" class="connectButton" type="button"><span class="connectDot" aria-hidden="true"></span><span id="connectLabel">Connect both to TrinoTime</span></button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="modeCard" class="modeCard" data-mode="checking">
+      <div>
+        <span class="kicker">ACTIVE WORKSPACE</span>
+        <strong id="mode">Checking selected QC task…</strong>
+      </div>
+      <span id="modePill" class="modePill">CHECKING</span>
+    </section>
+
+    <p class="modeHelp">Follows the selected QC job. Coverage and Confirmation totals stay separate.</p>
+
+    <section class="launchGrid" aria-label="Tracker workspaces">
+      <a class="launchCard coverage" href="coverage-popup.html">
+        <span class="launchIcon">C</span>
+        <span class="launchCopy"><strong>Coverage</strong><small>Actions · Submitted · Presence</small></span>
+        <span class="chevron">›</span>
+      </a>
+      <a class="launchCard confirmation" href="confirmation-popup.html">
+        <span class="launchIcon">F</span>
+        <span class="launchCopy"><strong>Confirmation</strong><small>Intervals · EOD</small></span>
+        <span class="chevron">›</span>
+      </a>
+    </section>
+
+    <section id="shiftCard" class="shiftCard" data-state="checking">
+      <div><span class="kicker">TRINOTIME SHIFT</span><strong id="shiftTitle">Checking shift…</strong><small id="shiftMeta">Time In starts tracking · Time Out locks final totals</small></div>
+      <span id="shiftPill" class="shiftPill">CHECKING</span>
+    </section>
+    <section id="syncHealthPanel" class="syncHealthPanel" aria-label="Tracker sync health" data-state="checking">
+      <div class="syncHealthHeading"><div><span class="kicker">TRACKER · SERVER DELIVERY</span><strong>Sync Health</strong></div><span id="syncHealthPill" class="syncHealthPill">CHECKING</span></div>
+      <p id="syncHealthOverview" class="syncHealthOverview" role="status" aria-live="polite">Checking local delivery state…</p>
+      <div class="syncHealthRows">
+        <div class="syncHealthRow"><strong>Coverage</strong><small id="coverageSync">Checking…</small><span id="coveragePending">Pending unknown</span><small id="coverageAck">Last accepted: unknown</small></div>
+        <div class="syncHealthRow"><strong>Confirmation</strong><small id="confirmationSync">Checking…</small><span id="confirmationPending">Pending unknown</span><small id="confirmationAck">Last accepted: unknown</small></div>
+      </div>
+      <div class="syncHealthActions"><button id="syncBoth" type="button">Sync both now</button><small>Connected ≠ server accepted</small></div>
+      <details class="syncHealthDetails"><summary>Delivery details</summary><p id="syncHealthDetails">No diagnostic details yet.</p></details>
+    </section>
+
+    <section class="rtaPanel" id="rtaPanel" data-connected="false" aria-label="Augmoto store assignments">
+      <div class="rtaHeading"><div><span class="kicker">AUGMOTO · STORE ASSIGNMENT</span><strong>Store Assignment Queue</strong></div><span class="rtaTag">staging</span></div>
+      <small id="rtaIdentity">Checking signed-in Agent…</small>
+      <div class="rtaCurrent" id="podDispatchBanner"><span>TL / Admin · LIVE POD INSTRUCTION</span><strong id="podDispatchCurrent">Checking current POD instruction…</strong><small id="podDispatchDetail">Separate from the stored queue and observed Augmoto metrics.</small></div>
+      <div class="rtaCurrent"><span>Assigned store · Admin/TL plan</span><strong id="rtaCurrent">Checking…</strong><small id="rtaProgress"></small></div>
+      <div class="rtaNextStore"><span>Up next</span><strong id="rtaNextStore">—</strong></div>
+      <ol id="rtaStoreList" class="rtaStoreList" aria-label="Store sequence"></ol>
+      <div class="rtaButtons"><button id="rtaPrevious" type="button" disabled>← Previous</button><button id="rtaNext" type="button" disabled>Next store →</button><button id="rtaRefresh" type="button">Refresh</button></div>
+      <p id="rtaStatus" role="status" aria-live="polite"></p>
+      <small id="rtaConflicts">Store assignments are separate from Augmoto-observed job mapping.</small>
+      <details class="rtaImportBlock"><summary>Local CSV fallback (QA)</summary>
+        <p>Paste header <code>order,store,plannedJobs,jobIds</code>. Separate optional Job IDs with <code>|</code>. Example: <code>1,Preston,3,JOB_10001|JOB_10002</code>. A signed Agent can load an Admin/TL server assignment; local CSV is only a QA fallback.</p>
+        <textarea id="rtaCsv" rows="4" maxlength="64000" spellcheck="false" placeholder="order,store,plannedJobs,jobIds
+1,Preston,3,JOB_10001|JOB_10002
+2,Miranda,2,JOB_10003"></textarea>
+        <div class="rtaButtons"><button id="rtaImport" type="button" disabled>Import plan</button><button id="rtaClear" type="button" disabled>Clear local plan</button></div>
+      </details>
+    </section>
+
+
+    <section id="qaRecoveryPanel" class="qaRecoveryPanel" aria-label="Smart shift recovery">
+      <details id="qaRecoveryDetails">
+        <summary><span>🛡 Smart Sync Recovery</span><small>Fix previous device ownership without resetting attendance</small></summary>
+        <div class="qaRecoveryContent">
+          <p id="qaRecoveryState">Checking the two workflows…</p>
+          <div id="qaRecoveryCounts" class="qaRecoveryCounts"></div>
+          <p>First stop Augmoto work and close all Augmoto tabs. Keep this Tracker installed and stay signed in to TrinoTime STAGING QA.</p>
+          <button id="qaRecoveryBackup" class="qaRecoveryAction" type="button">1. Download private QA backup</button>
+          <label class="qaRecoveryConsent"><input id="qaRecoveryConsent" type="checkbox" disabled> I've saved the backup and these local records are disposable staging activity. Keep them archived; restore the existing server shift.</label>
+          <button id="qaRecoveryRun" class="qaRecoveryAction primary" type="button" disabled>2. Archive QA locally &amp; recover shift</button>
+          <p id="qaRecoveryMessage" class="qaRecoveryMessage" role="status" aria-live="polite"></p>
+          <small>Recovery uses the existing authenticated TrinoTime shift handoff. It does not reset server totals, alter Firebase rules, or merge unsynced QA records into productivity.</small>
+        </div>
+      </details>
+    </section>
+    <button id="recoverShift" class="recoverShift" type="button" hidden>Recover This Shift (No Reset)</button>
+    <p id="recoveryHelp" class="recoveryHelp" hidden>Another Tracker installation owns this shift. Recovery verifies your Agent login, preserves server counts and job history, then transfers the shift without resetting it. Stop working in Augmoto during recovery.</p>
+
+
+
+    <details class="advancedTools">
+      <summary>Advanced tools <span>Reset · backup import</span></summary>
+      <div class="advancedBody">
+    <button id="resetShift" class="resetShift" type="button" disabled>Reset Current Shift</button>
+    <details class="migration">
+      <summary>Move existing Confirmation counts</summary>
+      <div class="migrationBody">
+        <p>Import a backup from the previous Confirmation tracker before counting here.</p>
+        <label class="fileButton">Choose backup<input id="backup" type="file" accept="application/json,.json"></label>
+      </div>
+    </details>
+      </div>
+    </details>
+
+    <footer>Tracker follows TrinoTime Time In/Time Out. Completed shift totals are locked.</footer>
+  </main>
+  <script src="popup.js"></script>
+  <script src="qa-smart-recovery.js"></script>
+  <script src="store-queue-core.js"></script>
+  <script src="store-queue-popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+/* TrinoTime v1.1.15 - Premium My Schedule alignment hotfix.
+   Presentation only. Standard / non-Premium navigation is intentionally untouched.
+   No Firebase, App Check, reCAPTCHA, Auth, database, API-key, permission,
+   entitlement, attendance, or session-policy changes. */
+
+/* Premium/customized workspace only: normalize My Schedule against the
+   neighboring Premium header controls. Do not apply to Standard layouts. */
+html[data-trino-custom-workspace='enabled'] #appRoot > .band .action-rail > #openDayOffBtn {
+  box-sizing: border-box !important;
+  align-self: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: 1.15 !important;
+  text-indent: 0 !important;
+  white-space: nowrap !important;
+  transform: none !important;
+}
+
+/* Premium Team Leader headers use a deliberately compact 34px action rail. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail > #openDayOffBtn {
+  height: 34px !important;
+  min-height: 34px !important;
+}

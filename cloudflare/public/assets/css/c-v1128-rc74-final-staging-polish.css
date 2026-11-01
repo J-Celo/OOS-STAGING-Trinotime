@@ -1,0 +1,16 @@
+/* TrinoTime v1.1.128 RC74 — Final Staging Polish
+   Presentation-only cleanup for the Attendance selected-agent identity row. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #selectedEmployeeDisplay{
+  display:flex;align-items:center;min-width:0;max-width:100%;gap:10px!important;flex:1 1 auto;
+}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-avatar{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-identity{display:flex;align-items:baseline;gap:10px;min-width:0;flex:1 1 auto}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-name{display:inline-flex;align-items:center;min-width:0;max-width:100%;font:inherit;color:inherit}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-pod{display:inline-block;min-width:0;margin:0!important;color:var(--muted)!important;font:500 9px/1.2 'IBM Plex Mono',monospace!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-actions{display:inline-flex;align-items:center;flex:0 0 auto}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .edit-name-btn{margin-left:2px!important;flex:0 0 auto}
+@media(max-width:700px){
+  html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-identity{align-items:flex-start;flex-direction:column;gap:4px}
+  html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .selected-employee-pod{max-width:min(52vw,240px)}
+}
+body.dark-mode #selectedEmployeeDisplay .selected-employee-pod{color:#8E98A7!important}

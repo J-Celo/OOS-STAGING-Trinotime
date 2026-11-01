@@ -1,0 +1,217 @@
+/* TrinoTime v1.0.64 — Liquid Glass portal CTA + Live Operations clock.
+   Presentation-only enhancement. Keeps the v1.0.63 grid/calendar containment
+   while replacing the two flat obsidian surfaces with frosted liquid glass. */
+
+/* -------------------------------------------------------------------------- */
+/* Enter Portal: frosted dark liquid glass, prismatic edge, hover shimmer.    */
+/* -------------------------------------------------------------------------- */
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  border:1.5px solid transparent!important;
+  background:
+    linear-gradient(145deg,rgba(8,12,18,.78) 0%,rgba(19,24,31,.56) 54%,rgba(9,13,19,.70) 100%) padding-box,
+    linear-gradient(135deg,rgba(212,175,55,.6),rgba(255,255,255,.15),rgba(212,175,55,.3)) border-box!important;
+  -webkit-backdrop-filter:blur(30px) saturate(200%)!important;
+  backdrop-filter:blur(30px) saturate(200%)!important;
+  box-shadow:
+    0 18px 42px rgba(8,13,20,.26),
+    0 0 0 1px rgba(255,255,255,.025),
+    inset 0 1px 0 rgba(255,255,255,.17),
+    inset 0 -1px 0 rgba(212,175,55,.06)!important;
+  color:#FFFDF7!important;
+  transform:translateZ(0);
+  transition:transform .22s cubic-bezier(.22,.75,.22,1),box-shadow .22s ease,filter .22s ease!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta::before{
+  content:''!important;
+  position:absolute!important;
+  inset:1px!important;
+  width:auto!important;
+  height:auto!important;
+  padding:0!important;
+  border-radius:inherit!important;
+  background:
+    radial-gradient(circle at 18% 8%,rgba(255,255,255,.19),transparent 31%),
+    linear-gradient(118deg,rgba(255,255,255,.08),transparent 32%,rgba(212,175,55,.055) 72%,transparent)!important;
+  -webkit-mask:none!important;
+  mask:none!important;
+  opacity:.95!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta::after{
+  content:'';
+  position:absolute;
+  z-index:1;
+  top:-55%;
+  bottom:-55%;
+  left:-62%;
+  width:42%;
+  border-radius:42%;
+  pointer-events:none;
+  opacity:0;
+  transform:skewX(-19deg) translate3d(0,0,0);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05) 12%,rgba(255,248,220,.62) 50%,rgba(212,175,55,.18) 70%,transparent);
+  filter:blur(2px);
+  mix-blend-mode:screen;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta:hover{
+  transform:translateY(-2px) scale(1.012)!important;
+  background:
+    linear-gradient(145deg,rgba(12,17,24,.74) 0%,rgba(25,31,40,.54) 54%,rgba(10,15,21,.66) 100%) padding-box,
+    linear-gradient(135deg,rgba(212,175,55,.72),rgba(255,255,255,.24),rgba(212,175,55,.42)) border-box!important;
+  box-shadow:
+    0 23px 52px rgba(7,12,19,.31),
+    0 0 30px rgba(212,175,55,.10),
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -1px 0 rgba(212,175,55,.08)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta:hover::after,
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta:focus-visible::after{
+  animation:ttLiquidPortalShimmer .88s cubic-bezier(.2,.72,.22,1) both;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta:active{
+  transform:translateY(0) scale(.985)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-copy,
+.gate-overlay[data-gate-step='welcome'] .gate-enter-icon{
+  position:relative!important;
+  z-index:2!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-icon{
+  border-color:rgba(255,245,215,.38)!important;
+  background:
+    linear-gradient(145deg,rgba(244,214,133,.92),rgba(190,132,35,.90)) padding-box,
+    linear-gradient(135deg,rgba(255,255,255,.65),rgba(212,175,55,.42)) border-box!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 5px 16px rgba(0,0,0,.20),0 0 18px rgba(212,175,55,.10)!important;
+}
+
+@keyframes ttLiquidPortalShimmer{
+  0%{left:-62%;opacity:0;transform:skewX(-19deg) translate3d(-8%,0,0)}
+  14%{opacity:.18}
+  48%{opacity:.82}
+  82%{opacity:.24}
+  100%{left:126%;opacity:0;transform:skewX(-19deg) translate3d(8%,0,0)}
+}
+
+/* -------------------------------------------------------------------------- */
+/* Live Operations: dark frosted liquid glass + prismatic border.            */
+/* -------------------------------------------------------------------------- */
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+  isolation:isolate!important;
+  border:1.5px solid transparent!important;
+  background:
+    linear-gradient(145deg,rgba(8,12,18,.76) 0%,rgba(19,25,33,.55) 56%,rgba(8,13,19,.69) 100%) padding-box,
+    linear-gradient(135deg,rgba(212,175,55,.6),rgba(255,255,255,.15),rgba(212,175,55,.3)) border-box!important;
+  -webkit-backdrop-filter:blur(30px) saturate(200%)!important;
+  backdrop-filter:blur(30px) saturate(200%)!important;
+  box-shadow:
+    0 24px 58px rgba(8,13,20,.27),
+    0 0 38px rgba(212,175,55,.055),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(212,175,55,.055)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry::before{
+  content:''!important;
+  position:absolute!important;
+  inset:1px!important;
+  top:1px!important;
+  right:1px!important;
+  bottom:1px!important;
+  left:1px!important;
+  width:auto!important;
+  height:auto!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  z-index:0!important;
+  filter:none!important;
+  opacity:1!important;
+  background:
+    radial-gradient(circle at 10% 2%,rgba(255,255,255,.11),transparent 32%),
+    radial-gradient(circle at 96% 8%,rgba(212,175,55,.10),transparent 30%),
+    linear-gradient(118deg,rgba(255,255,255,.035),transparent 31%,rgba(255,255,255,.018) 63%,rgba(212,175,55,.035))!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry::after{
+  content:''!important;
+  position:absolute!important;
+  inset:1px!important;
+  top:1px!important;
+  right:1px!important;
+  bottom:1px!important;
+  left:1px!important;
+  width:auto!important;
+  height:auto!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  z-index:1!important;
+  opacity:.62!important;
+  background:linear-gradient(112deg,rgba(255,255,255,.05),transparent 23%,transparent 70%,rgba(212,175,55,.035))!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry>*{
+  position:relative!important;
+  z-index:2!important;
+}
+
+/* Ambient glow sits specifically behind the digital clock face. */
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:visible!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock::before{
+  content:'';
+  position:absolute;
+  z-index:0;
+  left:-7%;
+  top:50%;
+  width:92%;
+  height:170%;
+  transform:translateY(-49%);
+  border-radius:50%;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 42% 50%,rgba(237,199,110,.24) 0%,rgba(212,175,55,.12) 28%,rgba(106,147,188,.065) 52%,transparent 72%);
+  filter:blur(17px);
+  opacity:.92;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock strong,
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock span{
+  position:relative!important;
+  z-index:1!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock strong{
+  text-shadow:0 1px 18px rgba(0,0,0,.20),0 0 24px rgba(236,202,122,.07)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-stat{
+  background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.022))!important;
+  border-color:rgba(255,255,255,.085)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(145%)!important;
+  backdrop-filter:blur(10px) saturate(145%)!important;
+}
+
+/* Preserve the requested liquid appearance in both themes. */
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-enter-cta,
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+  -webkit-backdrop-filter:blur(30px) saturate(200%)!important;
+  backdrop-filter:blur(30px) saturate(200%)!important;
+}
+
+/* Low-performance mode keeps the dark liquid composition but avoids costly
+   real-time blur; Full/Auto retain the requested 30px / 200% glass renderer. */
+html[data-glass-performance='low'] .gate-overlay[data-gate-step='welcome'] .gate-enter-cta,
+html[data-glass-performance='low'] .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  background:
+    linear-gradient(145deg,rgba(10,14,20,.94),rgba(19,25,33,.91)) padding-box,
+    linear-gradient(135deg,rgba(212,175,55,.6),rgba(255,255,255,.15),rgba(212,175,55,.3)) border-box!important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta,
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta::after{transition:none!important;animation:none!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta:hover::after,
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta:focus-visible::after{opacity:.20!important;left:32%!important}
+}

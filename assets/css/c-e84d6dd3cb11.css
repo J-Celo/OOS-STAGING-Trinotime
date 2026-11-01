@@ -1,0 +1,114 @@
+/* ========================================================================== */
+/* TrinoTime v1.0.71 - Premium top action-bar de-duplication                  */
+/* Premium presentation only. Standard accounts retain the full action rail. */
+/* Auth, Firebase/App Check, attendance, schedules, and permissions unchanged.*/
+/* ========================================================================== */
+
+/* The unified edition runtime mirrors verified entitlement into html[data-trino-tier].
+   Premium de-duplication is applied only when the customized Premium workspace
+   is actually enabled; Standard/fail-closed sessions retain basic navigation. */
+html[data-trino-tier='premium'] #appRoot > .band .action-rail {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Premium sidebar already exposes these destinations, so remove their
+   duplicated top-bar controls. TL Status is also omitted so the Premium rail
+   contains only the requested essential action set. Day Off Schedule is also
+   reached from the Premium sidebar, so its top-bar shortcut is hidden here too. */
+html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] #appRoot > .band .action-rail :is(
+  #openShiftGuidelinesBtn,
+  #headerSpeedtestBtn,
+  #notifBellBtn,
+  #settingsGearBtn,
+  #tlAdminOverviewBtn,
+  #openDayOffBtn
+) {
+  display: none !important;
+}
+
+/* Standard accounts keep the basic navigation controls. Settings, Notifications,
+   and My Schedule (Day Off Schedule) remain reachable even while Premium
+   entitlement is unavailable, expired, disabled, or still being verified. */
+html[data-trino-tier='normal'] #appRoot > .band .action-rail :is(
+  #notifBellBtn,
+  #settingsGearBtn,
+  #openDayOffBtn
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail :is(
+  #notifBellBtn,
+  #settingsGearBtn,
+  #openDayOffBtn
+) {
+  display: inline-flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Dividers become redundant once the Premium rail is reduced to five actions. */
+html[data-trino-tier='premium'] #appRoot > .band .action-rail > .action-rail-divider {
+  display: none !important;
+}
+
+/* Earlier Premium responsive rules intentionally hid some management actions
+   on wide layouts. Restore only controls the runtime has already authorized
+   and made visible. This preserves role permissions for Standard and Premium. */
+html[data-trino-tier='premium'] #appRoot > .band .action-rail #openShiftSettingsBtn[style*='inline-flex'],
+html[data-trino-tier='premium'] #appRoot > .band .action-rail #sessionMeta[style*='inline-flex'],
+html[data-trino-tier='premium'] #appRoot > .band .action-rail #sessionLogoutBtn[style*='inline-flex'] {
+  display: inline-flex !important;
+}
+
+/* Keep the PWA display/install icon only when the existing install runtime has
+   not explicitly hidden it (standalone mode or after installation). */
+html[data-trino-tier='premium'] #appRoot > .band .action-rail #installAppBtn:not([style*='display:none']):not([style*='display: none']) {
+  display: inline-flex !important;
+}
+
+/* Compact essential controls without changing their established visual theme. */
+html[data-trino-tier='premium'] #appRoot > .band .action-rail :is(
+  #openShiftSettingsBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) {
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-trino-tier='premium'] #appRoot > .band .action-rail :is(
+  #installAppBtn,
+  #sessionMeta,
+  #sessionMetaToggle
+) {
+  flex: 0 0 auto !important;
+}
+
+/* Premium action rails should never create a second row. At constrained
+   widths, the capsule may scroll horizontally rather than wrap. */
+@media (max-width: 1240px) {
+  html[data-trino-tier='premium'] #appRoot > .band .band-side {
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-inline: contain;
+  }
+
+  html[data-trino-tier='premium'] #appRoot > .band .band-side::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-trino-tier='premium'] #appRoot > .band .action-rail {
+    flex-wrap: nowrap !important;
+    width: max-content !important;
+    max-width: none !important;
+  }
+}

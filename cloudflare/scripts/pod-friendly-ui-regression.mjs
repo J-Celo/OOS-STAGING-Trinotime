@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const js=fs.readFileSync(new URL('../public/assets/js/j-5a9b0d9aeabc.js',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
+assert.match(js,/return `tt-custom-pod:\$\{slug\}:\$\{stamp\}-\$\{rand\}`/);
+assert.match(js,/\$\{escapeHtml\(entry\.name\)\}<\/strong><span>\$\{escapeHtml\(teamGroupById\(entry\.team\)\.label\)\} · POD \/ Team/);
+assert.match(html,/id="podTeamManagementTitle">POD \/ Team Management/);
+assert.match(html,/id="podTeamStatCustom">0<\/strong><span>Added PODs/);
+assert.match(html,/pod-team-friendly-names=20261018/);
+assert.doesNotMatch(js,/entry\.system \? 'System POD' : 'Custom POD'/);
+assert.match(js,/`<option value="\$\{escapeHtml\(pod\)\}"\$\{pod === selected/);
+assert.match(js,/\$\{escapeHtml\(podDisplayName\(pod\)\)\}<\/option>`/);
+console.log('PASS — POD labels display-only; stable IDs retained.');

@@ -1,0 +1,26 @@
+/* TrinoTime V 2.0.0 RC35 — Attendance Review Top-Layer Hotfix */
+:root {
+  --z-attendance-correction-child-modal: 2147482100;
+}
+
+/*
+ * Attendance Review can be launched from the Overtime & Payroll hub. The
+ * legacy staging-QA modal contract puts ordinary open dialogs at 2147481800,
+ * so this child layer must use the same top-layer scale. Keep it above normal
+ * operational modals/PWA repair (<=2147482000) and below profile-cropper,
+ * confirmation, credential, Messaging, password, profile, and call overlays.
+ * JavaScript still portals the editor to <body> on open.
+ */
+body > :is(#editOverlay, #tlAttendanceEditOverlay)[data-attendance-correction-modal-portal="body"] {
+  z-index: var(--z-attendance-correction-child-modal) !important;
+  isolation: isolate;
+}
+
+/* Explicit open-state selectors protect the nested payroll Review flow from
+ * the legacy .modal-overlay.open !important rule. */
+body > #editOverlay.open[data-attendance-correction-modal-portal="body"],
+body > #tlAttendanceEditOverlay.open[data-attendance-correction-modal-portal="body"] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: var(--z-attendance-correction-child-modal) !important;
+}

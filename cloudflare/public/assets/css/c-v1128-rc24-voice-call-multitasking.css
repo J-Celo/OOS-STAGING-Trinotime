@@ -1,0 +1,35 @@
+/* TrinoTime v1.1.128 RC24 — connected voice-call multitasking / minimize closure.
+   Connected calls may collapse into a small non-modal dock without interrupting WebRTC media.
+   Incoming, ringing, preparing, and connecting states remain full attention surfaces. */
+.tt-call-card{position:relative}
+.tt-call-minimize-btn{position:absolute;top:16px;right:16px;z-index:2;width:38px;height:38px;border:1px solid rgba(120,143,177,.34);border-radius:12px;background:rgba(255,255,255,.74);color:inherit;display:grid;place-items:center;cursor:pointer;box-shadow:0 7px 18px rgba(15,23,42,.08);transition:transform .14s ease,background .14s ease,border-color .14s ease}
+.tt-call-minimize-btn:hover{transform:translateY(-1px);background:#fff;border-color:#8fb2ff}.tt-call-minimize-btn:focus-visible{outline:3px solid #4d83ff;outline-offset:3px}.tt-call-minimize-btn[hidden]{display:none!important}.tt-call-minimize-icon-up{display:none}
+html[data-theme="dark"] .tt-call-minimize-btn,body.dark-mode .tt-call-minimize-btn,body.dark .tt-call-minimize-btn{background:#1d2a40;border-color:#51627b;color:#f4f7ff;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+html[data-theme="dark"] .tt-call-minimize-btn:hover,body.dark-mode .tt-call-minimize-btn:hover,body.dark .tt-call-minimize-btn:hover{background:#263a58;border-color:#7da7ff}
+
+/* The minimized surface is intentionally non-modal: only the compact call dock receives pointer events. */
+.tt-call-overlay.is-minimized{inset:auto max(76px,calc(14px + env(safe-area-inset-right) + 62px)) max(14px,env(safe-area-inset-bottom)) auto!important;width:auto;height:auto;padding:0!important;display:block!important;place-items:unset!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;overflow:visible!important;pointer-events:none}
+.tt-call-overlay.is-minimized .tt-call-card{pointer-events:auto;width:min(370px,calc(100vw - 100px));min-height:0!important;margin:0!important;padding:12px 12px 12px 13px!important;border-radius:20px!important;display:grid;grid-template-columns:50px minmax(0,1fr) auto;grid-template-rows:auto;align-items:center;gap:11px;text-align:left;box-shadow:0 18px 48px rgba(5,18,45,.3)}
+.tt-call-overlay.is-minimized .tt-call-avatar{grid-column:1;width:48px!important;height:48px!important;margin:0!important}
+.tt-call-overlay.is-minimized .tt-call-avatar .tt-wm-avatar{width:48px!important;height:48px!important;border-width:2px!important;font-size:15px!important;box-shadow:0 7px 18px rgba(31,70,145,.18)}
+.tt-call-overlay.is-minimized .tt-call-copy{grid-column:2;min-width:0;align-items:flex-start!important;gap:2px!important;padding-right:2px}
+.tt-call-overlay.is-minimized .tt-call-kicker,.tt-call-overlay.is-minimized #ttVoiceCallStatus{display:none!important}
+.tt-call-overlay.is-minimized .tt-call-copy h3{width:100%;font-size:15px!important;line-height:1.2!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-call-overlay.is-minimized .tt-call-meta{width:100%;font-size:11px!important;line-height:1.25!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-call-overlay.is-minimized .tt-call-timer{display:block!important;margin-top:2px;font-size:12px!important;line-height:1.2;font-weight:800}
+.tt-call-overlay.is-minimized .tt-call-actions{grid-column:3;margin:0!important;padding:0!important;gap:7px!important;flex-wrap:nowrap!important}
+.tt-call-overlay.is-minimized .tt-call-action{min-width:38px!important;gap:0!important;font-size:0!important}
+.tt-call-overlay.is-minimized .tt-call-action b{display:none!important}
+.tt-call-overlay.is-minimized .tt-call-action>span{width:38px!important;height:38px!important;font-size:17px!important;box-shadow:none!important}
+.tt-call-overlay.is-minimized .tt-call-minimize-btn{top:-11px;right:-11px;width:30px;height:30px;border-radius:10px;background:var(--card,#fff)}
+.tt-call-overlay.is-minimized .tt-call-minimize-icon-down{display:none}.tt-call-overlay.is-minimized .tt-call-minimize-icon-up{display:block}
+.tt-call-overlay.is-minimized audio{display:none!important}
+
+@media(max-width:620px){
+  .tt-call-overlay.is-minimized{left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));width:auto}
+  .tt-call-overlay.is-minimized .tt-call-card{width:100%;grid-template-columns:44px minmax(0,1fr) auto;padding:10px!important;border-radius:18px!important;gap:9px}
+  .tt-call-overlay.is-minimized .tt-call-avatar,.tt-call-overlay.is-minimized .tt-call-avatar .tt-wm-avatar{width:42px!important;height:42px!important}
+  .tt-call-overlay.is-minimized .tt-call-copy h3{font-size:14px!important}.tt-call-overlay.is-minimized .tt-call-meta{font-size:10px!important}.tt-call-overlay.is-minimized .tt-call-action>span{width:36px!important;height:36px!important}
+}
+@media(max-width:390px){.tt-call-overlay.is-minimized .tt-call-meta{display:none!important}.tt-call-overlay.is-minimized .tt-call-card{grid-template-columns:42px minmax(0,1fr) auto}.tt-call-overlay.is-minimized .tt-call-actions{gap:5px!important}}
+@media(prefers-reduced-motion:reduce){.tt-call-minimize-btn{transition:none}}

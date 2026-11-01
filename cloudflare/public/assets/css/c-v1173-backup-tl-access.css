@@ -1,0 +1,194 @@
+/* TrinoTime v1.1.73 - Backup TL Access Hub + deterministic body-level layering */
+:root {
+  --z-backup-tl-overlay: 11500;
+}
+
+/* The hub is portaled to <body> so #appRoot isolation can never cover its controls. */
+body > #backupTlOverlay[data-backup-tl-portal="body"] {
+  z-index: var(--z-backup-tl-overlay) !important;
+  isolation: isolate;
+}
+#backupTlOverlay {
+  z-index: var(--z-backup-tl-overlay) !important;
+}
+#backupTlOverlay .backup-tl-access-box {
+  position: relative;
+  z-index: 1;
+  width: min(900px, calc(100vw - 28px));
+  max-width: 900px;
+  max-height: min(82vh, 820px);
+  overflow: visible;
+}
+#backupTlOverlay .backup-tl-access-head,
+#backupTlOverlay .backup-tl-access-summary,
+#backupTlOverlay .backup-tl-assignment-list,
+#backupTlOverlay .backup-tl-access-actions,
+#backupTlOverlay .backup-tl-assignment-card,
+#backupTlOverlay .backup-tl-card-actions,
+#backupTlOverlay :is(button, a, input, select, textarea, details, summary) {
+  position: relative;
+  z-index: 2;
+}
+.backup-tl-access-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:14px;
+}
+.backup-tl-access-head-copy { min-width:0; }
+.backup-tl-access-kicker,
+.backup-tl-card-kicker {
+  display:block;
+  margin-bottom:4px;
+  color:var(--muted);
+  font:800 9px/1.2 'IBM Plex Mono',monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.backup-tl-access-meta {
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.45;
+}
+.backup-tl-access-summary {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin:0 0 14px;
+}
+.backup-tl-access-summary>div {
+  min-width:0;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--surface);
+}
+.backup-tl-access-summary span,
+.backup-tl-card-grid span {
+  display:block;
+  color:var(--muted);
+  font:700 9px/1.25 'IBM Plex Mono',monospace;
+  letter-spacing:.045em;
+  text-transform:uppercase;
+}
+.backup-tl-access-summary strong,
+.backup-tl-card-grid strong {
+  display:block;
+  min-width:0;
+  margin-top:4px;
+  overflow-wrap:anywhere;
+  color:var(--text);
+  font-size:12px;
+  line-height:1.3;
+}
+.backup-tl-assignment-list {
+  z-index:3 !important;
+  display:grid;
+  gap:10px;
+  max-height:min(52vh,520px);
+  overflow:auto;
+  overscroll-behavior:contain;
+  padding:1px 3px 4px 1px;
+}
+.backup-tl-assignment-card {
+  z-index:4 !important;
+  overflow:visible;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--card,var(--surface));
+  box-shadow:0 8px 26px rgba(15,23,42,.05);
+}
+.backup-tl-assignment-card[data-state="active"] {
+  border-color:rgba(16,185,129,.48);
+  box-shadow:0 9px 28px rgba(16,185,129,.10);
+}
+.backup-tl-assignment-card[data-state="waiting"] { border-style:dashed; }
+.backup-tl-assignment-card[data-state="unavailable"] { opacity:.86; }
+.backup-tl-card-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.backup-tl-card-head strong { display:block; font-size:14px; color:var(--text); }
+.backup-tl-card-head small { display:block; margin-top:3px; color:var(--muted); font-size:10px; }
+.backup-tl-status-pill {
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  min-height:25px;
+  padding:5px 8px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--muted);
+  font:800 9px/1 'IBM Plex Mono',monospace;
+  letter-spacing:.04em;
+  white-space:nowrap;
+}
+.backup-tl-status-pill[data-state="active"] { border-color:rgba(16,185,129,.45); color:#047857; background:rgba(16,185,129,.08); }
+.backup-tl-status-pill[data-state="waiting"] { border-color:rgba(245,158,11,.45); color:#B45309; background:rgba(245,158,11,.08); }
+.backup-tl-status-pill[data-state="unavailable"] { border-color:rgba(239,68,68,.35); color:#B91C1C; background:rgba(239,68,68,.07); }
+.backup-tl-card-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:11px 0 8px;
+}
+.backup-tl-card-grid>div { min-width:0; padding:8px 9px; border-radius:10px; background:rgba(148,163,184,.08); }
+.backup-tl-assignment-card>p { margin:8px 0 0; color:var(--muted); font-size:11px; line-height:1.5; }
+.backup-tl-card-actions { z-index:5 !important; display:flex; justify-content:flex-end; margin-top:11px; }
+.backup-tl-open-pod { z-index:6 !important; min-width:180px; }
+.backup-tl-open-pod:disabled { cursor:not-allowed; opacity:.58; }
+.backup-tl-access-actions {
+  z-index:6 !important;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.backup-tl-access-actions>div { display:flex; gap:8px; flex-wrap:wrap; }
+.backup-tl-empty { display:flex; flex-direction:column; gap:5px; padding:18px; border:1px dashed var(--border); border-radius:13px; background:var(--surface); }
+.backup-tl-empty strong { color:var(--text); }
+.backup-tl-empty span { color:var(--muted); font-size:11px; line-height:1.45; }
+#backupTlTabBtn { gap:6px; align-items:center; }
+.backup-tl-tab-badge {
+  display:inline-grid;
+  place-items:center;
+  min-width:18px;
+  height:18px;
+  padding:0 5px;
+  border-radius:999px;
+  background:rgba(148,163,184,.16);
+  color:currentColor;
+  font:800 9px/1 'IBM Plex Mono',monospace;
+}
+#backupTlTabBtn.has-active-coverage .backup-tl-tab-badge { background:rgba(16,185,129,.18); color:#047857; }
+#backupTlTabBtn.has-active-coverage::before {
+  content:'';
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#10B981;
+  box-shadow:0 0 0 3px rgba(16,185,129,.12);
+}
+#backupTlOverlay :is(button,a,input,select,textarea,summary):focus-visible {
+  outline:2px solid currentColor;
+  outline-offset:2px;
+}
+@media(max-width:720px){
+  #backupTlOverlay .backup-tl-access-box { width:min(100%,calc(100vw - 18px)); max-height:88vh; }
+  .backup-tl-access-head { flex-direction:column; }
+  .backup-tl-access-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .backup-tl-card-head { flex-direction:column; }
+  .backup-tl-status-pill { white-space:normal; }
+  .backup-tl-card-grid { grid-template-columns:1fr; }
+  .backup-tl-card-actions,.backup-tl-access-actions { align-items:stretch; flex-direction:column; }
+  .backup-tl-card-actions .backup-tl-open-pod,.backup-tl-access-actions button { width:100%; }
+}

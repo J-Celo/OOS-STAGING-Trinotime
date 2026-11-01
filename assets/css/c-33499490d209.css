@@ -1,0 +1,36 @@
+/* ========================================================================== */
+/* TrinoTime v1.1.2 - Attendance Tab Contrast + Premium TL POD Header Cleanup */
+/* Presentation-only patch on top of the known-good fixed v1.1.1 runtime.     */
+/* ========================================================================== */
+
+/* Compatibility aliases requested for Light/Standard tab typography. */
+:root {
+  --text-primary: var(--tt-text-primary, #172033);
+  --text-secondary: var(--tt-text-secondary, #6B7280);
+}
+
+/* Attendance Log tab contrast.
+   A legacy Customized Workspace rule forced white text into Pearl/Light mode.
+   Keep inactive labels visibly muted and the active/interactive label dark. */
+html[data-trino-tier] body:not(.dark-mode)[data-trino-role] #appRoot .log-tabs .log-tab {
+  color: var(--text-secondary) !important;
+  -webkit-text-fill-color: var(--text-secondary) !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+html[data-trino-tier] body:not(.dark-mode)[data-trino-role] #appRoot .log-tabs .log-tab:is(:hover, :focus-visible),
+html[data-trino-tier] body:not(.dark-mode)[data-trino-role] #appRoot .log-tabs .log-tab.active,
+html[data-trino-tier] body:not(.dark-mode)[data-trino-role] #appRoot .log-tabs .log-tab[aria-selected='true'] {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  font-weight: 700 !important;
+  opacity: 1 !important;
+}
+
+/* Premium Team Leaders already have POD context in the Premium workspace and
+   sidebar. Remove only the large redundant POD strip. Standard / non-Premium
+   accounts retain the existing #podTabsOuter layout unchanged. */
+html[data-trino-tier='premium'] body[data-trino-role='teamleader'] #appRoot > #podTabsOuter {
+  display: none !important;
+}

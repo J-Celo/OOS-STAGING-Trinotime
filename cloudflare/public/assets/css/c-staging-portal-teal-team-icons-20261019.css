@@ -1,0 +1,95 @@
+/* STAGING-ONLY: Chemistry/Albertsons gateway blue-teal palette + static icons.
+ * Styling only; no team/POD authorization, event handlers, Worker/Firebase, or data changes.
+ * Colors follow the Chemist Warehouse OOS workstream selected state (#16718b / #e9f5f9).
+ */
+.gate-overlay { --gate-teal:#16718b; --gate-teal-dark:#105a75; --gate-teal-soft:#e9f5f9; --gate-teal-ink:#173f55; }
+.gate-overlay .gate-eyebrow {color:#176783!important}
+/* Make the two existing top-level team selectors visually distinct without altering their innerHTML. */
+.gate-overlay .gate-team-btn[data-team] {
+  display:grid!important;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto;
+  align-content:center;align-items:center;justify-items:start;column-gap:11px;row-gap:2px;
+  min-width:0;min-height:72px!important;padding:10px 14px!important;text-align:left;
+}
+.gate-overlay .gate-team-btn[data-team].active {padding-right:36px!important}
+.gate-overlay .gate-team-btn[data-team]::before {
+  content:"";grid-column:1;grid-row:1/3;display:block;width:36px;height:36px;
+  flex-shrink:0;border-radius:10px;background-color:#deedf3;
+  background-repeat:no-repeat;background-position:center;background-size:23px 23px;
+}
+.gate-overlay .gate-team-btn[data-team="CWH"]::before {background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23155b79%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2021V9l9-6%209%206v12H3Z%22%2F%3E%3Cpath%20d%3D%22M3%2010h18M8%2021v-7h8v7M10%2014v7M14%2014v7%22%2F%3E%3C%2Fsvg%3E")}
+.gate-overlay .gate-team-btn[data-team="ALBERTSONS"]::before {background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23155b79%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2010v11h16V10%22%2F%3E%3Cpath%20d%3D%22M2%2010%204%204h16l2%206H2Z%22%2F%3E%3Cpath%20d%3D%22M8%2021v-7h8v7%22%2F%3E%3Cpath%20d%3D%22M2%2010h20%22%2F%3E%3C%2Fsvg%3E")}
+.gate-overlay .gate-team-btn[data-team] strong {grid-column:2;grid-row:1;min-width:0;font-size:13px!important;line-height:1.25!important}
+.gate-overlay .gate-team-btn[data-team] small {grid-column:2;grid-row:2;min-width:0;font-size:11px!important;line-height:1.4!important;overflow-wrap:anywhere}
+.gate-overlay .gate-team-btn:hover,.gate-overlay .gate-pod-btn:hover {
+  background:#f4fafc!important;box-shadow:inset 0 0 0 1px rgba(22,113,139,.4),0 9px 24px rgba(13,84,116,.07)!important;
+}
+.gate-overlay .gate-team-btn.active,.gate-overlay .gate-pod-btn.active,
+.gate-overlay .gate-pod-btn.selected,.gate-overlay .gate-pod-btn[aria-pressed="true"] {
+  background:linear-gradient(130deg,#e7f4f8,#f3fafd)!important;color:var(--gate-teal-ink)!important;
+  box-shadow:inset 0 0 0 2px var(--gate-teal),0 8px 22px rgba(22,113,139,.07)!important;
+}
+.gate-overlay .gate-team-btn.active small {color:#536b7a!important}
+.gate-overlay .gate-team-btn.active::after,.gate-overlay .gate-pod-btn.active::after,
+.gate-overlay .gate-pod-btn[aria-pressed="true"]::after {
+  background:linear-gradient(135deg,#268bab,#11677e)!important;color:#fff!important;
+  box-shadow:0 3px 10px rgba(11,85,111,.18)!important;
+}
+.gate-overlay .gate-selection-summary {
+  background:linear-gradient(125deg,#e9f6f9,#f3fafd 62%,#fff)!important;
+  box-shadow:inset 0 0 0 1px #a5cfde,inset 0 1px 0 #fff,0 9px 22px rgba(13,84,116,.06)!important;
+}
+.gate-overlay .gate-selection-confirm-mark {
+  background:linear-gradient(135deg,#238bab,#13657f)!important;color:#fff!important;
+  box-shadow:0 6px 17px rgba(15,91,121,.16)!important;
+}
+.gate-overlay .gate-selection-summary-copy>span {color:#426a80!important}
+.gate-overlay .gate-selection-summary-copy strong {color:#183d52!important}
+.gate-overlay .gate-selection-summary-copy strong i {color:#6e97a8!important}
+.gate-overlay .gate-selection-summary-copy>small {color:#607889!important}
+.gate-overlay .gate-selection-continue {
+  background:linear-gradient(125deg,#238eab,#16718b 62%,#105b78)!important;
+  color:#fff!important;text-shadow:none!important;
+  box-shadow:0 8px 18px rgba(16,93,124,.18),inset 0 1px 0 rgba(255,255,255,.20)!important;
+}
+.gate-overlay .gate-selection-continue:hover:not(:disabled) {
+  box-shadow:0 11px 24px rgba(16,93,124,.24)!important;
+}
+.gate-overlay .gate-selection-change {color:#425f70!important;box-shadow:inset 0 0 0 1px #cbdde4!important}
+.gate-overlay .gate-selection-change:hover {background:#e9f5f9!important;color:#125672!important}
+.gate-overlay .gate-staff-access>summary:hover {background:#edf7fa!important}
+.gate-overlay .gate-staff-access-icon {background:#e0f0f6!important;color:#176c86!important;box-shadow:inset 0 0 0 1px #c1dce6!important}
+.gate-overlay .gate-staff-access[open] .gate-staff-access-chevron {color:#16718b!important}
+.gate-overlay #mostUsedPod.most-used .most-used-link {
+  background:#e6f3f8!important;color:#165b75!important;
+  box-shadow:inset 0 0 0 1px #b9d7e3!important;
+}
+.gate-overlay #mostUsedPod.most-used .most-used-link:hover,
+.gate-overlay #mostUsedPod.most-used .most-used-link:focus-visible {background:#cfebf4!important;color:#114b65!important}
+/* Consistent accessibility focus without changing click behavior. */
+.gate-overlay .gate-team-btn:focus-visible,.gate-overlay .gate-pod-btn:focus-visible,
+.gate-overlay .gate-selection-continue:focus-visible,.gate-overlay .gate-selection-change:focus-visible {outline:3px solid #2785a6!important;outline-offset:3px!important}
+@media(max-width:560px) {
+  .gate-overlay .gate-team-btn[data-team] {min-height:62px!important;padding:9px 11px!important;grid-template-columns:33px minmax(0,1fr);column-gap:10px}
+  .gate-overlay .gate-team-btn[data-team]::before {width:33px;height:33px;background-size:21px 21px}
+  .gate-overlay .gate-team-btn[data-team].active {padding-right:34px!important}
+}
+body.dark-mode .gate-overlay .gate-team-btn.active,
+body.dark-mode .gate-overlay .gate-pod-btn.active,
+body.dark-mode .gate-overlay .gate-pod-btn[aria-pressed="true"] {
+  background:linear-gradient(130deg,#183d50,#1b3548)!important;color:#eaf9ff!important;
+  box-shadow:inset 0 0 0 2px #74c1d6,0 8px 24px rgba(0,0,0,.15)!important;
+}
+body.dark-mode .gate-overlay .gate-team-btn.active small {color:#c4dce7!important}
+body.dark-mode .gate-overlay .gate-selection-summary {
+  background:linear-gradient(125deg,#183648,#132a3b)!important;
+  box-shadow:inset 0 0 0 1px #4b8ca1,0 10px 28px rgba(0,0,0,.18)!important;
+}
+body.dark-mode .gate-overlay .gate-selection-summary-copy>span,
+body.dark-mode .gate-overlay .gate-selection-summary-copy>small {color:#a8c5d3!important}
+body.dark-mode .gate-overlay .gate-selection-summary-copy strong {color:#effaff!important}
+body.dark-mode .gate-overlay .gate-selection-change {color:#d1e5ed!important;box-shadow:inset 0 0 0 1px #4e6e7d!important}
+body.dark-mode .gate-overlay .gate-staff-access-icon {background:#1b3e50!important;color:#9addf1!important;box-shadow:inset 0 0 0 1px #416b80!important}
+@media(forced-colors:active) {
+  .gate-overlay .gate-team-btn.active,.gate-overlay .gate-pod-btn.active,.gate-overlay .gate-pod-btn[aria-pressed="true"] {box-shadow:none!important;border:2px solid Highlight!important}
+  .gate-overlay .gate-team-btn[data-team]::before {background-color:Canvas!important}
+}

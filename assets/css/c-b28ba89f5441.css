@@ -1,0 +1,87 @@
+/* TrinoTime v1.1.9 - Premium toolbar + floating-control UI hotfix.
+   Presentation only. No Firebase, App Check, reCAPTCHA, Auth, database,
+   API-key, permission, entitlement, or security-runtime changes. */
+
+/* Premium workspace: Speedtest, Notifications and Settings live outside the
+   compact Premium top rail. Hide these duplicates whenever Premium UI is active,
+   regardless of the transient entitlement mirror value on <html>. */
+html[data-trino-tier='premium'] #appRoot > .band .action-rail :is(
+  #headerSpeedtestBtn,
+  #notifBellBtn,
+  #settingsGearBtn
+),
+html[data-trino-custom-workspace='enabled'] #appRoot > .band .action-rail :is(
+  #headerSpeedtestBtn,
+  #notifBellBtn,
+  #settingsGearBtn
+) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Standard / non-Premium workspace: keep the same three basic destinations
+   visible and usable. Existing runtime handlers remain authoritative. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #appRoot > .band .action-rail :is(
+  #headerSpeedtestBtn,
+  #notifBellBtn,
+  #settingsGearBtn
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail :is(
+  #headerSpeedtestBtn,
+  #notifBellBtn,
+  #settingsGearBtn
+) {
+  display: inline-flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* AI Chat overlap: while Chat is open, suspend the profile-search floating
+   control (and its drawer) so neither can render over the Send action. */
+html.tt-ai-chat-open #profileDirectorySearchFab,
+html.tt-ai-chat-open #profileDirectorySearchDrawer {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Leave Request badge: remove the counter from the flex layout and pin it to
+   the clock icon's top-right corner. The badge no longer widens/squeezes the
+   46px floater or displaces the icon when counts appear. */
+#leaveRequestFloater.leave-request-floater {
+  overflow: visible !important;
+}
+
+#leaveRequestFloater .leave-request-floater-icon {
+  flex: 0 0 25px !important;
+}
+
+#leaveRequestFloaterBadge.leave-request-floater-badge {
+  position: absolute !important;
+  top: -5px !important;
+  left: 28px !important;
+  right: auto !important;
+  z-index: 3 !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 5px !important;
+  margin: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 18px !important;
+  pointer-events: none !important;
+  box-sizing: border-box !important;
+}
+
+/* Keep multi-digit counters compact without pushing the badge into the icon. */
+#leaveRequestFloaterBadge.leave-request-floater-badge.show {
+  display: inline-flex !important;
+}
+
+@media (max-width: 560px) {
+  #leaveRequestFloaterBadge.leave-request-floater-badge {
+    top: -4px !important;
+    left: 27px !important;
+  }
+}

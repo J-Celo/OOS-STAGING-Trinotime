@@ -1,0 +1,128 @@
+/* TrinoTime v1.1.128 RC9 — Admin UI Table + Modal Closure
+   Scope: Attendance sub-tab visibility, Coaching report readability,
+   and consistent top-positioned Close controls for Attendance-tab dialogs. */
+
+/* Keep every Attendance sub-tab discoverable on desktop. The previous fit-content
+   row could extend beyond the available Admin workspace and clip Audit. */
+#appRoot .log-head > div:first-child {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+#appRoot #logTabs {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center;
+  overflow: visible !important;
+  gap: 4px;
+}
+#appRoot #logTabs .log-tab {
+  flex: 0 0 auto !important;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  #appRoot #logTabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scroll-padding-inline: 10px;
+  }
+}
+
+/* Attendance-tab dialogs use the same top header action pattern. */
+:is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-modal-head {
+  position: sticky;
+  top: 0;
+  z-index: 35;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0 12px;
+  background: var(--card, #fff);
+  border-bottom: 1px solid color-mix(in srgb, var(--line, #e5e7eb) 78%, transparent);
+}
+:is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+:is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-close-top {
+  flex: 0 0 auto;
+  min-width: 78px;
+  min-height: 40px;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+body.dark-mode :is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-modal-head {
+  background: var(--card, #111c2c);
+  border-bottom-color: rgba(148, 163, 184, .24);
+}
+@media (max-width: 720px) {
+  :is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-modal-head {
+    flex-wrap: wrap;
+  }
+  :is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-modal-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  :is(#auditOverlay,#historyOverlay,#noteHistoryOverlay,#rosterOverlay,#backupTlOverlay,#networkOverlay,#networkAgentOverlay) .tt-tab-close-top {
+    margin-left: auto !important;
+  }
+}
+
+/* Coaching: Type and Topic are separate columns, internal POD IDs never need to
+   compete with the content columns, and the report is intentionally horizontally
+   scrollable rather than allowing text to collide. */
+#coachingReportOverlay .coaching-report-table {
+  min-width: 1480px !important;
+  table-layout: auto !important;
+}
+#coachingReportOverlay .coaching-report-table th,
+#coachingReportOverlay .coaching-report-table td {
+  width: auto !important;
+  min-width: 0;
+  vertical-align: top;
+}
+#coachingReportOverlay .coaching-report-table th:nth-child(1),
+#coachingReportOverlay .coaching-report-table td:nth-child(1) { min-width: 185px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(2),
+#coachingReportOverlay .coaching-report-table td:nth-child(2) { min-width: 105px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(3),
+#coachingReportOverlay .coaching-report-table td:nth-child(3) { min-width: 140px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(4),
+#coachingReportOverlay .coaching-report-table td:nth-child(4) { min-width: 170px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(5),
+#coachingReportOverlay .coaching-report-table td:nth-child(5) { min-width: 155px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(6),
+#coachingReportOverlay .coaching-report-table td:nth-child(6) { min-width: 170px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(7),
+#coachingReportOverlay .coaching-report-table td:nth-child(7) { min-width: 105px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(8),
+#coachingReportOverlay .coaching-report-table td:nth-child(8) { min-width: 100px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(9),
+#coachingReportOverlay .coaching-report-table td:nth-child(9) { min-width: 135px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(10),
+#coachingReportOverlay .coaching-report-table td:nth-child(10) { min-width: 145px; }
+#coachingReportOverlay .coaching-report-table th:nth-child(11),
+#coachingReportOverlay .coaching-report-table td:nth-child(11) { min-width: 110px; }
+#coachingReportOverlay .coaching-report-pod,
+#coachingReportOverlay .coaching-report-type,
+#coachingReportOverlay .coaching-topic {
+  display: block;
+  max-width: 100%;
+  margin-top: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-height: 1.35;
+}
+#coachingReportOverlay .coaching-report-type { color: var(--text, #111827); }
+#coachingReportOverlay .coaching-topic { color: var(--muted, #64748b); font-size: 11px; }

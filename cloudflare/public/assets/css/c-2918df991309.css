@@ -1,0 +1,99 @@
+/* ========================================================================== */
+/* TrinoTime v1.1.3 - Today's Shift Dropdown Readability + Menu Spacing       */
+/* Presentation-only patch on top of the known-good fixed v1.1.2 runtime.     */
+/* ========================================================================== */
+
+/* The legacy Premium punch-field rule uses two ID selectors and a
+   font shorthand with line-height:1. Use the real punch-card hierarchy here
+   so this targeted patch wins even when both rules are !important. */
+body #appRoot #punchCard #todayShiftSelect.shift-select-dropdown {
+  box-sizing: border-box !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 0 38px 0 13px !important;
+  font-family: 'Plus Jakarta Sans', Inter, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Light / Pearl / Standard surfaces. Explicitly synchronize color and
+   -webkit-text-fill-color because the latter is inherited in Chromium. */
+body:not(.dark-mode) #appRoot #punchCard #todayShiftSelect.shift-select-dropdown {
+  background-color: #FFFFFF !important;
+  color: var(--text-primary, #172033) !important;
+  -webkit-text-fill-color: var(--text-primary, #172033) !important;
+  color-scheme: light !important;
+}
+
+body:not(.dark-mode) #appRoot #punchCard #todayShiftSelect.shift-select-dropdown option,
+body:not(.dark-mode) #appRoot #punchCard #todayShiftSelect.shift-select-dropdown optgroup {
+  background: #FFFFFF !important;
+  color: #17202B !important;
+  -webkit-text-fill-color: #17202B !important;
+  font-family: 'Plus Jakarta Sans', Inter, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.55 !important;
+}
+
+body:not(.dark-mode) #appRoot #punchCard #todayShiftSelect.shift-select-dropdown option {
+  min-height: 38px !important;
+  height: auto !important;
+  padding: 9px 12px !important;
+}
+
+body:not(.dark-mode) #appRoot #punchCard #todayShiftSelect.shift-select-dropdown option:checked {
+  background: #EEF2F7 !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+body:not(.dark-mode) #appRoot #punchCard #todayShiftSelect.shift-select-dropdown:disabled {
+  background-color: #F3F4F6 !important;
+  color: #4B5563 !important;
+  -webkit-text-fill-color: #4B5563 !important;
+  opacity: 1 !important;
+}
+
+/* Obsidian keeps a true dark native menu instead of inheriting the light
+   option surface. Text-fill is explicit here as well for Chromium/WebKit. */
+body.dark-mode #appRoot #punchCard #todayShiftSelect.shift-select-dropdown {
+  background-color: #171D25 !important;
+  color: #ECE8E0 !important;
+  -webkit-text-fill-color: #ECE8E0 !important;
+  color-scheme: dark !important;
+}
+
+body.dark-mode #appRoot #punchCard #todayShiftSelect.shift-select-dropdown option,
+body.dark-mode #appRoot #punchCard #todayShiftSelect.shift-select-dropdown optgroup {
+  background: #111827 !important;
+  color: #F3F4F6 !important;
+  -webkit-text-fill-color: #F3F4F6 !important;
+  font-family: 'Plus Jakarta Sans', Inter, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.55 !important;
+}
+
+body.dark-mode #appRoot #punchCard #todayShiftSelect.shift-select-dropdown option {
+  min-height: 38px !important;
+  height: auto !important;
+  padding: 9px 12px !important;
+}
+
+body.dark-mode #appRoot #punchCard #todayShiftSelect.shift-select-dropdown option:checked {
+  background: #263244 !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* Preserve accessible focus behavior after the targeted native-menu reset. */
+body #appRoot #punchCard #todayShiftSelect.shift-select-dropdown:focus-visible {
+  outline: 2px solid var(--tt-focus-ring, #3B82F6) !important;
+  outline-offset: 2px !important;
+}

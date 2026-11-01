@@ -1,0 +1,105 @@
+/* TrinoTime v1.1.65: pre-login PWA self-healing and one-click recovery UI. */
+.pwa-recovery-overlay[hidden] { display: none !important; }
+.pwa-recovery-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(248, 250, 252, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+.pwa-recovery-card {
+    width: min(640px, calc(100vw - 32px));
+    border: 1px solid rgba(148, 163, 184, 0.34);
+    border-radius: 24px;
+    padding: clamp(24px, 4vw, 38px);
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 30px 90px rgba(15, 23, 42, 0.18);
+    color: #0f172a;
+}
+.pwa-recovery-kicker {
+    margin: 0 0 10px;
+    font: 700 11px/1.2 'IBM Plex Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+.pwa-recovery-card h2 {
+    margin: 0;
+    font: 800 clamp(24px, 4vw, 34px)/1.12 'Plus Jakarta Sans', Inter, sans-serif;
+    letter-spacing: -.035em;
+}
+.pwa-recovery-message {
+    margin: 14px 0 0;
+    font: 500 15px/1.65 'Plus Jakarta Sans', Inter, sans-serif;
+    color: #475569;
+}
+.pwa-recovery-detail {
+    min-height: 18px;
+    margin: 12px 0 0;
+    font: 600 12px/1.55 'IBM Plex Mono', monospace;
+    color: #64748b;
+}
+.pwa-recovery-progress {
+    position: relative;
+    height: 6px;
+    overflow: hidden;
+    margin: 24px 0 0;
+    border-radius: 999px;
+    background: #e2e8f0;
+}
+.pwa-recovery-progress::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    width: 38%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #0f172a, #2563eb);
+    animation: tt-pwa-progress 1.1s ease-in-out infinite;
+}
+.pwa-recovery-overlay[data-state="needs-action"] .pwa-recovery-progress::after {
+    width: 100%;
+    animation: none;
+    background: #d97706;
+}
+.pwa-recovery-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+.pwa-recovery-actions button {
+    min-height: 44px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 0 16px;
+    background: #fff;
+    color: #0f172a;
+    font: 700 13px/1 'Plus Jakarta Sans', Inter, sans-serif;
+    cursor: pointer;
+}
+.pwa-recovery-actions .pwa-recovery-primary {
+    border-color: #0f172a;
+    background: #0f172a;
+    color: #fff;
+}
+#appUpdateBanner {
+    z-index: 2147482000;
+}
+@keyframes tt-pwa-progress {
+    0% { transform: translateX(-115%); }
+    55% { transform: translateX(110%); }
+    100% { transform: translateX(270%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .pwa-recovery-progress::after { animation: none; width: 100%; }
+}
+@media (max-width: 560px) {
+    .pwa-recovery-overlay { padding: 14px; }
+    .pwa-recovery-card { border-radius: 20px; padding: 24px 20px; }
+    .pwa-recovery-actions { flex-direction: column; }
+    .pwa-recovery-actions button { width: 100%; }
+}

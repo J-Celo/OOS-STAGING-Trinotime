@@ -1,0 +1,26 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {webcrypto} from 'node:crypto';
+const source=fs.readFileSync(new URL('../src/worker.js',import.meta.url),'utf8');
+const c=vm.createContext({URL,Request,Response,Headers,console,crypto:webcrypto,TextEncoder,TextDecoder,btoa,atob,createRemoteJWKSet:()=>({})});
+vm.runInContext(source.replace(/^import .*;\n/gm,'').replace('export default {','const workerDefault = {').replace('export class ChatRealtimeHub','class ChatRealtimeHub')+`
+canonicalWorkforceMemberServer=async(env)=>env.member;
+firebaseAdminGet=async(env,path)=>{if(env.readFailure)throw new Error('storage unavailable');return path.includes('/bridges/')?env.bridge:env.previous||null;};
+firebaseAdminPatch=async(env,root,updates)=>{env.updates=updates;};
+trackerShiftResolveForActorServer=async(env,actor)=>({sessionId:'shift-test',generation:0,status:'active',locked:false,reportDate:env.shiftDate,startedAt:new Date().toISOString()});
+trackerShiftWorkflowSnapshotServer=async(env,workflow,actor,shift)=>env.previous||null;
+globalThis.test={confirmationSyncServer,signCompactToken};`,c);
+const date=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const env={shiftDate:date,CHAT_SESSION_SECRET:'fixture-only-not-a-production-secret',member:{name:'Tanjiro Kamado',pod:'demon',role:'agent'},bridge:{name:'Tanjiro Kamado',pod:'demon',deviceId:'browser-one',active:true,expiresAtMs:Date.now()+3600000}};
+const payload={name:'Tanjiro Kamado',pod:'demon',role:'agent',tokenId:'test-token',deviceId:'browser-one'};
+const token=await c.test.signCompactToken(env,payload,'workforce-confirmation-bridge-v1',3600000);
+const body={date,shiftSessionId:'shift-test',shiftGeneration:0,deviceId:'browser-one',clientSequence:606,summary:{interval1:200,interval2:201,interval3:204,interval1ManualAdjustment:2,interval2ManualAdjustment:-1,interval3ManualAdjustment:3,currentInterval:3,submitted:900,activeMs:45000,idleMs:30000,awayMs:15000,trackerState:'away',lastActivityAt:Date.now()-330000,idleSinceAt:Date.now()-30000,awaySinceAt:Date.now()-15000,presenceUpdatedAt:Date.now()},tasks:[{jobId:'JOB_TEST',taskIndex:1,totalTasks:2,submitted:true,interval:2}]};
+const request=(t=token,b=body)=>new Request('https://fixture.test/api/workforce/confirmation/sync',{method:'POST',headers:{'content-type':'application/json','X-TT-Confirmation-Bridge':t},body:JSON.stringify(b)});
+await c.test.confirmationSyncServer(request(),env);
+const records=Object.entries(env.updates);assert(records.every(([key])=>key.startsWith('workforceConfirmation/v1/')));const daily=records.find(([key])=>key.includes('/daily/'))[1];assert.equal(daily.submitted,605);assert.equal(daily.interval1DisplayTotal,202);assert.equal(daily.interval2DisplayTotal,200);assert.equal(daily.interval3DisplayTotal,207);assert.equal(daily.submittedManualAdjustment,4);assert.equal(daily.submittedDisplayTotal,609);assert.equal(daily.activeMs,45000);assert.equal(daily.idleMs,30000);assert.equal(daily.awayMs,15000);assert.equal(daily.trackerState,'away');assert.equal(records.find(([key])=>key.includes('/tasks/'))[1].interval,2);
+const wrongPurpose=await c.test.signCompactToken(env,payload,'workforce-coverage-bridge-v1',3600000);
+await assert.rejects(c.test.confirmationSyncServer(request(wrongPurpose),env),e=>e.code==='CHAT_TOKEN_EXPIRED');
+await assert.rejects(c.test.confirmationSyncServer(request(token,{...body,deviceId:'other-browser'}),env),e=>e.code==='CONFIRMATION_DEVICE_MISMATCH');
+await assert.rejects(c.test.confirmationSyncServer(request(),{...env,bridge:{...env.bridge,active:false}}),e=>e.code==='CONFIRMATION_BRIDGE_REVOKED');
+await assert.rejects(c.test.confirmationSyncServer(request(),{...env,member:{...env.member,pod:'other'}}),e=>e.code==='CONFIRMATION_BRIDGE_ROSTER_MISMATCH');
+await assert.rejects(c.test.confirmationSyncServer(request(),{...env,previous:{deviceId:'second-browser',submitted:1,shiftSessionId:'shift-test',shiftGeneration:0}}),e=>e.code==='CONFIRMATION_DEVICE_CONFLICT');
+const staleEnv={...env,updates:null,previous:{deviceId:'browser-one',clientSequence:900,shiftSessionId:'shift-test',shiftGeneration:0}};assert.equal((await c.test.confirmationSyncServer(request(),staleEnv)).stale,true);assert.equal(staleEnv.updates,null);
+console.log('PASS real signed Confirmation bridge: confirmed 605 + corrected EOD 609 + Active/Idle/Away persisted, isolated namespace, task interval persisted, Coverage token rejected, wrong device/revoked token/POD reassignment rejected, second-browser overwrite denied, stale sequence denied');

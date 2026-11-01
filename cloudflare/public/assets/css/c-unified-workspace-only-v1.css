@@ -1,0 +1,26 @@
+/* TrinoTime V3 production: one verified Premium-design workspace, no Standard edition UI.
+   Shared legacy DOM and permission adapters remain in source for safety but no longer initialize
+   or expose the Standard dashboard. These styles do not grant authorization. */
+#ttStandardTierBadge, #ttStandardTodayRibbon, #ttStandardPreferences,
+#ttV116Overview, #premiumUiToggleRow, [data-workspace-preview='standard'] {
+  display: none !important;
+}
+/* One consistent responsive work area across Admin, TL, Agent, QA.
+   Avoid horizontal document overflow while leaving table-level scrolling available. */
+html[data-trino-tier='premium'] body { max-width: 100%; }
+html[data-trino-tier='premium'] :is(.tt-profile-header-copy,.tt-profile-role,.tt-profile-workspace-chip) { min-width: 0; }
+html[data-trino-tier='premium'] .tt-profile-workspace-chip {
+  max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+@media (max-width: 760px) {
+ html[data-trino-tier='premium'] .premium-product-signature {max-width:100%;overflow-wrap:anywhere;}
+ html[data-trino-tier='premium'] :is(.settings-modal,.modal-box) {max-width: min(100%, calc(100vw - 16px));}
+ html[data-trino-tier='premium'] :is(#agentProfileHeaderBtn,.tt-profile-header-copy) {min-width:0;}
+}
+@media (prefers-reduced-motion: reduce) {
+ html[data-trino-tier='premium'] .tt-profile-workspace-chip {transition:none;}
+}
+
+/* V3 production unified-workspace cleanup: Premium Access manager is retired.
+   This presentation rule does NOT grant, revoke, or modify any authorization. */
+#settingsPremiumAccessTabBtn, #settingsPanelPremiumAccess, #ttPremiumSidebar [data-tt-nav="premium"], #ttAdminToolsOverlay [data-tool="premium"] { display:none !important; }

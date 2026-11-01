@@ -1,0 +1,85 @@
+/* V2.0.1 RC80 — Admin first-login password policy. Event-driven only. */
+#adminPasswordOverlay .tt-admin-password-policy-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(120, 151, 211, .28);
+  border-radius: 12px;
+  background: rgba(91, 130, 198, .08);
+  color: var(--muted, #8fa0bb);
+  font-size: 13px;
+  line-height: 1.45;
+}
+#adminPasswordOverlay .tt-admin-password-policy-status {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  background: rgba(91, 130, 198, .10);
+  color: var(--text, #e7edf8);
+}
+#adminPasswordOverlay .tt-admin-password-policy-status[data-tone="error"] {
+  background: rgba(239, 68, 68, .11);
+  color: #fecaca;
+}
+#adminPasswordOverlay .tt-admin-password-policy-status[data-tone="success"] {
+  background: rgba(34, 197, 94, .11);
+  color: #bbf7d0;
+}
+#adminPasswordOverlay .tt-admin-password-policy-status[data-tone="required"] {
+  background: rgba(245, 158, 11, .12);
+  color: #fde68a;
+}
+#adminPasswordOverlay.tt-admin-first-login-required {
+  z-index: 2147483600 !important;
+}
+#adminPasswordOverlay.tt-admin-first-login-required .agent-password-box {
+  box-shadow: 0 28px 90px rgba(0,0,0,.42);
+}
+#adminPasswordOverlay.tt-admin-first-login-required #adminPasswordCancelBtn {
+  opacity: .92;
+}
+.tt-admin-password-success-toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 2147483640;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #142238;
+  color: #f8fbff;
+  border: 1px solid rgba(148,163,184,.3);
+  box-shadow: 0 18px 50px rgba(0,0,0,.25);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .16s ease, transform .16s ease;
+  font-weight: 700;
+}
+.tt-admin-password-success-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* RC80 synchronization gate + responsive hardening */
+body.tt-admin-security-gated #appRoot{pointer-events:none!important;user-select:none!important}
+.tt-admin-security-check-overlay{position:fixed;inset:0;z-index:2147483590;display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:rgba(8,15,28,.82);overflow:auto;overscroll-behavior:contain}
+.tt-admin-security-check-overlay[hidden]{display:none!important}
+.tt-admin-security-check-card{width:min(430px,100%);box-sizing:border-box;padding:24px;border:1px solid rgba(148,163,184,.28);border-radius:20px;background:var(--card,#fff);color:var(--ink,#172033);box-shadow:0 28px 90px rgba(0,0,0,.36);text-align:center}
+.tt-admin-security-check-card h3{margin:12px 0 6px;font-size:21px;line-height:1.2}.tt-admin-security-check-card p{margin:0;color:var(--muted,#718096);font-size:13px;line-height:1.5}
+.tt-admin-security-check-spinner{display:inline-block;width:30px;height:30px;border:3px solid rgba(49,94,234,.18);border-top-color:#315eea;border-radius:50%;animation:ttAdminSecuritySpin .75s linear infinite}@keyframes ttAdminSecuritySpin{to{transform:rotate(360deg)}}
+.tt-admin-security-check-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:16px}.tt-admin-security-check-btn{min-height:39px;padding:8px 14px;border:1px solid rgba(148,163,184,.4);border-radius:11px;background:transparent;color:inherit;font:750 13px/1.1 Inter,sans-serif;cursor:pointer}.tt-admin-security-check-btn.primary{border-color:#315eea;background:#315eea;color:#fff}
+#adminPasswordOverlay.agent-password-overlay.open{align-items:center;box-sizing:border-box;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));overflow:auto;overscroll-behavior:contain}
+#adminPasswordOverlay .agent-password-box{width:min(440px,100%);max-height:calc(100dvh - 56px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;box-sizing:border-box}
+#adminPasswordOverlay .agent-password-grid input{min-width:0}#adminPasswordOverlay .agent-password-actions button:disabled{opacity:.58;cursor:wait}
+html[data-theme="dark"] .tt-admin-security-check-card,body.dark-mode .tt-admin-security-check-card{background:#111827;color:#e5edf8;border-color:#334155}html[data-theme="dark"] .tt-admin-security-check-card p,body.dark-mode .tt-admin-security-check-card p{color:#9aa9bd}html[data-theme="dark"] .tt-admin-security-check-btn,body.dark-mode .tt-admin-security-check-btn{border-color:#475569;color:#e5edf8}html[data-theme="dark"] .tt-admin-security-check-btn.primary,body.dark-mode .tt-admin-security-check-btn.primary{border-color:#496de6;background:#496de6;color:#fff}
+@media(max-height:720px) and (min-width:701px){.tt-admin-profile-modal{max-height:calc(100dvh - 16px)!important}.tt-admin-profile-body{min-height:0!important}}
+@media(max-width:700px){#adminPasswordOverlay.agent-password-overlay.open,.tt-admin-security-check-overlay{align-items:start;place-items:start center}#adminPasswordOverlay .agent-password-box,.tt-admin-security-check-card{margin-top:max(8px,env(safe-area-inset-top))}#adminPasswordOverlay .agent-password-grid input{font-size:16px!important}#adminPasswordOverlay .agent-password-actions{position:sticky;bottom:0;z-index:2;padding-top:12px;padding-bottom:max(2px,env(safe-area-inset-bottom));background:inherit}.tt-admin-profile-overlay{padding:0!important;align-items:stretch!important}.tt-admin-profile-modal{width:100%!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important}.tt-admin-profile-head{flex:0 0 auto;padding:max(16px,env(safe-area-inset-top)) 16px 12px!important;gap:12px!important}.tt-admin-profile-head h2{font-size:22px!important}.tt-admin-profile-tabs{flex:0 0 auto;padding:8px 12px!important;gap:5px!important;scrollbar-width:thin}.tt-admin-profile-tabs button{white-space:nowrap;padding:9px 11px!important}.tt-admin-profile-body{flex:1 1 auto;min-height:0!important;padding:13px!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}.tt-admin-profile-hero{grid-template-columns:64px minmax(0,1fr)!important;gap:12px!important;padding:14px!important}.tt-admin-profile-avatar{width:64px!important;height:64px!important;border-radius:19px!important;font-size:22px!important}.tt-admin-profile-identity{min-width:0}.tt-admin-profile-identity h3{margin-top:2px!important;font-size:21px!important;overflow-wrap:anywhere}.tt-admin-profile-identity p{overflow-wrap:anywhere}.tt-admin-directory-grid{grid-template-columns:minmax(0,1fr)!important}.tt-admin-directory-card{min-width:0!important}.tt-admin-directory-copy strong,.tt-admin-directory-copy span,.tt-admin-directory-copy small{white-space:normal!important;overflow-wrap:anywhere}}
+@media(max-width:420px){.tt-admin-security-check-card{padding:20px 16px;border-radius:16px}.tt-admin-security-check-actions{flex-direction:column}.tt-admin-security-check-btn{width:100%}.tt-admin-password-success-toast{left:16px;right:16px;bottom:max(16px,env(safe-area-inset-bottom));text-align:center}}
+@media(prefers-reduced-motion:reduce){.tt-admin-security-check-spinner{animation:none}}
+
+/* When the Firebase password already changed but profile bootstrap is pending, do not ask for it twice. */
+#adminPasswordOverlay.tt-admin-setup-finish-only .agent-password-grid{display:none!important}
+#adminPasswordOverlay.tt-admin-setup-finish-only .tt-admin-password-policy-note{display:none!important}
+#adminPasswordOverlay.tt-admin-setup-finish-only .tt-admin-password-policy-status{margin-top:4px}
+
+@media(max-width:860px) and (min-width:701px){.tt-admin-profile-modal{width:min(96vw,820px)!important;max-height:96dvh!important}.tt-admin-profile-body{padding:16px 18px 20px!important}.tt-admin-profile-hero{grid-template-columns:80px minmax(0,1fr)!important;gap:16px!important}.tt-admin-profile-avatar{width:80px!important;height:80px!important}.tt-admin-profile-hero>.tt-admin-btn{grid-column:1/-1;justify-self:start}.tt-admin-directory-grid{grid-template-columns:minmax(0,1fr)!important}.tt-admin-profile-form-grid{gap:12px!important}}

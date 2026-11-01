@@ -1,0 +1,173 @@
+/* TrinoTime v1.1.128 RC11 — Final UI Stabilization
+   Presentation-only closure for Attendance table polish, Notification Center
+   sizing, floating AI stacking, and consistent top Close access. */
+
+/* -------------------------------------------------------------------------- */
+/* Attendance: eliminate white date-group seams and de-clutter payroll cells. */
+/* -------------------------------------------------------------------------- */
+#desktopTableContainer > .desktop-table {
+  min-width: 1640px !important;
+}
+#desktopTableContainer > .desktop-table col.att-col-name { width: 22% !important; }
+#desktopTableContainer > .desktop-table col.att-col-hours { width: 11% !important; }
+#desktopTableContainer > .desktop-table col.att-col-break { width: 13% !important; }
+
+#desktopTableContainer > .desktop-table tbody tr.attendance-date-divider > td {
+  border-top: 4px solid color-mix(in srgb, var(--line, #d7dee8) 58%, var(--card, #fff)) !important;
+  background: color-mix(in srgb, var(--card, #fff) 90%, var(--paper, #f8fafc)) !important;
+  background-clip: padding-box !important;
+}
+#desktopTableContainer > .desktop-table tbody tr.attendance-date-divider:first-child > td {
+  border-top-width: 0 !important;
+}
+#desktopTableContainer .attendance-date-line {
+  min-height: 38px;
+  padding: 7px 12px !important;
+}
+#desktopTableContainer .attendance-date-toggle,
+#desktopTableContainer .attendance-date-summary {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card, #fff) 88%, transparent);
+}
+#desktopTableContainer .attendance-date-toggle {
+  position: sticky;
+  left: 10px;
+  z-index: 2;
+  padding: 4px 8px !important;
+}
+#desktopTableContainer .attendance-date-summary {
+  position: sticky;
+  right: 10px;
+  z-index: 2;
+  padding: 4px 8px;
+}
+
+#desktopTableContainer > .desktop-table td.hours-cell,
+#desktopTableContainer > .desktop-table td.break-summary-cell {
+  padding-inline: 12px !important;
+  vertical-align: middle !important;
+}
+#desktopTableContainer > .desktop-table td.hours-cell .hours-cell-content {
+  gap: 7px !important;
+}
+#desktopTableContainer > .desktop-table td.hours-cell .hours-cell-badges {
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+#desktopTableContainer > .desktop-table td.hours-cell .hours-cell-badges > .time-flag,
+#desktopTableContainer > .desktop-table td.break-summary-cell .time-flag {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  margin: 0 !important;
+  white-space: nowrap;
+  line-height: 1.25 !important;
+}
+#desktopTableContainer > .desktop-table td.break-summary-cell .break-summary-main {
+  margin-bottom: 7px !important;
+  font-size: 11px;
+  line-height: 1.25;
+}
+#desktopTableContainer > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td {
+  background-clip: padding-box !important;
+}
+
+body.dark-mode #desktopTableContainer > .desktop-table tbody tr.attendance-date-divider > td {
+  background: color-mix(in srgb, var(--card, #111827) 92%, #0f172a) !important;
+  border-top-color: rgba(148,163,184,.18) !important;
+}
+body.dark-mode #desktopTableContainer .attendance-date-toggle,
+body.dark-mode #desktopTableContainer .attendance-date-summary {
+  background: color-mix(in srgb, var(--card, #111827) 90%, transparent);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Notification Center: content-sized modal; no dead footer/empty-state space. */
+/* -------------------------------------------------------------------------- */
+.notification-center-modal {
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: min(86dvh, 760px) !important;
+  overflow: hidden !important;
+}
+.notification-center-modal > .announce-modal-header,
+.notification-center-modal > .notification-center-tabs {
+  flex: 0 0 auto;
+}
+.notification-center-panel.active:not([hidden]) {
+  display: flex !important;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+#notificationPanelNotifications .announce-composer {
+  flex: 0 0 auto;
+}
+#notificationPanelNotifications .announce-list {
+  flex: 0 1 auto;
+  min-height: 0 !important;
+  max-height: min(54dvh, 520px) !important;
+  overflow-y: auto !important;
+  padding-bottom: 12px !important;
+}
+#notificationPanelNotifications .announce-list:empty {
+  display: none !important;
+}
+#notificationPanelNotifications .leave-v2-notification-section:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Floating utility rail: AI must sit on the same top utility layer as chat.   */
+/* -------------------------------------------------------------------------- */
+#aiChatFloater.ai-chat-floater {
+  position: fixed !important;
+  z-index: 2147481200 !important;
+  isolation: isolate;
+}
+#aiChatPanel.ai-chat-panel {
+  z-index: 2147481250 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Global modal Close access: moved Close buttons use a sticky top-right dock. */
+/* -------------------------------------------------------------------------- */
+.modal-box:has(> .tt-global-close-dock) {
+  position: relative;
+}
+.tt-global-close-dock {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: flex;
+  justify-content: flex-end;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.tt-global-close-dock > .tt-global-close-top {
+  pointer-events: auto;
+  flex: 0 0 auto !important;
+  min-width: 78px;
+  min-height: 42px;
+  margin: 12px 12px 0 0 !important;
+  white-space: nowrap;
+  box-shadow: 0 8px 22px rgba(15,23,42,.10);
+}
+.tt-bottom-close-retired,
+.tt-bottom-close-retired-row {
+  display: none !important;
+}
+@media (max-width: 560px) {
+  .tt-global-close-dock > .tt-global-close-top {
+    min-width: 72px;
+    min-height: 40px;
+    margin: 8px 8px 0 0 !important;
+  }
+}

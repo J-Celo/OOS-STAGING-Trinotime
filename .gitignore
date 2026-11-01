@@ -1,0 +1,62 @@
+# TrinoTime STAGING collaboration — tracked source only
+# Never commit secrets or local machine/auth state.
+.env
+.env.*
+!.env.example
+!.env.sample
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+*.pem
+*.p12
+*.pfx
+*.key
+*.keystore
+*service-account*.json
+*serviceAccount*.json
+*credentials*.json
+*private-key*.json
+*private_key*.json
+*.secrets
+.secrets/
+**/.secrets/
+
+# Runtime tools, generated caches, local deployment/auth state
+node_modules/
+**/node_modules/
+.wrangler/
+**/.wrangler/
+.firebase/
+**/.firebase/
+.cache/
+**/.cache/
+.vscode/settings.json
+*.log
+**/*.log
+firebase-debug.log
+npm-debug.log*
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Live private rules/employee-linked snapshots, generated candidates
+CURRENT-STAGING-RULES.json
+candidate.rules.json
+RULES-REVIEW.txt
+RULES-DIFF.txt
+
+# Local archives and exports (source itself is tracked separately)
+*.zip
+# Required current staging Tracker and one regression-only fixture
+!cloudflare/public/downloads/TrinoTime-QC-Tracker-v2.2.62.zip
+!cloudflare/fixtures/TrinoTime-QC-Tracker-v2.2.32.zip
+*.7z
+*.tar.gz
+*.csv
+*.sqlite
+*.db
+
+# Keep package-lock.json TRACKED for reproducible development.

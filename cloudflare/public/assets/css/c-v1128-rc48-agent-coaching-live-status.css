@@ -1,0 +1,23 @@
+/* RC48 — Agent-side Coaching live status card. Presentation only; leadership retains all Coaching controls. */
+#coachingActionRow[hidden]{display:none!important}
+body[data-trino-role="agent"] #coachingActionRow:not([hidden]){grid-template-columns:minmax(0,340px) minmax(0,1fr);align-items:center}
+body[data-trino-role="agent"] #btnCoaching.is-agent-readonly{
+  opacity:1!important;
+  cursor:default!important;
+  pointer-events:none!important;
+  color:#f8fbff!important;
+  border-color:rgba(96,165,250,.76)!important;
+  background:linear-gradient(135deg,#1d4ed8 0%,#2563eb 48%,#4338ca 100%)!important;
+  box-shadow:0 0 0 1px rgba(147,197,253,.18),0 0 24px rgba(59,130,246,.26),0 12px 28px rgba(30,64,175,.22)!important;
+  transform:none!important;
+}
+body[data-trino-role="agent"] #btnCoaching.is-agent-readonly #coachingActionLabel{letter-spacing:.015em;color:#fff!important}
+body[data-trino-role="agent"] #btnCoaching.is-agent-readonly #subCoaching{color:rgba(255,255,255,.92)!important;font-variant-numeric:tabular-nums}
+body[data-trino-role="agent"] #coachingActionHint{color:var(--muted)!important;font-size:10px!important;line-height:1.45!important}
+body.dark-mode[data-trino-role="agent"] #btnCoaching.is-agent-readonly,[data-theme="dark"] body[data-trino-role="agent"] #btnCoaching.is-agent-readonly{
+  border-color:rgba(147,197,253,.78)!important;
+  box-shadow:0 0 0 1px rgba(147,197,253,.2),0 0 28px rgba(59,130,246,.32),0 14px 30px rgba(0,0,0,.3)!important;
+}
+@media(max-width:760px){body[data-trino-role="agent"] #coachingActionRow:not([hidden]){grid-template-columns:1fr}.coaching-action-hint{text-align:left!important}}
+@media(prefers-reduced-motion:reduce){body[data-trino-role="agent"] #btnCoaching.is-agent-readonly{transition:none!important}}
+@media(forced-colors:active){body[data-trino-role="agent"] #btnCoaching.is-agent-readonly{background:ButtonFace!important;color:ButtonText!important;border:2px solid Highlight!important;box-shadow:none!important}}

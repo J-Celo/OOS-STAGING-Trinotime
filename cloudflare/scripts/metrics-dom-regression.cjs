@@ -1,0 +1,16 @@
+const {JSDOM}=require('jsdom'),fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ const d=new JSDOM('<body data-trino-role="admin"><aside id="ttPremiumSidebar"><nav class="tt-premium-nav"><button data-tt-nav="dashboard">Dashboard</button></nav></aside><main id="mainContent"></main><section id="ttCoverageRoot" hidden></section></body>',{url:'https://oos.trinotime.com',runScripts:'outside-only',pretendToBeVisual:true});const w=d.window;
+ w.setInterval=()=>1;w.firebase={auth:()=>({currentUser:{isAnonymous:false,getIdToken:async()=>'fixture'}})};let posted=null;
+ const data={ok:true,authority:'workforce-metrics-v1',viewer:{role:'admin'},scope:'all-pods',pods:[{pod:'pod1',label:'POD 1',coverage:{secondsPerTask:15},confirmation:{secondsPerTask:20}}],rows:[{name:'Agent One',podLabel:'POD 1',job:'coverage',submitted:10,measuredTasks:5,measuredActiveMs:75000,secondsPerTask:15,target:{secondsPerTask:15},efficiencyPercent:100,grade:'A',reason:''},{name:'Agent Two',podLabel:'POD 1',job:'confirmation',submitted:0,measuredTasks:0,measuredActiveMs:0,secondsPerTask:null,target:null,efficiencyPercent:null,grade:null,reason:'Not synced'}]};
+ w.fetch=async(url,opts)=>{assert.equal(opts.headers['X-TT-Metrics-Expected-Role'],'admin');if(opts.method==='POST')posted=JSON.parse(opts.body);return {ok:true,json:async()=>opts.method==='POST'?{ok:true}:data};};
+ w.eval(fs.readFileSync(path.join(__dirname,'../public/assets/js/j-agent-metrics-rc22.js'),'utf8'));await delay(10);
+ w.document.querySelector('[data-tt-nav="metrics"]').click();await delay(15);
+ const root=w.document.querySelector('#ttMetricsRoot');assert(!root.hidden);assert(root.textContent.includes('Agent One'));assert(root.textContent.includes('Not graded'));assert.equal(root.querySelector('[data-grade="A"]').textContent,'A');assert.equal(w.document.querySelector('#ttMetricsTarget').value,'15');
+ w.document.querySelector('#ttMetricsTargetJob').value='confirmation';w.document.querySelector('#ttMetricsTargetJob').dispatchEvent(new w.Event('change'));assert.equal(w.document.querySelector('#ttMetricsTarget').value,'20');
+ w.document.querySelector('#ttMetricsTarget').value='25';const form=w.document.querySelector('#ttMetricsForm');form.dispatchEvent(new w.SubmitEvent('submit',{bubbles:true,cancelable:true,submitter:form.querySelector('button')}));await delay(15);assert.equal(posted.secondsPerTask,25);assert.equal(posted.job,'confirmation');assert.equal(posted.pod,'pod1');
+ w.document.querySelector('#ttMetricsJob').value='coverage';w.document.querySelector('#ttMetricsJob').dispatchEvent(new w.Event('change'));assert(!w.document.querySelector('#ttMetricsBody').textContent.includes('Agent Two'));
+ w.document.addEventListener('click',e=>{if(e.target.dataset.ttNav==='dashboard')e.stopImmediatePropagation();},true);w.document.querySelector('[data-tt-nav="dashboard"]').click();assert(root.hidden);assert(!w.document.querySelector('#mainContent').hidden);
+ d.window.close();console.log('PASS metrics UI: Admin A/Not graded rows, distinct job targets, target save payload, job filter, hidden-state restoration with Admin navigation interception');
+})().catch(e=>{console.error(e);process.exit(1)});

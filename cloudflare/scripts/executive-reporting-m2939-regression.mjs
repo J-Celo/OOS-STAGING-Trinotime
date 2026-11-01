@@ -1,0 +1,48 @@
+import os from 'node:os';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const source=fs.readFileSync(path.join(root,'public/assets/js/j-report-exports-m2935.js'),'utf8');
+const runtime={window:{},document:{addEventListener(){}},TextEncoder,Uint8Array,Uint32Array,DataView,Date,Intl,console,Set,Map,Math,Number,Error,Array,Blob};
+vm.runInNewContext(source,runtime);
+const api=runtime.window.TrinoTimeReportExports;
+const report={workflow:'Metrics',date:'2026-10-06',period:'Historical date',scope:'own-pod',viewer:'Team Leader',role:'team_leader',filter:'Coverage only',generated:'Oct 8, 2026',kpis:Array.from({length:20},(_,i)=>['Current KPI '+i,String(i)]),tables:{activity:{headers:['Agent','Submitted','Seconds / Task','Efficiency %','Grade'],rows:[['Agent One','26','106.9s','76.1%','B'],['Agent Two','3','180s','100%','A']]},stores:{headers:['Store','Workflow','Confirmed','Jobs'],rows:[['Preston','coverage','2','1'],['Miranda','confirmation','5','2']]},storeJobs:{headers:['Job ID','Agent','Store','Mapping','Active sec / submit'],rows:[['JOB_1','Agent One','Preston','tracker-observed','106.9s'],['JOB_2','Agent Two','Miranda','Unknown','180s']]},storeTrends:{headers:['Date','Store','Confirmed'],rows:[['2026-10-05','Preston','2'],['2026-10-06','Miranda','5']]},mappingReview:{headers:['Job ID','Mapping'],rows:[['JOB_2','unknown']]},storeStatus:'2 observed, 1 unknown',storePeriod:'7d'},notes:['Scope limited to authorized team.','Native charts reference edit-ready Chart Data worksheet.']};
+const zip=api.buildXlsx(report);assert(zip.byteLength>12000);
+function entries(bytes){const out=new Map();const b=Buffer.from(bytes);let pos=0;while(pos+30<=b.length && b.readUInt32LE(pos)===0x04034b50){const compressed=b.readUInt32LE(pos+18);const fnLen=b.readUInt16LE(pos+26),extra=b.readUInt16LE(pos+28);const name=b.toString('utf8',pos+30,pos+30+fnLen);const offset=pos+30+fnLen+extra;out.set(name,b.toString('utf8',offset,offset+compressed));pos=offset+compressed;}return out;}
+const files=entries(zip);
+const charts=[...files.keys()].filter(s=>/^xl\/charts\/chart\d+\.xml$/.test(s));assert.equal(charts.length,3,'3 native charts from real report values');
+const book=files.get('xl/workbook.xml'),overview=files.get('xl/worksheets/sheet1.xml'),activity=files.get('xl/worksheets/sheet2.xml'),storeJobs=files.get('xl/worksheets/sheet4.xml'),chartData=files.get('xl/worksheets/sheet8.xml'),styles=files.get('xl/styles.xml');
+assert(book.includes('name="Chart Data"'),'chart data tab is included');
+assert(overview.includes('<mergeCell ref="A1:J1"/>'),'executive banner is merged');
+assert(overview.includes('<mergeCell ref="A6:B6"/>'),'KPI values are visually grouped');
+assert(overview.includes('r="A5" s="14"'),'KPI label at top');
+assert(overview.includes('<drawing xmlns:r='),'Overview hosts native drawing relationship');
+assert(chartData.includes('Agent One') && chartData.includes('<v>26</v>'),'charts backed by editable numeric data');
+assert(activity.includes('r="C6" s="10" t="n"'),'seconds/task is a numeric Excel time value');
+assert(!activity.includes('<v>1m 46.9s</v>'),'duration is not a pasted string in XLSX');
+assert(styles.includes('numFmtId="164"'),'numeric minutes/seconds display format present');
+assert(activity.includes('conditionalFormatting sqref="E6:E7"'),'grade conditional formatting range present');
+assert(activity.includes('EXACT(E6,&quot;A&quot;)'),'grade A exact-match only');
+assert(storeJobs.includes('r="E6" s="10" t="n"'),'store pace also numeric');
+assert([...charts].every(name=>files.get(name).includes("&apos;Chart Data&apos;!$A$")),'charts link to their own numeric source cells');
+assert([...charts].every(name=>files.get(name).includes('<c:numRef>')),'charts use native numeric series');
+assert(files.get('xl/drawings/drawing1.xml').includes('<xdr:graphicFrame'),'native Excel chart frames, not SVG images');
+assert(![...files.keys()].some(name=>/xl\/media\//.test(name)),'no static chart images');
+// Premium layout: charts sit directly after KPI strip; report details remain below them.
+const firstChart=Number(files.get('xl/drawings/drawing1.xml').match(/<xdr:row>(\d+)<\/xdr:row>/)[1]);assert(firstChart===9, 'native charts appear above the fold');
+assert(overview.includes('PERFORMANCE SNAPSHOT'),'overview includes dedicated performance section');
+assert(overview.includes('REPORT DETAILS  /  AUTHORIZED SCOPE'),'metadata remains accessible underneath charts');
+const notes=files.get('xl/worksheets/sheet7.xml');assert(notes.includes('<mergeCell ref="B6:G6"/>'),'long notes have merged, wrapped cells');
+assert.equal(api.reportSheets(report)[1].rows[0][2],'1m 46.9s','CSV/PDF also use readable durations');
+assert(!book.includes('Agent One'),'agent rows remain scoped to their own worksheet');
+assert(files.get('xl/charts/chart3.xml').includes('<c:lineChart>'),'trend chart uses native line series');
+// No-data exports are still valid and never invent chart values.
+const noCharts=entries(api.buildXlsx({...report,tables:{activity:{headers:['Agent','Submitted'],rows:[]},storeStatus:'No store data'}}));
+assert(![...noCharts.keys()].some(name=>name.startsWith('xl/charts/')),'no invented charts if no data');
+assert(!noCharts.get('xl/workbook.xml').includes('Chart Data'),'no empty chart worksheet');
+const output=process.env.TT_REPORT_M2939_SMOKE||path.join(os.tmpdir(),'trinotime-m2939-native-charts.xlsx');
+fs.writeFileSync(output,zip);
+console.log('PASS M2.9.39 Executive Reporting: native editable charts, dynamic safe layout, numeric times, scoped data, grade styling, empty datasets, and notes.');

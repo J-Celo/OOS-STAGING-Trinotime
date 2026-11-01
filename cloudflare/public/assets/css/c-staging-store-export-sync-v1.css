@@ -1,0 +1,32 @@
+/* Scoped add-on only; no Store Operations tab or Tracker styling overridden. */
+.tt-so-hub .tt-so-export-panel{margin:0 12px 18px;padding:15px 18px;border:1px solid rgba(115,146,173,.23);border-radius:17px;background:var(--surface,#fff);box-shadow:0 5px 22px rgba(15,37,64,.035)}
+.tt-so-export-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 13px;margin-bottom:12px}.tt-so-export-heading strong{font-size:16px;color:var(--text,#1b2331)}.tt-so-export-heading small{color:var(--muted,#64748b);font-size:12px}.tt-so-export-controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center}.tt-so-export-controls button,.tt-so-export-controls a,.tt-so-export-controls select{font:inherit;font-size:13px;border-radius:9px;padding:9px 12px;border:1px solid rgba(109,138,173,.3);min-height:39px;background:#fff;color:#1c3555;text-decoration:none}.tt-so-export-controls button{background:#174f86;color:#fff;cursor:pointer}.tt-so-export-controls button:disabled{opacity:.48;cursor:not-allowed}.tt-so-export-controls a{background:#eff6ff}.tt-so-export-controls a[hidden]{display:none!important}.tt-so-export-panel [data-tt-store-export-status]{font-size:12px;color:var(--muted,#64748b);margin:11px 0 0;overflow-wrap:anywhere}.tt-so-export-panel button:focus-visible,.tt-so-export-panel a:focus-visible{outline:2px solid #60a5fa;outline-offset:2px}
+body.dark-mode .tt-so-hub .tt-so-export-panel{background:#151f30;border-color:rgba(177,193,216,.2)}body.dark-mode .tt-so-export-controls select{background:#15243b;color:#e4effc}body.dark-mode .tt-so-export-controls a{background:#20344c;color:#e4effc}
+@media(max-width:700px){.tt-so-hub .tt-so-export-panel{margin:0 2px 15px;padding:13px}.tt-so-export-controls button{flex:1}}
+
+/* TT_IN_APP_REPORT_VIEWER_V1 — authenticated viewer, not a public Google Sheet. */
+.tt-so-report-backdrop{position:fixed;inset:0;z-index:2147483000;background:rgba(10,23,41,.67);display:flex;align-items:center;justify-content:center;padding:18px}
+.tt-so-report-dialog{width:min(1100px,97vw);max-height:92vh;background:#fff;color:#172536;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 22px 90px rgba(0,0,0,.26)}
+.tt-so-report-header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:18px 24px 12px;border-bottom:1px solid #e0e6ed}.tt-so-report-header h2{font-size:21px;margin:0 0 5px}.tt-so-report-header p{font-size:12px;color:#506279;margin:0}.tt-so-report-close{background:#184c81;color:white;border:0;border-radius:9px;padding:9px 15px;cursor:pointer}
+.tt-so-report-note{margin:0;padding:10px 23px;font-size:12px;color:#395774;background:#f1f6fc}.tt-so-report-tabs{display:flex;gap:5px;overflow-x:auto;padding:11px 18px;border-bottom:1px solid #d8e1ec}.tt-so-report-tabs button{padding:9px 12px;border:0;border-radius:8px;background:#eff3f8;color:#213d5c;cursor:pointer;white-space:nowrap;font-size:12px}.tt-so-report-tabs button[aria-pressed=true]{background:#174f86;color:#fff}
+.tt-so-report-data{overflow:auto;padding:0 16px 18px;flex:1;overscroll-behavior:contain}.tt-so-report-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}.tt-so-report-table th{text-align:left;position:sticky;top:0;background:#16375c;color:#fff;z-index:1;white-space:nowrap;padding:11px 10px}.tt-so-report-table td{padding:9px 10px;border-bottom:1px solid #e6ebf1;white-space:nowrap}.tt-so-report-table tr:nth-child(even){background:#f6f9fc}
+.tt-so-report-dialog button:focus-visible{outline:3px solid #71a8ff;outline-offset:2px}body.dark-mode .tt-so-report-dialog{background:#1a2535;color:#eef4fd}body.dark-mode .tt-so-report-table td{border-color:#35465a}body.dark-mode .tt-so-report-table tr:nth-child(even){background:#263347}body.dark-mode .tt-so-report-note{background:#223b57;color:#e4effe}
+@media(max-width:640px){.tt-so-report-backdrop{padding:4px}.tt-so-report-dialog{width:100%;max-height:97vh}.tt-so-report-header{padding:14px}.tt-so-report-header h2{font-size:17px}}
+
+/* TT_CONSOLIDATED_REPORT_VIEWER_UI_20261018: keep all five tabs visible, scroll only data. */
+.tt-so-report-backdrop{box-sizing:border-box;overflow:hidden}
+.tt-so-report-dialog{box-sizing:border-box;height:min(860px,calc(100dvh - 32px));max-height:calc(100dvh - 32px);min-width:0;isolation:isolate}
+.tt-so-report-header{flex:0 0 auto;min-width:0;align-items:center;position:relative;z-index:4;background:inherit}
+.tt-so-report-header h2{overflow-wrap:anywhere}
+.tt-so-report-close{flex-shrink:0}
+.tt-so-report-note{flex:0 0 auto;overflow-wrap:anywhere;position:relative;z-index:3}
+.tt-so-report-tabs{box-sizing:border-box;flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;align-content:center;justify-content:flex-start;gap:8px;overflow:visible!important;min-height:64px;padding:12px 18px;position:relative;z-index:3;background:#fff;border-bottom:1px solid #d8e1ec}
+.tt-so-report-tabs button{display:inline-flex!important;flex:0 0 auto;align-items:center;justify-content:center;min-height:40px;max-width:100%;position:relative;z-index:4;line-height:1.3!important;padding:10px 14px!important;overflow:visible!important;white-space:normal!important;box-sizing:border-box}
+.tt-so-report-tabs button[aria-selected=true]{background:#174f86;color:#fff}
+.tt-so-report-data{flex:1 1 auto;min-height:0;min-width:0;position:relative;z-index:0;isolation:isolate;overflow:auto!important;overscroll-behavior:contain;scrollbar-gutter:stable}
+.tt-so-report-table{width:max-content;min-width:100%;margin:0}
+.tt-so-report-table th{z-index:1}
+.tt-so-export-controls [data-tt-store-google-sheet-link]{display:inline-flex;align-items:center;justify-content:center;background:#edf5ff;color:#194979;font-weight:600;white-space:nowrap}
+.tt-so-export-controls [data-tt-store-google-sheet-link][hidden]{display:none!important}
+body.dark-mode .tt-so-report-tabs{background:#1a2535;border-color:#35465a}
+@media(max-width:640px){.tt-so-report-dialog{height:calc(100dvh - 8px);max-height:calc(100dvh - 8px)}.tt-so-report-tabs{padding:9px;gap:6px;min-height:50px}.tt-so-report-tabs button{font-size:11px;min-height:36px;padding:8px 10px!important}.tt-so-report-note{padding:9px 12px}.tt-so-report-data{padding:0 5px 10px}}

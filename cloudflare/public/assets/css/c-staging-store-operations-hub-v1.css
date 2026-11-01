@@ -1,0 +1,108 @@
+/* TrinoTime Store Operations hub — staging presentation only, 2026-10-15. */
+.tt-so-hub .tt-pod-dispatch-hero{margin-bottom:12px!important}
+.tt-so-hub .tt-so-tabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px;margin:0 12px 18px;border:1px solid rgba(124,147,173,.25);border-radius:16px;background:var(--surface,#fff);box-shadow:0 8px 30px rgba(18,37,60,.035)}
+.tt-so-hub .tt-so-tab{appearance:none;font:inherit;font-size:13px;font-weight:650;border:1px solid transparent;border-radius:10px;padding:11px 17px;min-height:43px;cursor:pointer;color:var(--text,#27334a);background:transparent;transition:background .12s ease,border-color .12s ease}
+.tt-so-hub .tt-so-tab:hover{background:rgba(80,118,172,.09)}
+.tt-so-hub .tt-so-tab:focus-visible{outline:2px solid #5c80c6;outline-offset:2px}
+.tt-so-hub .tt-so-tab.is-active{background:#194f89;color:#fff;border-color:#194f89;box-shadow:0 5px 14px rgba(26,76,133,.15)}
+.tt-so-hub [data-tt-so-overview][hidden],.tt-so-hub [data-tt-so-history-note][hidden],.tt-so-hub [data-tt-so-performance-note][hidden],.tt-so-hub [data-tt-so-report-notice][hidden]{display:none!important}
+.tt-so-hub .tt-so-overview{margin:0 12px 24px;padding:22px;border-radius:18px;border:1px solid rgba(124,147,173,.23);background:var(--surface,#fff)}
+.tt-so-hub .tt-so-section-heading h3{font-size:19px;line-height:1.2;margin:0 0 6px;color:var(--text,#1b2331)}
+.tt-so-hub .tt-so-section-heading p{margin:0 0 18px;color:var(--muted,#65758a);font-size:13px;line-height:1.5}
+.tt-so-hub .tt-so-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tt-so-hub .tt-so-stat{border:1px solid rgba(124,147,173,.25);padding:15px;border-radius:13px;background:rgba(102,145,195,.04);min-width:0;overflow-wrap:anywhere}
+.tt-so-hub .tt-so-stat-label{display:block;font-weight:650;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted,#65758a);margin-bottom:8px}
+.tt-so-hub .tt-so-stat-value{display:block;font-size:19px;font-weight:750;line-height:1.35;color:var(--text,#1b2331)}
+.tt-so-hub .tt-so-note{font-size:12px;color:var(--muted,#65758a);line-height:1.5;margin:15px 0 0}
+.tt-so-hub .tt-so-notice,.tt-so-hub .tt-so-history-note,.tt-so-hub .tt-so-performance-note{margin:0 12px 15px;padding:14px;border-radius:12px;background:rgba(90,137,192,.09);border:1px solid rgba(90,137,192,.19);font-size:13px;line-height:1.55;color:var(--text,#1b2331)}
+/* Hide only the Work Control editor, never Store Intelligence's own nested
+   data-tt-store-panel inside #ttPodStorePerformanceHost. */
+.tt-so-hub[data-tt-store-hub-tab="overview"] > .tt-ops-shell > [data-tt-store-panel],
+.tt-so-hub[data-tt-store-hub-tab="performance"] > .tt-ops-shell > [data-tt-store-panel],
+.tt-so-hub[data-tt-store-hub-tab="history"] > .tt-ops-shell > [data-tt-store-panel]{display:none!important}
+.tt-so-hub[data-tt-store-hub-tab="queue"] .tt-sp-pod-target{display:flex}
+/* The Coverage authorization and All Stores review are Work Control tools,
+   never duplicated in the planned Store Queue tab. All DOM/state is retained. */
+.tt-so-hub[data-tt-store-hub-tab="queue"] .tt-sp-current,
+.tt-so-hub[data-tt-store-hub-tab="queue"] .tt-sp-publish-section,
+.tt-so-hub[data-tt-store-hub-tab="queue"] .tt-sp-coverage-sequence,
+.tt-so-hub[data-tt-store-hub-tab="queue"] .tt-sp-all-stores{display:none!important}
+.tt-so-hub[data-tt-store-hub-tab="work"] .tt-sp-advanced{display:none!important}
+.tt-so-hub[data-tt-store-hub-tab="work"] .tt-sp-pod-target{display:flex}
+.tt-so-hub:not([data-tt-store-hub-tab="performance"]):not([data-tt-store-hub-tab="history"]) #ttPodStorePerformanceHost{display:none!important}
+.tt-so-hub #ttPodStorePerformanceHost[hidden]{display:none!important}
+.tt-so-hub[data-tt-store-hub-tab="history"] #ttPodStorePerformanceHost .tt-si-head h3::after{content:' · 7-day history';font-weight:500;font-size:.75em;color:var(--muted,#65758a)}
+body.dark-mode .tt-so-hub .tt-so-tabs,body.dark-mode .tt-so-hub .tt-so-overview{background:#151f30;border-color:rgba(177,193,216,.19)}
+body.dark-mode .tt-so-hub .tt-so-stat{background:#1b2940;border-color:rgba(177,193,216,.2)}
+body.dark-mode .tt-so-hub .tt-so-tab.is-active{background:#3b68bb;border-color:#3b68bb;color:white}
+@media(max-width:700px){.tt-so-hub .tt-so-tabs{margin:0 2px 14px;padding:10px;gap:5px}.tt-so-hub .tt-so-tab{flex:1 1 auto;padding:10px 9px;font-size:12px}.tt-so-hub .tt-so-overview{margin:0 2px 18px;padding:15px}.tt-so-hub .tt-so-stats{grid-template-columns:1fr}.tt-so-hub .tt-so-history-note,.tt-so-hub .tt-so-performance-note,.tt-so-hub .tt-so-notice{margin-left:2px;margin-right:2px}}
+
+/* RC2: purposeful cross-tab navigation and independently sourced observed summary. */
+.tt-so-hub .tt-so-shortcuts{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.tt-so-hub .tt-so-shortcut{font:inherit;font-size:12px;font-weight:700;padding:10px 13px;border:1px solid #d4e0ef;color:#1a4e82;background:#f7faff;border-radius:11px;cursor:pointer}
+.tt-so-hub .tt-so-shortcut:hover{background:#e6effc}.tt-so-hub .tt-so-shortcut:focus-visible{outline:2px solid #3977bf;outline-offset:2px}
+body.dark-mode .tt-so-hub .tt-so-shortcut{background:#1d2e49;border-color:#355579;color:#bbd8ff}
+
+/* Store Operations accessibility: scoped to dark mode, no global theme changes. */
+body.dark-mode .tt-so-hub, body.dark-mode .tt-so-hub .tt-ops-shell{color:#e8f1ff!important}
+body.dark-mode .tt-so-hub .tt-pod-dispatch-hero,
+body.dark-mode .tt-so-hub .tt-so-export-panel,
+body.dark-mode .tt-so-hub .tt-so-overview,
+body.dark-mode .tt-so-hub .tt-so-tabs,
+body.dark-mode .tt-so-hub .tt-sp-panel,
+body.dark-mode .tt-so-hub .tt-so-notice,
+body.dark-mode .tt-so-hub .tt-so-history-note,
+body.dark-mode .tt-so-hub .tt-so-performance-note{
+ background:#152237!important;color:#e8f1ff!important;border-color:#374962!important;
+ box-shadow:0 8px 25px rgba(0,0,0,.18)}
+body.dark-mode .tt-so-hub :is(h2,h3,h4,.tt-so-section-heading h3,.tt-so-export-heading strong,.tt-so-stat-value,.tt-sp-current-store,.tt-sp-heading strong){color:#f2f7ff!important}
+body.dark-mode .tt-so-hub :is(.tt-so-section-heading p,.tt-so-note,.tt-sp-helper,.tt-sp-intro span,.tt-sp-current-detail,.tt-sp-current-label,.tt-so-export-heading small,.tt-so-stat-label,.tt-so-hub .tt-pod-dispatch-hero p){color:#b7c9df!important}
+body.dark-mode .tt-so-hub .tt-so-tab{color:#d5e6fc!important;background:#1b2c43!important;border-color:#36506f!important}
+body.dark-mode .tt-so-hub .tt-so-tab:hover{background:#254362!important}
+body.dark-mode .tt-so-hub .tt-so-tab.is-active{color:#fff!important;background:#3064b8!important;border-color:#729ee6!important}
+body.dark-mode .tt-so-hub .tt-so-stat,
+body.dark-mode .tt-so-hub .tt-sp-current,
+body.dark-mode .tt-so-hub .tt-sp-coverage-sequence,
+body.dark-mode .tt-so-hub .tt-sp-all-stores,
+body.dark-mode .tt-so-hub .tt-all-store-stat,
+body.dark-mode .tt-so-hub .tt-all-store-item,
+body.dark-mode .tt-so-hub .tt-sp-advanced,
+body.dark-mode .tt-so-hub .tt-sp-store-row{background:#1c2d45!important;border-color:#3a526f!important;color:#e8f1ff!important}
+body.dark-mode .tt-so-hub :is(input,textarea,select){background:#101e30!important;color:#f1f6ff!important;border-color:#52708f!important;color-scheme:dark}
+body.dark-mode .tt-so-hub input::placeholder,body.dark-mode .tt-so-hub textarea::placeholder{color:#a9bcd2!important}
+body.dark-mode .tt-so-hub select option{background:#101e30!important;color:#f1f6ff!important}
+body.dark-mode .tt-so-hub :is(.tt-sp-panel label,.tt-so-export-admin-label){color:#c4d6ec!important}
+body.dark-mode .tt-so-hub :is(button:not(.tt-so-tab):not(.tt-sp-primary),.tt-so-shortcut){border-color:#567496;background:#233a56;color:#e7f2ff}
+body.dark-mode .tt-so-hub button:disabled{opacity:.62!important;color:#aebed4!important}
+body.dark-mode .tt-so-hub .tt-sp-panel .tt-sp-primary{background:#2f69c2!important;color:white!important;border-color:#4c86dd!important}
+body.dark-mode .tt-so-hub :is(.tt-so-export-panel,.tt-sp-panel) :focus-visible{outline:3px solid #85b5ff;outline-offset:2px}
+@media(max-width:700px){.tt-so-hub .tt-so-export-controls{gap:8px}.tt-so-hub .tt-so-export-controls>*{max-width:100%}}
+
+.tt-so-hub .tt-sp-verify-status{font-size:12px;font-weight:650;line-height:1.45;margin:5px 0 0;padding:8px 12px;border:1px solid #cbd9e7;background:#eef5fc;color:#285277;border-radius:10px;overflow-wrap:anywhere}
+.tt-so-hub .tt-sp-verify-status[data-status="success"]{border-color:#a6d8c4;background:#eaf8f1;color:#186247}
+.tt-so-hub .tt-sp-verify-status[data-status="error"]{border-color:#efb4b6;background:#fff1f1;color:#99272c}
+body.dark-mode .tt-so-hub .tt-sp-verify-status{background:#213c58;color:#d8ebff;border-color:#436e96}
+body.dark-mode .tt-so-hub .tt-sp-verify-status[data-status="success"]{background:#153c37;color:#baf7df;border-color:#397969}
+body.dark-mode .tt-so-hub .tt-sp-verify-status[data-status="error"]{background:#48252e;color:#ffd5d8;border-color:#a75c69}
+
+/* V3.1: visibly separate the live POD instruction cards from observational work.
+   Scoped to Store Operations Overview only; no page-wide or form changes. */
+.tt-so-hub .tt-so-overview .tt-so-observed-section{
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid rgba(124,147,173,.28);
+}
+.tt-so-hub .tt-so-observed-section .tt-so-section-heading{margin-bottom:4px}
+.tt-so-hub .tt-so-observed-section .tt-so-mapping-health{
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+  margin:14px 0 0;padding:9px 12px;border-radius:10px;
+  background:rgba(90,137,192,.065);border:1px solid rgba(90,137,192,.16);
+  color:var(--muted,#53667f);font-size:12px;line-height:1.45;
+}
+.tt-so-hub .tt-so-mapping-health[data-state="needs-mapping"]{
+  background:rgba(207,144,47,.065);border-color:rgba(207,144,47,.25);
+}
+body.dark-mode .tt-so-hub .tt-so-observed-section{border-top-color:#3a526f}
+body.dark-mode .tt-so-hub .tt-so-mapping-health{background:#1b2d45;color:#c7d7ec;border-color:#415c7a}
+body.dark-mode .tt-so-hub .tt-so-mapping-health[data-state="needs-mapping"]{background:#302b29;border-color:#6b5941;color:#f2dec2}
+@media(max-width:700px){.tt-so-hub .tt-so-overview .tt-so-observed-section{margin-top:24px;padding-top:20px}}

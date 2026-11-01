@@ -1,0 +1,90 @@
+/* STAGING UX11 — targeted, cross-role UI polish. No JS state, no APIs, no layout gates. */
+/* Keep navigation keyboard-visible and touch-friendly without resizing punch actions. */
+body[data-trino-role]:is([data-trino-role="admin"],[data-trino-role="teamleader"],[data-trino-role="agent"]) :is(
+  #logTabs .log-tab,
+  .tt-so-hub .tt-so-tab,
+  .team-tabs button,
+  .pod-tabs button,
+  .tt-wide-table-step
+):focus-visible {
+  outline: 3px solid #286ec2 !important;
+  outline-offset: 2px;
+  position: relative;
+  z-index: 2;
+}
+body.dark-mode[data-trino-role] :is(#logTabs .log-tab,.tt-so-hub .tt-so-tab,.team-tabs button,.pod-tabs button,.tt-wide-table-step):focus-visible {
+  outline-color: #93c5fd !important;
+}
+/* Consistent selectable-tab targets on all role workspaces; no role/permission changes. */
+body[data-trino-role] #logTabs .log-tab {
+  min-height: 38px;
+  box-sizing: border-box;
+  border-radius: 9px;
+  transition: background-color .14s ease, border-color .14s ease, color .14s ease;
+}
+body[data-trino-role] .tt-so-hub .tt-so-tab {
+  min-height: 42px;
+  box-sizing: border-box;
+  transition: background-color .14s ease, border-color .14s ease, color .14s ease;
+}
+/* Scrolling in table headers and filter tabs should not drag the whole page sideways. */
+body[data-trino-role] :is(#logTabs,.tt-so-hub .tt-so-tabs,.team-tabs-outer,.pod-tabs-outer,.tt-wide-table-navigation) {
+  overscroll-behavior-inline: contain;
+  min-width: 0;
+}
+body[data-trino-role] :is(.team-tabs,.pod-tabs,#logTabs,.tt-so-hub .tt-so-tabs) {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+/* On narrow screens avoid multiple rows of tabs jumping when data is refreshed. */
+@media (max-width: 720px) {
+  body[data-trino-role] #logTabs {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 6px;
+    scroll-padding-inline: 12px;
+    padding-block: 4px 7px;
+  }
+  body[data-trino-role] #logTabs .log-tab {
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding-inline: 12px;
+  }
+  body[data-trino-role] .tt-so-hub .tt-so-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-inline: 12px;
+    gap: 7px;
+    padding-block: 9px;
+  }
+  body[data-trino-role] .tt-so-hub .tt-so-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    min-height: 42px;
+  }
+  body[data-trino-role] .tt-wide-table-navigation {
+    min-width: 0;
+    gap: 5px;
+  }
+  body[data-trino-role] .tt-wide-table-navigation .tt-wide-table-top-scroll { min-width: 0; }
+  /* Keep status text readable without breaking operational workspace width. */
+  body[data-trino-role] .tt-dashboard-freshness {max-width:100%;font-size:11px;line-height:1.45;}
+}
+/* Smooth, low-cost indicator styling, with stable vertical size during polling. */
+body[data-trino-role] .tt-dashboard-freshness {
+  min-height: 28px;
+  box-sizing: border-box;
+  font-variant-numeric: tabular-nums;
+  transition: background-color .14s ease, border-color .14s ease;
+}
+/* Avoid unnecessary movement for accessibility and for users with Reduced Motion. */
+@media (prefers-reduced-motion: reduce) {
+  body[data-trino-role] :is(#logTabs .log-tab,.tt-so-hub .tt-so-tab,.tt-dashboard-freshness,.tt-wide-table-step) {transition:none !important;}
+  body[data-trino-role] :is(#logTabs,.tt-so-hub .tt-so-tabs,.team-tabs,.pod-tabs) {scroll-behavior:auto !important;}
+}

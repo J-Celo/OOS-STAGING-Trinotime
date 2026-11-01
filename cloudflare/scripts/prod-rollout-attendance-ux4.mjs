@@ -1,0 +1,25 @@
+// STAGING UX4 regression: one set of real Agent punch controls in the first-view clock panel.
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { createHash } from 'node:crypto';
+const read = relative => fs.readFileSync(new URL('../'+relative, import.meta.url),'utf8');
+const html=read('public/index.html'), css=read('public/assets/css/c-staging-attendance-hero-ux4.css');
+const js=read('public/assets/js/j-staging-attendance-hero-ux4.js');
+const feedback=read('public/assets/js/j-0288375a7a72.js');
+const ids=['btnTimeIn','btnStartBreak','btnEndBreak','btnLogOut','btnCoaching','attendanceTopActions','ttAttendanceHeroSlot','ttAttendanceHomeSlot','punchSaveState','pendingSyncCounter','statusLine','coachingActionRow'];
+for(const id of ids) assert.equal((html.match(new RegExp('id="'+id+'"','g'))||[]).length,1,'No duplicate source control: '+id);
+assert(html.indexOf('id="ttAttendanceHeroSlot"') < html.indexOf('id="punchCard"'),'Quick actions host must be in hero, before lower Attendance card');
+assert(html.includes('id="ttAttendanceHeroSlot" class="tt-ux4-hero-slot" aria-label="Quick attendance actions" hidden'),'Hero actions are initially hidden before verified Agent role');
+assert(js.includes("document.body.dataset.trinoRole==='agent'") && js.includes('new MutationObserver(sync)'), 'Dynamic authenticated role gating');
+assert(js.includes('slot.appendChild(panel)') && js.includes("home.insertAdjacentElement('afterend',panel)"), 'Move the original controls, restore for other roles');
+assert(!js.includes('cloneNode(') && !js.includes('.click()'),'Never clone an attendance control or proxy a click');
+assert(feedback.includes("qa('#attendanceTopActions .punch-btn').forEach"),'Pending punch locks must find moved original controls');
+for(const id of ['btnTimeIn','btnStartBreak','btnEndBreak','btnLogOut','btnCoaching']) assert(js.includes(id+':'), 'Inline icon for '+id);
+assert(css.includes('grid-template-columns:repeat(5,minmax(0,1fr))') && css.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'Responsive coaching as fifth tile');
+assert(css.includes('dark-mode') && css.includes('prefers-reduced-motion'),'Dark-mode contrast and reduced motion');
+assert(html.includes('assets/js/j-staging-attendance-hero-ux4.js?v=prod-301-ux4') && html.includes('assets/css/c-staging-attendance-hero-ux4.css?v=prod-301-ux4'),'Cache-busted assets are included');
+const manifest=JSON.parse(fs.readFileSync(new URL('../../tracker/manifest.json',import.meta.url),'utf8'));assert.equal(manifest.version,'2.3.10');
+const dl=JSON.parse(read('public/downloads/qc-tracker-current.json'));assert.equal(dl.version,'2.3.10');
+const archive=fs.readFileSync(new URL('../public/downloads/'+dl.file,import.meta.url));
+assert.equal(createHash('sha256').update(archive).digest('hex'),dl.sha256);
+console.log('PASS: UX4 hero placement, unique live controls, role restoration, icons and coaching, sync feedback locks, tracker checksum');

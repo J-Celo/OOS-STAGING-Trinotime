@@ -1,0 +1,21 @@
+/* UX15: optional read-only Admin diagnostics; never obscures attendance cards. */
+#attendanceReconciliation[hidden],#attendanceReconciliationDetails[hidden]{display:none!important}
+#tableWrap .attendance-reconciliation{margin:12px 0 14px;padding:13px 15px;border-radius:14px;border:1px solid var(--border,rgba(148,163,184,.36));background:var(--card-bg,rgba(22,34,53,.12));color:inherit}
+#tableWrap .attendance-reconciliation-heading{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+#tableWrap .attendance-reconciliation-heading strong{font-size:13px;line-height:1.5}
+#tableWrap .attendance-reconciliation-heading p{margin:3px 0 0;font-size:12px;line-height:1.4;opacity:.8}
+#tableWrap .attendance-reconciliation-heading button{min-height:36px;padding:7px 12px;border:1px solid currentColor;border-radius:9px;background:transparent;color:inherit;cursor:pointer;font:inherit;font-size:12px;font-weight:650}
+#tableWrap .attendance-reconciliation-heading button:hover{background:rgba(148,163,184,.12)}
+#tableWrap .attendance-reconciliation-heading button:focus-visible{outline:3px solid #60a5fa;outline-offset:3px}
+#tableWrap .attendance-reconciliation-details{margin-top:12px;display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+#tableWrap .attendance-reconciliation-note,#tableWrap .attendance-reconciliation-state{grid-column:1/-1;margin:0;font-size:12px;line-height:1.5}
+#tableWrap .attendance-reconciliation-state{font-weight:650}
+#tableWrap .attendance-reconciliation-group{min-width:0;padding:11px 12px;border-radius:10px;background:rgba(127,140,160,.08);border:1px solid rgba(148,163,184,.24)}
+#tableWrap .attendance-reconciliation-group h4{margin:0 0 8px;font-size:12px}
+#tableWrap .attendance-reconciliation-group p{margin:8px 0 0;font-size:11px;opacity:.8}
+#tableWrap .attendance-reconciliation-group ul{margin:0;padding:0;list-style:none;max-height:280px;overflow-y:auto}
+#tableWrap .attendance-reconciliation-group li{padding:7px 0;border-bottom:1px solid rgba(148,163,184,.2);display:flex;gap:4px;flex-direction:column;font-size:12px}
+#tableWrap .attendance-reconciliation-group li:last-child{border-bottom:0}
+#tableWrap .attendance-reconciliation-group li span{font-size:11px;opacity:.8;overflow-wrap:anywhere}
+@media(max-width:720px){#tableWrap .attendance-reconciliation-details{grid-template-columns:1fr}#tableWrap .attendance-reconciliation-heading button{width:100%}}
+@media(prefers-reduced-motion:reduce){#tableWrap .attendance-reconciliation *{scroll-behavior:auto!important;transition:none!important}}

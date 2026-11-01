@@ -1,0 +1,11 @@
+{
+  "source": "cloudflare/public/assets/js/j-b52f8ff97ca5.js",
+  "baselineBuild": "M2.9.55 corrected staging package",
+  "maximumCounts": {
+    "rootReferences": 6,
+    "keyReferences": 13,
+    "rootChildEventSubscriptions": 3,
+    "rootValueSubscriptions": 1
+  },
+  "note": "Maximum counts guard against new direct /kv reads. They do not fix the existing exposure. Decrease a count only after replacing its feature and verifying staging sync. Do not disable /kv Firebase read rules with these watchers active."
+}

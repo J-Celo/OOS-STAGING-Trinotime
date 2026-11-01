@@ -1,0 +1,39 @@
+/* TrinoTime V 2.0.0 RC3 — production Premium read + modal layering closure.
+   Presentation-only modal rules: keep the dimmer on the outer overlay and never inside the POD card. */
+#podTeamManagementOverlay.pod-team-management-overlay{
+  position:fixed!important;
+  inset:0!important;
+  isolation:isolate!important;
+  overflow:auto!important;
+  background:rgba(15,23,42,.55)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#podTeamManagementOverlay.pod-team-management-overlay::before,
+#podTeamManagementOverlay.pod-team-management-overlay::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+#podTeamManagementOverlay.pod-team-management-overlay > .pod-team-management-modal{
+  position:relative!important;
+  z-index:2!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  transform:none!important;
+}
+#podTeamManagementOverlay .pod-team-management-modal::before,
+#podTeamManagementOverlay .pod-team-management-modal::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+#podTeamManagementOverlay .pod-team-management-modal > *{
+  position:relative;
+  z-index:1;
+}

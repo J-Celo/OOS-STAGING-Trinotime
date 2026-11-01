@@ -1,0 +1,158 @@
+/* TrinoTime v1.1.5 UI/UX polish layer.
+   Presentation only: no Firebase, App Check, authentication, or permission changes. */
+
+html[data-trino-tier='normal'] #notifBellBtn,
+html[data-trino-tier='normal'] #settingsGearBtn,
+html[data-trino-tier='normal'] #openDayOffBtn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.tt-standard-tier-badge {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid color-mix(in srgb, var(--border, #d6dbe5) 78%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface, #fff) 82%, transparent);
+  color: var(--muted, #64748b);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tt-standard-tier-badge[hidden] { display: none !important; }
+.tt-standard-tier-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .72; }
+
+.tt-standard-today-ribbon {
+  display: grid;
+  grid-template-columns: minmax(150px, .9fr) minmax(0, 2.4fr);
+  gap: 14px;
+  align-items: stretch;
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--border, #dce2eb) 78%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface, #fff) 90%, transparent);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, .05);
+}
+
+.tt-standard-today-ribbon[hidden] { display: none !important; }
+.tt-standard-today-heading { display: flex; flex-direction: column; justify-content: center; gap: 5px; padding: 3px 7px; min-width: 0; }
+.tt-standard-today-heading > div { display: grid; gap: 2px; }
+.tt-standard-today-heading span { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted, #64748b); }
+.tt-standard-today-heading strong { font-size: 16px; line-height: 1.2; color: var(--text, #18202c); }
+.tt-standard-today-heading small { color: var(--muted, #64748b); line-height: 1.35; }
+.tt-standard-today-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.tt-standard-today-metric { min-width: 0; padding: 11px 12px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--border, #dce2eb) 72%, transparent); background: color-mix(in srgb, var(--bg, #f8fafc) 76%, var(--surface, #fff)); display: grid; gap: 5px; align-content: center; }
+.tt-standard-today-metric span { color: var(--muted, #64748b); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.tt-standard-today-metric strong { color: var(--text, #18202c); font-size: 13px; line-height: 1.32; overflow-wrap: anywhere; }
+.tt-standard-today-metric[data-tone='active'] { border-color: rgba(34, 197, 94, .28); }
+.tt-standard-today-metric[data-tone='break'] { border-color: rgba(245, 158, 11, .34); }
+.tt-standard-today-metric[data-tone='complete'] { border-color: rgba(59, 130, 246, .28); }
+.tt-standard-today-metric[data-tone='warning'] { border-color: rgba(239, 68, 68, .28); }
+
+.tt-standard-preferences {
+  margin-top: 16px;
+  border: 1px solid color-mix(in srgb, var(--border, #dce2eb) 76%, transparent);
+  border-radius: 16px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface, #fff) 92%, transparent);
+}
+.tt-standard-preferences[hidden] { display: none !important; }
+.tt-standard-preferences-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px 12px; border-bottom:1px solid color-mix(in srgb, var(--border, #dce2eb) 70%, transparent); }
+.tt-standard-preferences-head > div { display:grid; gap:2px; }
+.tt-standard-preferences-head strong { color:var(--text, #18202c); font-size:14px; }
+.tt-standard-preferences-eyebrow { color:var(--muted, #64748b); font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.tt-standard-preferences-chip { border:1px solid color-mix(in srgb, var(--border, #dce2eb) 80%, transparent); border-radius:999px; padding:4px 8px; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--muted, #64748b); }
+.tt-standard-setting-row { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 16px; cursor:pointer; border-bottom:1px solid color-mix(in srgb, var(--border, #dce2eb) 58%, transparent); }
+.tt-standard-setting-row > span { display:grid; gap:2px; min-width:0; }
+.tt-standard-setting-row strong { color:var(--text, #18202c); font-size:13px; }
+.tt-standard-setting-row small { color:var(--muted, #64748b); font-size:11px; line-height:1.4; }
+.tt-standard-setting-row input { width:38px; height:20px; flex:0 0 auto; accent-color:var(--accent-blue, #2563eb); }
+.tt-standard-preferences-note { margin:0; padding:11px 16px 13px; color:var(--muted, #64748b); font-size:10.5px; line-height:1.5; }
+
+.tt-notification-toolbar { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:0 0 12px; padding:10px 12px; border:1px solid color-mix(in srgb, var(--border, #dce2eb) 72%, transparent); border-radius:14px; background:color-mix(in srgb, var(--surface, #fff) 90%, transparent); }
+.tt-notification-toolbar-copy { min-width:0; display:grid; gap:2px; }
+.tt-notification-toolbar-copy strong { color:var(--text, #18202c); font-size:12px; }
+.tt-notification-toolbar-copy span { color:var(--muted, #64748b); font-size:10.5px; line-height:1.35; }
+#ttNotificationMarkRead { flex:0 0 auto; min-height:34px; padding:0 11px; border-radius:10px; border:1px solid color-mix(in srgb, var(--border, #dce2eb) 78%, transparent); background:var(--surface, #fff); color:var(--text, #18202c); font-weight:750; font-size:11px; cursor:pointer; }
+#ttNotificationMarkRead:disabled { opacity:.45; cursor:default; }
+#announceList .announce-item { position:relative; transition:border-color .18s ease, background-color .18s ease, transform .18s ease; }
+#announceList .announce-item.is-unread { border-color:rgba(59,130,246,.32); background:color-mix(in srgb, #eff6ff 45%, var(--surface, #fff)); }
+.tt-notification-new-pill { display:inline-flex; align-items:center; min-height:19px; padding:0 7px; border-radius:999px; background:rgba(37,99,235,.1); color:#2563eb; font-size:9px; font-weight:850; letter-spacing:.06em; text-transform:uppercase; margin-left:auto; }
+#announceList .announce-empty { min-height:150px; display:grid; place-content:center; justify-items:center; gap:5px; text-align:center; padding:28px; color:var(--muted, #64748b); }
+#announceList .announce-empty strong { color:var(--text, #18202c); font-size:14px; }
+#announceList .announce-empty span { max-width:340px; font-size:11px; line-height:1.45; }
+
+.tt-leave-status-legend { display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; margin:-2px 0 12px; color:var(--muted, #64748b); font-size:10px; }
+.tt-leave-status-legend span { display:inline-flex; align-items:center; gap:6px; }
+.tt-leave-status-legend i { width:7px; height:7px; border-radius:50%; background:#94a3b8; }
+.tt-leave-status-legend i[data-tone='pending'] { background:#f59e0b; }
+.tt-leave-status-legend i[data-tone='approved'] { background:#22c55e; }
+.tt-leave-status-legend i[data-tone='closed'] { background:#94a3b8; }
+
+/* Compact mode only reduces visual density; it does not hide actions or records. */
+html[data-trino-tier='normal'] body.tt-standard-compact #mainContent { --tt-compact-gap: 12px; }
+html[data-trino-tier='normal'] body.tt-standard-compact .punch-card { padding-top:14px; padding-bottom:14px; }
+html[data-trino-tier='normal'] body.tt-standard-compact .tt-standard-today-ribbon { margin-bottom:12px; padding:11px; }
+html[data-trino-tier='normal'] body.tt-standard-compact .log-section { margin-top:18px; }
+html[data-trino-tier='normal'] body.tt-standard-compact .attendance-summary-grid { gap:8px; }
+
+body.tt-user-reduced-motion *,
+body.tt-user-reduced-motion *::before,
+body.tt-user-reduced-motion *::after {
+  scroll-behavior:auto !important;
+  animation-duration:.001ms !important;
+  animation-iteration-count:1 !important;
+  transition-duration:.001ms !important;
+}
+
+/* Wide desktop containment */
+@media (max-width: 1536px) {
+  html[data-trino-tier='normal'] .band-inner { gap:18px; }
+  html[data-trino-tier='normal'] .action-rail { row-gap:8px; }
+  html[data-trino-tier='normal'] .session-indicator { max-width:220px; }
+}
+
+/* Laptop / tablet */
+@media (max-width: 1180px) {
+  .tt-standard-today-ribbon { grid-template-columns:1fr; }
+  .tt-standard-today-heading { flex-direction:row; align-items:center; justify-content:space-between; }
+  html[data-trino-tier='normal'] .action-rail { flex-wrap:wrap; justify-content:flex-end; }
+  html[data-trino-tier='normal'] .band-side { min-width:0; }
+  html[data-trino-tier='normal'] .log-tabs { max-width:100%; overflow-x:auto; scrollbar-width:thin; padding-bottom:3px; }
+  html[data-trino-tier='normal'] .log-tab { flex:0 0 auto; }
+}
+
+@media (max-width: 820px) {
+  .tt-standard-today-grid { grid-template-columns:1fr; }
+  .tt-standard-today-heading { align-items:flex-start; }
+  .tt-notification-toolbar { align-items:flex-start; }
+  .notification-center-modal { width:min(94vw, 720px); max-height:88vh; }
+  .notification-center-tabs { overflow-x:auto; }
+  .tt-standard-setting-row { align-items:flex-start; }
+  .leave-v2-tabs { overflow-x:auto; flex-wrap:nowrap !important; padding-bottom:3px; }
+  .leave-v2-tab { flex:0 0 auto; }
+}
+
+@media (max-width: 560px) {
+  html[data-trino-tier='normal'] .action-rail { justify-content:flex-start; width:100%; }
+  html[data-trino-tier='normal'] .action-rail .dayoff-btn,
+  html[data-trino-tier='normal'] .action-rail .settings-gear-btn,
+  html[data-trino-tier='normal'] .action-rail .notif-bell-btn { min-height:40px; }
+  .tt-standard-tier-badge { order:-5; }
+  .tt-standard-today-ribbon { border-radius:16px; padding:10px; }
+  .tt-standard-today-grid { gap:8px; }
+  .tt-standard-today-metric { padding:10px; }
+  .tt-notification-toolbar { display:grid; grid-template-columns:1fr; }
+  #ttNotificationMarkRead { width:100%; }
+  .tt-standard-setting-row { gap:12px; }
+  .tt-standard-setting-row small { font-size:10px; }
+}

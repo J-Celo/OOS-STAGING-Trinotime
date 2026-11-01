@@ -1,0 +1,41 @@
+/* TrinoTime V2.0.0 RC16 — wide-display UI polish
+   Presentation-only: roster alignment + unboxed Attendance selector + wide-screen guard. */
+
+/* The roster keeps RC14's dedicated title row, but the heading returns to the
+   conventional left edge requested in staging. */
+#rosterOverlay #rosterTitle{
+  text-align:left !important;
+}
+
+/* In dark Premium/TL/Admin workspaces the outer Attendance card was visually
+   reading as a second dark box behind Agent search / Today's Shift.  The
+   individual controls and lower Attendance surfaces already provide their own
+   boundaries, so let the workspace background carry the outer shell instead. */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard{
+  background:transparent !important;
+  border-color:transparent !important;
+  box-shadow:none !important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard::before{
+  display:none !important;
+}
+
+/* The selector row itself must never re-introduce a glass/card surface. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select{
+  background:transparent !important;
+  border:0 !important;
+  border-color:transparent !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+
+/* QHD / large 24–27 inch monitors: keep the selection controls comfortably
+   sized instead of allowing the first column to span the entire workspace. */
+@media (min-width:1800px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select{
+    width:100% !important;
+    max-width:1180px !important;
+  }
+}

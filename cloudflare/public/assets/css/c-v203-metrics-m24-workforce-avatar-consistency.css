@@ -1,0 +1,15 @@
+/* M2.4 — workforce avatar consistency. Presentation only. */
+.tt-workforce-agent-cell{display:flex;align-items:center;gap:8px;min-width:0}
+.tt-workforce-agent-cell>.avatar{margin-right:0!important;flex:0 0 auto}
+.tt-workforce-agent-copy{min-width:0}
+.tt-workforce-agent-copy>strong{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tt-coaching-agent-cell .coaching-report-profile-link{min-width:0;text-align:left}
+.tt-recent-agent-cell{display:flex;align-items:center;gap:7px;min-width:0}
+.tt-recent-agent-cell>strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.tt-recent-avatar{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex:0 0 24px;overflow:hidden;border-radius:50%;background:rgba(51,92,255,.11);color:#335cff;font-size:8px;font-weight:850;letter-spacing:.02em}
+.tt-recent-avatar img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+body.dark-mode .tt-recent-avatar{background:rgba(112,139,255,.14);color:#9eb3ff}
+.agent-security-name .tt-workforce-agent-cell{min-width:190px}
+.firebase-migration-table .tt-workforce-agent-cell{min-width:180px}
+#coachingReportOverlay .tt-workforce-agent-cell{min-width:170px}
+@media(max-width:760px){.tt-recent-avatar{width:22px;height:22px;flex-basis:22px}.tt-recent-agent-cell{gap:6px}}

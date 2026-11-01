@@ -1,0 +1,175 @@
+/* RC31 — precision metal, warm light, restrained movement. All reward artwork is native SVG/CSS. */
+.tt-achievements{--tt-ink:var(--text,#202731);--tt-muted:var(--muted,#5f6670);--tt-metal:#805d36;--tt-metal-light:#c5a57a;--tt-line:color-mix(in srgb,var(--tt-ink) 13%,transparent);--tt-surface:var(--card,#fff);--tt-tint:color-mix(in srgb,var(--tt-surface) 95%,#aa8151);--tt-stage:linear-gradient(135deg,#f3f0ea,#f9f8f5 55%,#ebe6dd);min-width:0;color:var(--tt-ink);overflow-wrap:anywhere}
+body.dark-mode .tt-achievements,[data-theme="dark"] .tt-achievements{--tt-metal:#d2b48a;--tt-metal-light:#ead6b5;--tt-line:rgba(212,222,237,.14);--tt-tint:color-mix(in srgb,var(--card,#17202c) 93%,#a48964);--tt-stage:linear-gradient(135deg,#171d26,#202630 55%,#282a2c)}
+.tt-achievement-heading,.tt-collection-heading,.tt-progression-caption,.tt-reward-card-top,.tt-reward-action-row,.tt-achievement-footer{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tt-achievement-heading{margin-bottom:24px}.tt-achievement-heading h3,.tt-collection-heading h3{margin:7px 0 0!important;font-size:clamp(21px,2.5vw,27px)!important;font-weight:650!important;letter-spacing:-.045em;line-height:1.2}.tt-achievement-heading p{margin:9px 0 0;color:var(--tt-muted);font-size:14px;line-height:1.6}.tt-achievement-eyebrow{font-size:11px;line-height:1.5;font-weight:650;letter-spacing:.13em;color:var(--tt-muted)}.tt-achievement-mark{flex:none;display:block;object-fit:contain}.tt-achievement-heading>.tt-achievement-mark{width:50px;height:50px;opacity:.8}
+.tt-achievement-summary{display:grid;grid-template-columns:1.45fr 1fr;border:1px solid var(--tt-line);border-radius:18px;overflow:hidden;background:var(--tt-tint)}
+.tt-momentum{position:relative;isolation:isolate;overflow:hidden;padding:25px 28px;min-width:0}.tt-momentum>.tt-achievement-eyebrow,.tt-streak-value,.tt-momentum-label{position:relative;z-index:1}.tt-streak-value{display:flex;align-items:center;gap:17px;margin:12px 0}.tt-streak-value strong{font-size:clamp(52px,6vw,78px);line-height:1;letter-spacing:-.07em;font-weight:550;font-variant-numeric:tabular-nums;color:var(--tt-ink)}.tt-streak-value>span{font-size:13px;line-height:1.6;color:var(--tt-muted)}.tt-momentum-label{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--tt-metal);font-weight:550}.tt-momentum-label i{width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px color-mix(in srgb,var(--tt-metal) 9%,transparent)}
+.tt-momentum-lines{position:absolute;right:-36px;top:-65px;width:245px;height:310px;border-radius:50%;border:1px solid var(--tt-line);transform:rotate(28deg);box-shadow:0 0 0 20px color-mix(in srgb,var(--tt-metal) 3%,transparent),0 0 0 21px color-mix(in srgb,var(--tt-metal) 10%,transparent),0 0 0 42px color-mix(in srgb,var(--tt-metal) 3%,transparent),0 0 0 43px color-mix(in srgb,var(--tt-metal) 8%,transparent);opacity:.6;pointer-events:none;z-index:0}.tt-momentum[data-momentum="distinction"] .tt-momentum-lines{border-color:var(--tt-metal-light);opacity:.9}
+.tt-achievement-grade{border-left:1px solid var(--tt-line);padding:24px;display:flex;flex-direction:column;justify-content:center;min-width:0}.tt-achievement-grade>div{display:flex;align-items:center;justify-content:space-between;gap:15px}.tt-achievement-grade .tt-grade{font-size:42px;font-weight:550;letter-spacing:-.04em;line-height:1.1}.tt-achievement-grade p{font-size:13px;line-height:1.6;margin:13px 0;color:var(--tt-muted)}.tt-period{font-size:11px;line-height:1.65;color:var(--tt-muted);font-variant-numeric:tabular-nums}
+.tt-achievements .tt-grade-A,.tt-achievements .tt-grade-B{color:#21714f!important}.tt-achievements .tt-grade-C{color:#826810!important}.tt-achievements .tt-grade-D{color:#a65322!important}.tt-achievements .tt-grade-F{color:#b34343!important}body.dark-mode .tt-achievements .tt-grade-A,body.dark-mode .tt-achievements .tt-grade-B,[data-theme="dark"] .tt-achievements .tt-grade-A,[data-theme="dark"] .tt-achievements .tt-grade-B{color:#88c8a8!important}body.dark-mode .tt-achievements .tt-grade-C,[data-theme="dark"] .tt-achievements .tt-grade-C{color:#dfc977!important}body.dark-mode .tt-achievements .tt-grade-D,[data-theme="dark"] .tt-achievements .tt-grade-D{color:#e1ab80!important}body.dark-mode .tt-achievements .tt-grade-F,[data-theme="dark"] .tt-achievements .tt-grade-F{color:#efa0a0!important}
+.tt-achievement-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--tt-line);margin:4px 0 23px;padding:19px 0;gap:12px}.tt-achievement-stats>div{padding:0 12px;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--tt-line);min-width:0}.tt-achievement-stats>div:first-child{padding-left:0}.tt-achievement-stats>div:last-child{border:0}.tt-achievement-stats span{font-size:12px;color:var(--tt-muted)}.tt-achievement-stats strong{font-size:20px;letter-spacing:-.025em;font-weight:600;font-variant-numeric:tabular-nums}
+.tt-progression{margin-bottom:30px}.tt-progression-caption{align-items:baseline;font-size:12px;margin-bottom:12px}.tt-progression-caption strong{font-weight:600}.tt-progression-caption>span{color:var(--tt-muted);text-align:right}.tt-achievements progress{display:block;appearance:none;-webkit-appearance:none;border:0;background:var(--tt-line);color:var(--tt-metal);width:100%;height:3px;border-radius:9px;overflow:hidden}.tt-achievements progress::-webkit-progress-bar{background:var(--tt-line)}.tt-achievements progress::-webkit-progress-value{background:linear-gradient(90deg,#896d4c,#c3a77f)}.tt-achievements progress::-moz-progress-bar{background:linear-gradient(90deg,#896d4c,#c3a77f)}
+.tt-milestone-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none!important;padding:0!important;margin:16px 0 0!important;gap:12px}.tt-milestone-track li{display:flex;flex-direction:column;gap:6px;position:relative;padding-left:17px;min-width:0}.tt-milestone-track strong{font-size:12px;font-weight:600;color:var(--tt-muted)}.tt-milestone-track li>span:last-child{font-size:11px;color:var(--tt-muted);line-height:1.5}.tt-track-point{position:absolute;left:0;top:4px;width:5px;height:5px;border:1px solid var(--tt-metal);transform:rotate(45deg)}.tt-milestone-track .is-reached .tt-track-point{background:var(--tt-metal)}.tt-milestone-track .is-reached strong{color:var(--tt-metal)}
+.tt-collection-heading{margin:8px 0 17px;align-items:end}.tt-collection-heading h3{font-size:20px!important}.tt-collection-heading>span{font-size:11px;color:var(--tt-muted)}.tt-achievement-rewards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.tt-reward-card{border:1px solid var(--tt-line);border-radius:16px;overflow:hidden;min-width:0;background:var(--tt-surface);display:flex;flex-direction:column;transition:border-color .2s ease,box-shadow .2s ease}.tt-reward-card[data-reward-state="equipped"]{border-color:color-mix(in srgb,var(--tt-metal) 58%,var(--tt-line));box-shadow:0 1px 8px color-mix(in srgb,var(--tt-metal) 7%,transparent)}.tt-reward-card-top{padding:17px 18px;gap:10px}.tt-reward-card-top>.tt-achievement-eyebrow{font-size:11px;letter-spacing:.1em}.tt-reward-state{font-size:11px;font-weight:600;line-height:1.4;border:1px solid var(--tt-line);border-radius:5px;padding:4px 7px;color:var(--tt-muted);white-space:nowrap}.tt-reward-card[data-reward-state="equipped"] .tt-reward-state,.tt-reward-card[data-reward-state="unlocked"] .tt-reward-state{color:var(--tt-metal);background:var(--tt-tint);border-color:color-mix(in srgb,var(--tt-metal) 35%,transparent)}
+.tt-reward-stage{position:relative;min-height:205px;background:var(--tt-stage);display:flex;align-items:center;justify-content:center;margin:0 9px;border-radius:10px;padding:22px;overflow:hidden;isolation:isolate}.tt-reward-stage:before{content:'';position:absolute;inset:9px;border:1px solid #b29c7c24;border-radius:5px;pointer-events:none}.tt-name-specimen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;text-align:center;min-width:0;width:100%;position:relative}.tt-name-specimen>strong{font-size:clamp(21px,2.4vw,28px);font-weight:600;line-height:1.35;letter-spacing:-.035em;max-width:100%;overflow-wrap:anywhere}.tt-specimen-kicker{font-size:11px;letter-spacing:.18em;color:#646369}.tt-name-specimen>span:last-child,.tt-avatar-specimen>span{font-size:11px;color:#626167;line-height:1.6;letter-spacing:.02em}.tt-specimen-rule{width:44px;height:1px;background:linear-gradient(90deg,transparent,#a08055,transparent)}body.dark-mode .tt-specimen-kicker,body.dark-mode .tt-name-specimen>span:last-child,body.dark-mode .tt-avatar-specimen>span,[data-theme="dark"] .tt-specimen-kicker,[data-theme="dark"] .tt-name-specimen>span:last-child,[data-theme="dark"] .tt-avatar-specimen>span{color:#b7b3ad}
+.tt-avatar-specimen{display:flex;flex-direction:column;align-items:center;gap:25px;padding-top:7px;position:relative}.tt-reward-avatar-wrap{width:94px;height:94px;flex:none;position:relative;border-radius:50%}.tt-reward-avatar-wrap .tt-reward-avatar{width:94px!important;height:94px!important;min-width:94px!important;border-radius:50%!important;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:25px!important;background:linear-gradient(140deg,#53616f,#293640)!important;color:#edf0f2!important;border:0!important;overflow:hidden;box-shadow:none!important}
+.tt-reward-details{display:flex;align-items:center;gap:10px;padding:18px 18px 0}.tt-reward-details .tt-achievement-mark{width:36px;height:36px}.tt-reward-details h4{font-size:15px!important;font-weight:650!important;line-height:1.4;margin:0!important;letter-spacing:-.02em;color:var(--tt-ink)!important}.tt-reward-details p{font-size:11px;color:var(--tt-muted);margin:4px 0 0}.tt-reward-description{padding:0 18px;font-size:12px;line-height:1.7;color:var(--tt-muted);margin:13px 0 18px}.tt-reward-action-row{padding:15px 18px;border-top:1px solid var(--tt-line);margin-top:auto;gap:10px}.tt-reward-action-row>span{font-size:11px;color:var(--tt-muted)}.tt-achievements .rc15-btn{font-size:12px;min-height:38px;border-radius:8px;white-space:normal;line-height:1.4}.tt-achievements .rc15-btn.is-primary{background:var(--tt-ink)!important;border-color:var(--tt-ink)!important;color:var(--tt-surface)!important;box-shadow:none!important}.tt-achievements button:focus-visible{outline:2px solid var(--tt-metal);outline-offset:4px}.tt-achievements button:disabled{opacity:.55;cursor:not-allowed}.tt-achievement-footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--tt-line);align-items:center}.tt-achievement-footer>p{max-width:65%;font-size:11px;line-height:1.8;color:var(--tt-muted);margin:0}.tt-achievement-footer>button{flex:none}
+.tt-achievement-feedback,.tt-achievement-risk{border-left:2px solid var(--tt-metal);padding:12px 15px;background:var(--tt-tint);font-size:13px;line-height:1.6;margin:16px 0}.tt-achievement-empty{padding:30px;border:1px solid var(--tt-line);border-radius:16px}.tt-achievement-empty p{font-size:14px;line-height:1.7}
+/* Name signature: warm metal has a static readable fallback. Higher current streaks add restrained light. */
+.tt-blaze{color:#79532d!important;text-shadow:0 1px 10px #ac7b3320}.tt-blaze[data-momentum="resonance"]{text-shadow:0 0 13px #b88d4d38}.tt-blaze[data-momentum="distinction"]{text-shadow:0 0 16px #b88d4d45}
+body.dark-mode .tt-blaze,[data-theme="dark"] .tt-blaze{color:#dec39d!important;text-shadow:0 0 14px #c09c6233}
+@supports(background-clip:text){.tt-blaze{background:linear-gradient(110deg,#79532d 10%,#805a32 37%,#765029 52%,#805a32 70%,#79532d 90%);background-size:220% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}.tt-blaze[data-momentum="resonance"],.tt-blaze[data-momentum="distinction"]{animation:tt-metal-light 9s ease-in-out infinite}.tt-blaze[data-momentum="distinction"]{background-size:260% 100%}body.dark-mode .tt-blaze,[data-theme="dark"] .tt-blaze{background-image:linear-gradient(110deg,#cfac7c 10%,#e4ccaa 37%,#f3e3c7 52%,#c5a274 70%,#e5cda8 90%)}}
+/* Precision halo: every decorative pixel stays outside the avatar. No image rotation. */
+.tt-flame{position:relative;border-radius:50%;outline:1px solid #b5946466;outline-offset:3px;box-shadow:0 0 0 5px #b89d7012,0 0 18px #b39a6624}
+.tt-flame:before{content:'';position:absolute;inset:-7px;border-radius:50%;padding:2px;background:conic-gradient(from 22deg,#87704f,#e9d7b2 14%,#ad9065 28%,#715e42 39%,#d9c39a 55%,#f0e1c2 66%,#958061 84%,#87704f);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;pointer-events:none}
+.tt-flame:after{content:'';position:absolute;inset:-12px;border-radius:50%;background:conic-gradient(from 44deg,#b89966 0deg 2deg,transparent 2deg 88deg,#e1c99f 88deg 92deg,transparent 92deg 178deg,#b89966 178deg 182deg,transparent 182deg 268deg,#e1c99f 268deg 272deg,transparent 272deg 360deg);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 4px));pointer-events:none;animation:tt-halo-light 7s ease-in-out infinite}
+.tt-achievement-celebrate{position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:center;gap:14px;margin:0 0 20px;padding:18px 20px;border:1px solid color-mix(in srgb,var(--tt-metal) 40%,transparent);background:var(--tt-tint);border-radius:12px;animation:tt-recognition-arrive 1.6s ease-out both}.tt-achievement-celebrate>.tt-achievement-mark{width:40px;height:40px}.tt-achievement-celebrate p{font-size:13px;line-height:1.6;margin:5px 0 0}.tt-achievement-celebrate:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 20%,#ccb2861c 47%,transparent 72%);transform:translateX(100%);animation:tt-recognition-sweep 1.6s ease-out both;pointer-events:none}
+@keyframes tt-metal-light{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}@keyframes tt-halo-light{0%,100%{opacity:.58}50%{opacity:1}}@keyframes tt-recognition-arrive{0%{opacity:0;transform:translateY(5px)}22%,100%{opacity:1;transform:translateY(0)}}@keyframes tt-recognition-sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@media(hover:hover){.tt-reward-card:hover{border-color:color-mix(in srgb,var(--tt-metal) 48%,var(--tt-line))}.tt-achievements .rc15-btn:not(:disabled):hover{filter:brightness(1.08)}}
+@media(max-width:760px){.tt-achievement-rewards{grid-template-columns:1fr}.tt-reward-stage{min-height:210px}.tt-achievement-summary{grid-template-columns:1.1fr 1fr}.tt-momentum{padding:22px}.tt-achievement-grade{padding:20px}.tt-name-specimen>strong{font-size:28px}}
+@media(max-width:480px){.tt-achievement-heading{margin-bottom:18px;gap:10px}.tt-achievement-heading>.tt-achievement-mark{width:38px;height:38px}.tt-achievement-heading h3{font-size:22px!important}.tt-achievement-summary{grid-template-columns:1fr}.tt-achievement-grade{border-left:0;border-top:1px solid var(--tt-line);padding:18px 22px}.tt-achievement-grade p{margin:8px 0}.tt-achievement-grade .tt-grade{font-size:32px}.tt-streak-value strong{font-size:64px}.tt-achievement-stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:20px}.tt-achievement-stats>div:nth-child(2){border:0}.tt-achievement-stats>div:nth-child(3){padding-left:0}.tt-milestone-track{gap:8px}.tt-milestone-track li{padding-left:12px}.tt-milestone-track strong{font-size:11px}.tt-milestone-track li>span:last-child{font-size:11px}.tt-progression-caption{flex-direction:column;align-items:start;gap:6px}.tt-progression-caption>span{text-align:left}.tt-collection-heading{align-items:start;flex-direction:column;gap:8px}.tt-achievement-footer{align-items:start;flex-direction:column;gap:12px}.tt-achievement-footer>p{max-width:100%}.tt-reward-card-top,.tt-reward-action-row{padding-left:14px;padding-right:14px}.tt-reward-details{padding-left:14px;padding-right:14px}.tt-reward-description{padding-left:14px;padding-right:14px}.tt-achievement-celebrate{padding:14px;gap:10px}.tt-achievement-celebrate>.tt-achievement-mark{width:32px;height:32px}}
+@media(prefers-reduced-motion:reduce){.tt-blaze,.tt-flame:after,.tt-achievement-celebrate,.tt-achievement-celebrate:after{animation:none!important;transform:none!important}.tt-achievement-celebrate:after{display:none}.tt-reward-card{transition:none}}
+@media(forced-colors:active){.tt-blaze{background:none!important;-webkit-text-fill-color:CanvasText;color:CanvasText!important;text-shadow:none}.tt-flame{outline:2px solid Highlight;box-shadow:none}.tt-flame:before,.tt-flame:after{display:none}.tt-achievement-mark{forced-color-adjust:none}.tt-reward-card,.tt-achievement-summary,.tt-reward-state{border-color:CanvasText}.tt-achievements .rc15-btn.is-primary{background:ButtonFace!important;color:ButtonText!important}.tt-track-point{border-color:CanvasText}.tt-milestone-track .is-reached .tt-track-point{background:CanvasText}}
+
+/* Preserve the unobscured avatar even when CSS masking is unavailable. */
+@supports not ((mask-composite:exclude) or (-webkit-mask-composite:xor)){.tt-flame:before,.tt-flame:after{display:none}}
+
+/* RC52 — Attendance Rewards Phase 2 consolidated additions. */
+.tt-achievement-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 20px}.tt-achievement-actions .rc15-btn{min-height:36px}
+.tt-calculation-panel{margin:0 0 26px;border:1px solid var(--tt-line);border-radius:14px;background:color-mix(in srgb,var(--tt-surface) 94%,var(--tt-tint));overflow:hidden}.tt-calculation-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:18px 20px;border-bottom:1px solid var(--tt-line)}.tt-calculation-head h4{margin:4px 0 0!important;font-size:16px!important;line-height:1.35;color:var(--tt-ink)!important}.tt-calculation-head>span{font-size:12px;color:var(--tt-muted);white-space:nowrap}.tt-calculation-note,.tt-calculation-footnote{margin:0;padding:14px 20px;font-size:12px;line-height:1.7;color:var(--tt-muted)}.tt-calculation-note{background:var(--tt-tint);border-bottom:1px solid var(--tt-line)}.tt-calculation-list{display:grid}.tt-calculation-row{display:grid;grid-template-columns:minmax(94px,.6fr) minmax(160px,1.3fr) minmax(170px,1fr);gap:14px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--tt-line);font-size:12px}.tt-calculation-row:last-child{border-bottom:0}.tt-calculation-row strong{font-size:13px;color:var(--tt-ink);font-weight:650}.tt-calculation-row>span:last-child{color:var(--tt-muted)}.tt-calculation-date{font-variant-numeric:tabular-nums;color:var(--tt-muted)}.tt-calculation-row[data-calculation-state="included"]{box-shadow:inset 2px 0 0 color-mix(in srgb,var(--tt-metal) 65%,transparent)}.tt-calculation-row[data-calculation-state="paused"]{box-shadow:inset 2px 0 0 color-mix(in srgb,var(--tt-muted) 45%,transparent)}.tt-calculation-row[data-calculation-state="breaking"]{box-shadow:inset 2px 0 0 color-mix(in srgb,#a76868 60%,transparent)}
+.tt-resonance-specimen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;text-align:center;width:100%;min-height:142px}.tt-resonance-specimen strong{font-size:24px;letter-spacing:-.03em;font-weight:620;color:var(--tt-ink)}.tt-resonance-specimen>span:last-child{font-size:11px;line-height:1.6;color:var(--tt-muted)}.tt-resonance-rule{display:block;width:76px;height:2px;border-radius:999px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--tt-metal) 75%,var(--tt-ink)),transparent)}.tt-permanent-lock{font-size:11px;color:var(--tt-muted);font-weight:600}
+.tt-directory-reward-avatar{display:inline-flex;border-radius:50%;position:relative;vertical-align:middle}.tt-directory-reward-avatar>.profile-avatar{position:relative;z-index:1}
+.tt-achievements.tt-reward-static .tt-blaze,.tt-achievements.tt-reward-static .tt-flame:after,.tt-achievements.tt-reward-static .tt-achievement-celebrate,.tt-achievements.tt-reward-static .tt-achievement-celebrate:after{animation:none!important;transform:none!important}.tt-achievements.tt-reward-static .tt-achievement-celebrate:after{display:none}.tt-achievements.tt-reward-static .tt-reward-card{transition:none!important}
+body.tt-user-reduced-motion .tt-achievements .tt-blaze,body.tt-user-reduced-motion .tt-achievements .tt-flame:after,body.tt-user-reduced-motion .tt-achievements .tt-achievement-celebrate,body.tt-user-reduced-motion .tt-achievements .tt-achievement-celebrate:after{animation:none!important;transform:none!important}
+@media(max-width:760px){.tt-calculation-row{grid-template-columns:1fr 1.4fr}.tt-calculation-row>span:last-child{grid-column:1/-1;padding-left:0}.tt-achievement-actions{align-items:stretch}.tt-achievement-actions .rc15-btn{flex:1 1 220px}}
+@media(max-width:480px){.tt-calculation-head{flex-direction:column;gap:7px}.tt-calculation-head>span{white-space:normal}.tt-calculation-row{grid-template-columns:1fr;padding:12px 14px;gap:5px}.tt-calculation-row>span:last-child{grid-column:auto}.tt-calculation-note,.tt-calculation-footnote{padding:12px 14px}.tt-resonance-specimen strong{font-size:21px}}
+
+/* RC56: unified, scale-safe AvatarFrame primitive for equipped reward borders. */
+.tt-avatar-frame,.tt-reward-surface-avatar,.tt-directory-reward-avatar{--tt-avatar-frame-size:28px;--tt-avatar-frame-ring-outset:3px;--tt-avatar-frame-halo-outset:5px;--tt-avatar-frame-stroke:1.5px;--tt-avatar-frame-halo-stroke:2px;display:inline-grid;place-items:center;position:relative;width:var(--tt-avatar-frame-size);height:var(--tt-avatar-frame-size);min-width:var(--tt-avatar-frame-size);min-height:var(--tt-avatar-frame-size);flex:0 0 var(--tt-avatar-frame-size);border-radius:50%;vertical-align:middle;isolation:isolate;overflow:visible;box-sizing:border-box;line-height:0}
+.tt-avatar-frame>.avatar,.tt-avatar-frame>.profile-avatar,.tt-avatar-frame>.tt-wm-avatar,.tt-avatar-frame>.agent-profile-header-avatar,.tt-reward-surface-avatar>.avatar,.tt-reward-surface-avatar>.profile-avatar,.tt-reward-surface-avatar>.tt-wm-avatar,.tt-directory-reward-avatar>.profile-avatar{position:relative;z-index:1;width:100%!important;height:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;border-radius:50%!important;overflow:hidden;box-sizing:border-box}
+.tt-avatar-frame.tt-flame,.tt-reward-surface-avatar.tt-flame,.tt-directory-reward-avatar.tt-flame{outline:0;outline-offset:0;box-shadow:0 0 0 1px #b5946438,0 0 10px #b39a661a}
+.tt-avatar-frame.tt-flame:before,.tt-reward-surface-avatar.tt-flame:before,.tt-directory-reward-avatar.tt-flame:before{inset:calc(-1 * var(--tt-avatar-frame-ring-outset));padding:var(--tt-avatar-frame-stroke)}
+.tt-avatar-frame.tt-flame:after,.tt-reward-surface-avatar.tt-flame:after,.tt-directory-reward-avatar.tt-flame:after{inset:calc(-1 * var(--tt-avatar-frame-halo-outset));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - var(--tt-avatar-frame-halo-stroke)),#000 calc(100% - var(--tt-avatar-frame-halo-stroke)));mask:radial-gradient(farthest-side,transparent calc(100% - var(--tt-avatar-frame-halo-stroke)),#000 calc(100% - var(--tt-avatar-frame-halo-stroke)))}
+.tt-avatar-frame--attendance{--tt-avatar-frame-size:28px;--tt-avatar-frame-ring-outset:2.5px;--tt-avatar-frame-halo-outset:4.5px;margin-right:8px}
+body.attendance-density-compact .tt-avatar-frame--attendance{--tt-avatar-frame-size:23px;--tt-avatar-frame-ring-outset:2px;--tt-avatar-frame-halo-outset:3.5px;margin-right:6px}
+.tt-avatar-frame--shift{--tt-avatar-frame-size:28px;--tt-avatar-frame-ring-outset:2.5px;--tt-avatar-frame-halo-outset:4.5px;margin:0}
+html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .tt-avatar-frame--shift{--tt-avatar-frame-size:28px}
+@media(max-width:820px){html[data-trino-custom-workspace='enabled'] #selectedEmployeeDisplay .tt-avatar-frame--shift{--tt-avatar-frame-size:29px}}
+.tt-avatar-frame--header{--tt-avatar-frame-size:36px;--tt-avatar-frame-ring-outset:3px;--tt-avatar-frame-halo-outset:5px}
+.tt-avatar-frame--chat{--tt-avatar-frame-size:42px;--tt-avatar-frame-ring-outset:3px;--tt-avatar-frame-halo-outset:5px}
+.tt-avatar-frame--chat-message{--tt-avatar-frame-size:30px;--tt-avatar-frame-ring-outset:2.5px;--tt-avatar-frame-halo-outset:4px;align-self:flex-end;margin:0 8px 18px 0}
+.tt-wm-msg-row.is-mine>.tt-avatar-frame--chat-message{order:2;margin:0 0 18px 8px}
+.tt-avatar-frame--chat-reply{--tt-avatar-frame-size:24px;--tt-avatar-frame-ring-outset:2px;--tt-avatar-frame-halo-outset:3.5px;margin-right:6px}
+.tt-avatar-frame--chat-read{--tt-avatar-frame-size:18px;--tt-avatar-frame-ring-outset:1px;--tt-avatar-frame-halo-outset:2px;--tt-avatar-frame-stroke:1px;--tt-avatar-frame-halo-stroke:1px}
+.tt-avatar-frame--directory{--tt-avatar-frame-size:72px;--tt-avatar-frame-ring-outset:4px;--tt-avatar-frame-halo-outset:7px}
+.tt-avatar-frame--hero{--tt-avatar-frame-size:116px;--tt-avatar-frame-ring-outset:7px;--tt-avatar-frame-halo-outset:12px;--tt-avatar-frame-stroke:2px}
+@media(max-width:640px){.profile-directory-profile-hero .tt-avatar-frame--directory{--tt-avatar-frame-size:58px;--tt-avatar-frame-ring-outset:3px;--tt-avatar-frame-halo-outset:5px}}
+.tt-attendance-reward-name,.tt-wm-reward-name{font:inherit;letter-spacing:inherit}
+body.tt-user-reduced-motion .tt-blaze,body.tt-user-reduced-motion .tt-flame:after{animation:none!important;transform:none!important}
+
+/* RC56 clip-fix-1: keep the circular base centered below both decorative rims.
+   Size through logical properties so legacy physical width/height rules cannot
+   enlarge selected-agent/profile avatars. Clip only the base, never the frame. */
+.tt-avatar-frame.tt-flame{--tt-avatar-frame-inner-inset:1px}
+.tt-avatar-frame--hero.tt-flame,.tt-avatar-frame--directory.tt-flame{--tt-avatar-frame-inner-inset:2px}
+.tt-avatar-frame.tt-flame>:is(.avatar,.profile-avatar,.tt-wm-avatar,.agent-profile-header-avatar){
+  position:absolute;inset:var(--tt-avatar-frame-inner-inset);z-index:1;
+  inline-size:auto!important;block-size:auto!important;
+  min-inline-size:0!important;min-block-size:0!important;
+  max-inline-size:none!important;max-block-size:none!important;
+  margin:0!important;border-radius:50%!important;box-sizing:border-box;
+  overflow:hidden;clip-path:circle(50% at 50% 50%);
+}
+.tt-avatar-frame.tt-flame::before,.tt-avatar-frame.tt-flame::after{z-index:2;box-sizing:border-box;pointer-events:none}
+/* The presence dot is a separate status indicator, not part of the portrait. */
+.tt-avatar-frame--hero.tt-flame>.rc15-presence{z-index:3;right:0;bottom:0}
+
+/* RC57: compact, accessible guidance; inherits the profile's light/dark tokens. */
+.tt-streak-guidance{display:grid;gap:10px;margin:16px 0}
+.tt-streak-next,.tt-streak-pending,.tt-streak-adjustment{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink)}
+.tt-streak-next strong,.tt-streak-pending strong{display:block;margin:5px 0;font-size:13px;color:var(--ink-dark)}
+.tt-streak-guidance p,.tt-streak-adjustment li{font-size:12px;line-height:1.65;margin:5px 0;color:var(--muted)}
+.tt-streak-pending{border-inline-start:3px solid #b59464}
+.tt-streak-adjustment summary{cursor:pointer;font-weight:700;font-size:12px}
+.tt-calculation-row strong small{display:block;margin-top:4px;font-weight:400;font-size:11px;color:var(--muted);line-height:1.5}
+.tt-calculation-row[data-calculation-state="pending"]{border-inline-start:3px solid #b59464}
+.tt-avatar-frame--reward{--tt-avatar-frame-size:68px;--tt-avatar-frame-ring-outset:4px;--tt-avatar-frame-halo-outset:7px}
+#editStreakReview,#tlEditStreakReview{display:block;width:100%;padding:10px;margin:6px 0;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+/* Match legacy selected-identity specificity so mobile fixed widths cannot escape the inset. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #selectedEmployeeDisplay .tt-avatar-frame.tt-flame>.avatar{width:calc(100% - 2 * var(--tt-avatar-frame-inner-inset))!important;height:calc(100% - 2 * var(--tt-avatar-frame-inner-inset))!important}
+
+
+/* RC59: compact header identity AvatarFrame closure.
+   The header previously mixed a 36px frame contract with 40-44px legacy avatar
+   dimensions, pushing the decorative ring and presence dot into adjacent text.
+   Keep the frame as the single geometry owner and anchor presence to its edge. */
+#agentProfileHeaderAvatarFrame.tt-avatar-frame--header{
+  --tt-avatar-frame-size:44px;
+  --tt-avatar-frame-ring-outset:2px;
+  --tt-avatar-frame-halo-outset:3.5px;
+  --tt-avatar-frame-stroke:1.25px;
+  --tt-avatar-frame-halo-stroke:1.5px;
+  --tt-avatar-frame-inner-inset:1px;
+  flex:0 0 var(--tt-avatar-frame-size)!important;
+  margin:0!important;
+}
+#agentProfileHeaderAvatarFrame.tt-avatar-frame--header>#agentProfileHeaderAvatar{
+  position:absolute!important;
+  inset:var(--tt-avatar-frame-inner-inset)!important;
+  width:auto!important;height:auto!important;
+  min-width:0!important;min-height:0!important;
+  max-width:none!important;max-height:none!important;
+  flex:none!important;margin:0!important;
+  border-radius:50%!important;overflow:hidden!important;
+  clip-path:circle(50% at 50% 50%);
+}
+#agentProfileHeaderAvatarFrame.tt-avatar-frame--header>#agentProfileHeaderStatus{
+  position:absolute!important;
+  left:auto!important;right:-2px!important;bottom:-2px!important;
+  width:10px!important;height:10px!important;
+  margin:0!important;z-index:4!important;
+  box-sizing:border-box!important;
+}
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderAvatarFrame.tt-avatar-frame--header{--tt-avatar-frame-size:42px}
+@media(max-width:680px){
+  html[data-trino-custom-workspace='enabled'] #agentProfileHeaderAvatarFrame.tt-avatar-frame--header{--tt-avatar-frame-size:42px}
+}
+@media(max-width:440px){
+  html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderAvatarFrame.tt-avatar-frame--header{--tt-avatar-frame-size:40px}
+}
+
+/* RC5: Blaze remains copper in the high-specificity profile contrast cascade. */
+#agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze,
+body.dark-mode #agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze {
+  color: #79532d !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+body.dark-mode #agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze {
+  color: #dec39d !important;
+}
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  #agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze,
+  body.dark-mode #agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze {
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+}
+@media (forced-colors: active) {
+  .tt-blaze,
+  #agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze,
+  body.dark-mode #agentProfileOverlay .tt-achievements .tt-name-specimen > strong.tt-blaze {
+    background: none !important;
+    color: CanvasText !important;
+    -webkit-text-fill-color: CanvasText !important;
+    text-shadow: none !important;
+  }
+}
+#moveAgentsOverlay > .modal-box { background: #ffffff !important; }
+body.dark-mode #moveAgentsOverlay > .modal-box { background: #151d29 !important; }
+#moveAgentsOverlay .pod-transfer-status { padding: 10px 0; min-height: 2em; font-size: 13px; line-height: 1.5; }
+#moveAgentsOverlay .pod-transfer-status[data-state="error"] { color: #a62626; }
+body.dark-mode #moveAgentsOverlay .pod-transfer-status[data-state="error"] { color: #ffb4ab; }
+#moveAgentsOverlay button:disabled { opacity: .48; cursor: not-allowed; box-shadow: none; }
+#moveAgentsOverlay #moveAgentsApplyBtn[aria-busy="true"] { opacity: .75; cursor: progress; }

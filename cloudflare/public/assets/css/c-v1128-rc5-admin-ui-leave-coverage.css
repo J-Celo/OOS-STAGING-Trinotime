@@ -1,0 +1,29 @@
+/* TrinoTime v1.1.128 RC5 — Admin UI / Leave coverage usability closure */
+/* The consolidated pre-custom bundle gives password reveal buttons a white !important color
+   for the dark welcome gate. Agent login is a light card, so explicitly restore contrast here. */
+.agent-login-password-wrap .password-hold-toggle {
+  color: #64748B !important;
+  background: transparent !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.agent-login-password-wrap .password-hold-toggle:hover,
+.agent-login-password-wrap .password-hold-toggle:focus-visible,
+.agent-login-password-wrap .password-hold-toggle.is-revealing {
+  color: #2563EB !important;
+  background: #EFF6FF !important;
+}
+.agent-login-password-wrap .password-hold-toggle svg {
+  display: block !important;
+  width: 18px;
+  height: 18px;
+}
+body.dark-mode .agent-login-password-wrap .password-hold-toggle {
+  color: #94A3B8 !important;
+}
+body.dark-mode .agent-login-password-wrap .password-hold-toggle:hover,
+body.dark-mode .agent-login-password-wrap .password-hold-toggle:focus-visible,
+body.dark-mode .agent-login-password-wrap .password-hold-toggle.is-revealing {
+  color: #BFDBFE !important;
+  background: rgba(37,99,235,.16) !important;
+}

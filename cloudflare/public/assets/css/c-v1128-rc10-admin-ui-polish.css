@@ -1,0 +1,83 @@
+/* TrinoTime v1.1.128 RC10 — Admin UI Polish Closure
+   Scope: readable Overtime Reason/Note column and unmistakable destructive-action states. */
+
+/* Overtime history must never crop the right-side Reason / Note or Actions columns.
+   Legacy .table-card uses overflow:hidden, which clipped content when the auto-layout
+   table grew wider than the modal. Keep the table readable and allow local scrolling. */
+#otTabOverlay #otListWrap .table-card {
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+#otTabOverlay #otListWrap .ot-management-table {
+  width: max(100%, 1380px) !important;
+  min-width: 1380px !important;
+  table-layout: auto !important;
+}
+#otTabOverlay #otListWrap .ot-management-table th:nth-child(11),
+#otTabOverlay #otListWrap .ot-management-table td:nth-child(11) {
+  min-width: 230px !important;
+  max-width: 320px;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-height: 1.4;
+}
+#otTabOverlay #otListWrap .ot-management-table th:nth-child(12),
+#otTabOverlay #otListWrap .ot-management-table td:nth-child(12) {
+  min-width: 92px !important;
+  white-space: nowrap;
+}
+#otTabOverlay #otListWrap .ot-table-review-note {
+  display: block;
+  max-width: 100% !important;
+  margin-top: 4px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Destructive actions: enabled must look enabled. Previous customized-workspace CSS
+   used the same pale translucent red for every state, making active Void/Clear/Delete
+   controls look disabled. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.delete:not(:disabled),
+body[data-trino-role] .modal-btn.delete:not(:disabled) {
+  border-color: #b42318 !important;
+  background: #b42318 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 20px rgba(180,35,24,.18) !important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.delete:not(:disabled):hover,
+body[data-trino-role] .modal-btn.delete:not(:disabled):hover {
+  border-color: #8f1c13 !important;
+  background: #8f1c13 !important;
+  color: #ffffff !important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.delete:disabled,
+body[data-trino-role] .modal-btn.delete:disabled {
+  border-color: rgba(180,35,24,.24) !important;
+  background: rgba(180,35,24,.10) !important;
+  color: rgba(143,28,19,.58) !important;
+  -webkit-text-fill-color: rgba(143,28,19,.58) !important;
+  opacity: .56 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+body.dark-mode[data-trino-role] .modal-btn.delete:not(:disabled),
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.delete:not(:disabled) {
+  border-color: #ef6a61 !important;
+  background: #b42318 !important;
+  color: #fff7f6 !important;
+  -webkit-text-fill-color: #fff7f6 !important;
+}
+body.dark-mode[data-trino-role] .modal-btn.delete:disabled,
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.delete:disabled {
+  border-color: rgba(239,106,97,.20) !important;
+  background: rgba(180,35,24,.15) !important;
+  color: rgba(255,210,206,.50) !important;
+  -webkit-text-fill-color: rgba(255,210,206,.50) !important;
+}

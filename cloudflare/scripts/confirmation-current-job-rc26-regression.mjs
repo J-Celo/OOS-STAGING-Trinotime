@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const js=fs.readFileSync(new URL('../public/assets/js/j-confirmation-dashboard-rc21.js',import.meta.url),'utf8');
+const css=fs.readFileSync(new URL('../public/assets/css/c-coverage-dashboard-v1.css',import.meta.url),'utf8');
+const worker=fs.readFileSync(new URL('../src/worker.js',import.meta.url),'utf8');
+const index=fs.readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
+assert.match(js,/__ttConfirmationDashboardBuild='RC24'/);
+assert.match(js,/__ttConfirmationCurrentJobBuild='RC26'/);
+assert.match(js,/<th>Current job<\/th><th>Current interval<\/th>/);
+assert.match(js,/r\.currentJob/);assert.match(js,/r\.currentTask/);assert.match(js,/r\.totalTasks/);
+assert.match(js,/tt-ops-job/);assert.match(index,/confirmation-rc24&current-job-rc26=1/);assert.match(css,/\.tt-confirmation-table\{min-width:1040px\}/);
+assert.match(worker,/currentJob:confirmationSafeJobIdServer\(row\.currentJob \|\| ''\)/);
+assert.match(worker,/currentTask:confirmationSafeTaskIndexServer\(row\.currentTask\)/);
+assert.match(worker,/totalTasks:confirmationSafeTaskIndexServer\(row\.totalTasks\)/);
+console.log('PASS RC26 Confirmation Current Job/Task UI: server row contract + dashboard column + task progress preserved');

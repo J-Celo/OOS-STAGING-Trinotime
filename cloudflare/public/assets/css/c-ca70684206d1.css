@@ -1,0 +1,64 @@
+/* TrinoTime v1.1.46 - Standard Light Mode punch-label contrast fix.
+   Presentation only. Premium/customized workspaces and Dark Mode are intentionally untouched. */
+
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.time-in,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.start-break,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.end-break,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.log-out {
+  font-weight: 800 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.time-in {
+  color: #166534 !important;
+}
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.time-in .sub {
+  color: #3F6F52 !important;
+  font-weight: 700 !important;
+}
+
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.start-break {
+  color: #92400E !important;
+}
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.start-break .sub {
+  color: #7C5426 !important;
+  font-weight: 700 !important;
+}
+
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.end-break {
+  color: #075985 !important;
+}
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.end-break .sub {
+  color: #3B6680 !important;
+  font-weight: 700 !important;
+}
+
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.log-out {
+  color: #991B1B !important;
+}
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.log-out .sub {
+  color: #7F4444 !important;
+  font-weight: 700 !important;
+}
+
+/* Preserve a clear disabled state without sacrificing legibility. */
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn:disabled {
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+/* Enabled hover states use white text only when the button itself becomes a strong solid color. */
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.time-in:not(:disabled):hover,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.start-break:not(:disabled):hover,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.end-break:not(:disabled):hover,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.log-out:not(:disabled):hover {
+  color: #FFFFFF !important;
+}
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.time-in:not(:disabled):hover .sub,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.start-break:not(:disabled):hover .sub,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.end-break:not(:disabled):hover .sub,
+html[data-trino-custom-workspace='standard'] body:not(.dark-mode) #punchCard .punch-btn.log-out:not(:disabled):hover .sub {
+  color: rgba(255,255,255,.88) !important;
+}

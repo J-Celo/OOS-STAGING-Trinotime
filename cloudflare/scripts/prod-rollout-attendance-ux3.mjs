@@ -1,0 +1,21 @@
+// Static regression: UI-only repositioning retains the authenticated punch path.
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const publicRoot=new URL('../public/',import.meta.url);
+const html=fs.readFileSync(new URL('index.html',publicRoot),'utf8');
+const css=fs.readFileSync(new URL('assets/css/c-staging-attendance-top-actions-ux3.css',publicRoot),'utf8');
+const ids=['btnTimeIn','btnStartBreak','btnEndBreak','btnLogOut','subTimeIn','subStartBreak','subEndBreak','subLogOut','coachingActionRow','btnCoaching','punchSaveState','pendingSyncCounter','connBanner','breakCountdownPanel','punchStepper','selectedEmployeeDisplay','liveHoursBig','todayShiftSelect','editTimeLogBtn'];
+for(const id of ids) assert.equal((html.match(new RegExp('id="'+id+'"','g'))||[]).length,1,'Exactly one original component '+id);
+const positions=['id="statusLine"','id="breakCountdownPanel"','id="connBanner"','id="attendanceTopActions"','id="btnTimeIn"','id="btnStartBreak"','id="btnEndBreak"','id="btnLogOut"','id="coachingActionRow"','id="punchStepper"','id="breakAlertReadiness"'].map(s=>html.indexOf(s));
+assert(positions.every(x=>x>=0)&&positions.every((x,i)=>i===0||x>positions[i-1]),'Summary, warnings, original controls, and details must render in correct order');
+assert(html.includes('href="assets/css/c-staging-attendance-top-actions-ux3.css?v=prod-301-ux3"'),'Cache-busted new stylesheet');
+assert(css.includes('grid-template-columns: repeat(4,minmax(0,1fr))')&&css.includes('grid-template-columns: repeat(2,minmax(0,1fr))'),'Responsive desktop/mobile actions');
+assert(css.includes('prefers-reduced-motion')&&css.includes('dark-mode'),'Accessible styles');
+const tracker=JSON.parse(fs.readFileSync(new URL('../../tracker/manifest.json',import.meta.url),'utf8'));
+assert.equal(tracker.version,'2.3.10');
+const dl=JSON.parse(fs.readFileSync(new URL('downloads/qc-tracker-current.json',publicRoot),'utf8'));
+assert.equal(dl.version,'2.3.10');
+const digest=createHash('sha256').update(fs.readFileSync(new URL('downloads/'+dl.file,publicRoot))).digest('hex');
+assert.equal(digest,dl.sha256,'Embedded staging Tracker checksum');
+console.log('PASS: staging UX3 top punch controls, unique IDs/handlers, warnings, responsive contrast, synchronized Tracker distribution');

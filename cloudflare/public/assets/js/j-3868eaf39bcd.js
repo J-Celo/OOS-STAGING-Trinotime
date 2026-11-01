@@ -1,0 +1,322 @@
+    (function(){
+        'use strict';
+        if (window.__myTrinoProfileV45) return;
+        window.__myTrinoProfileV45 = true;
+
+        const PREF_PREFIX = 'trinotime:my-profile-prefs:v43:';
+        let activeTab = 'overview';
+        let workEditing = false;
+        let profilePreviewMode = 'coworker';
+        let landingAppliedIdentity = '';
+        const originalRenderProfile = typeof renderAgentProfileDetail === 'function' ? renderAgentProfileDetail : null;
+        const originalEnterApp = typeof enterApp === 'function' ? enterApp : null;
+        const originalPunch = typeof punch === 'function' ? punch : null;
+        const originalFormatManilaTime = typeof formatManilaTime === 'function' ? formatManilaTime : null;
+
+        function esc(v){ return typeof escapeHtml === 'function' ? escapeHtml(v == null ? '' : String(v)) : String(v == null ? '' : v); }
+        function identity(){ try{return currentProfileIdentityName() || '';}catch(_){return '';} }
+        function profile(){ const name=identity(); return name && typeof getAgentProfile==='function' ? getAgentProfile(name) : {}; }
+        function roleLabel(){ try{if(isAdmin)return'Admin';if(isTeamLeader)return'Team Leader';return'Agent';}catch(_){return'Agent';} }
+        function safeLocalGetJson(key, fallback={}){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback;}catch(_){return fallback;}}
+        function safeLocalSetJson(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){return false;}}
+        function prefKey(){ const name=identity()||'default'; return PREF_PREFIX+name.toLowerCase().replace(/[^a-z0-9_-]+/g,'-'); }
+        function readPrefs(){
+            const saved=safeLocalGetJson(prefKey(),{});
+            let theme='light';try{theme=localStorage.getItem('oosTimeClockTheme')||saved.theme||'light';}catch(_){}
+            if(!['light','dark','system'].includes(theme))theme='light';
+            return {
+                theme,
+                density:saved.density==='compact'?'compact':'comfortable',
+                timeFormat:saved.timeFormat==='24'?'24':'12',
+                landing:['dashboard','log','status','coaching-report','history'].includes(saved.landing)?saved.landing:'dashboard',
+                reduceMotion:saved.reduceMotion===true,
+                confirmLogout:saved.confirmLogout!==false,
+                columns:saved.columns&&typeof saved.columns==='object'?saved.columns:{}
+            };
+        }
+        function writePrefs(next){ const current=readPrefs(); const merged={...current,...next}; safeLocalSetJson(prefKey(),merged); return merged; }
+        function privacyState(p){ const raw=(p&&p.myTrinoPrivacy)||{}; return {photo:'team',displayName:'team',bio:raw.bio==='team'?'team':'private',birthday:'private',gender:'private',location:raw.location==='team'?'team':'private',contact:raw.contact==='team'?'team':'private'}; }
+        function splitTags(value){ return String(value||'').split(',').map(v=>v.trim()).filter(Boolean).slice(0,12); }
+        function tagsMarkup(value){ const values=splitTags(value); return values.length?'<div class="mytrino-tag-list">'+values.map(v=>'<span class="mytrino-tag">'+esc(v)+'</span>').join('')+'</div>':'<span class="mytrino-empty">Not added yet.</span>'; }
+        function formatHours(value){ const n=Number(value); if(!Number.isFinite(n)||n<=0)return'0h'; const h=Math.floor(n); const m=Math.round((n-h)*60); return (h?h+'h ':'')+(m?m+'m':h?'':'0m'); }
+        function formatMinutes(value){ const n=Math.max(0,Math.round(Number(value)||0)); return (Math.floor(n/60)?Math.floor(n/60)+'h ':'')+(n%60?n%60+'m':n?'':'0m'); }
+        function dateMs(dateStr){ try{const p=parseDateStr(dateStr);return Date.UTC(p.y,p.m-1,p.d);}catch(_){return NaN;} }
+        function mondayStartMs(){ const today=todayKeyPart(); const ms=dateMs(today); if(!Number.isFinite(ms))return Date.now()-6*86400000; const d=new Date(ms); const day=d.getUTCDay(); const delta=(day+6)%7; return ms-delta*86400000; }
+        function actualBreakMinutes(rec,nowMs){ if(!rec||!rec.startBreak)return 0; const start=new Date(rec.startBreak).getTime(); const end=rec.endBreak?new Date(rec.endBreak).getTime():(rec.logOut?new Date(rec.logOut).getTime():nowMs); return Number.isFinite(start)&&Number.isFinite(end)&&end>start?(end-start)/60000:0; }
+        function activeWorkMs(rec,nowMs){ if(!rec||!rec.timeIn)return 0; const start=new Date(rec.timeIn).getTime(); const end=rec.logOut?new Date(rec.logOut).getTime():nowMs; if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start)return 0; return Math.max(0,end-start-actualBreakMinutes(rec,nowMs)*60000); }
+        function phtDateKeyFromIsoLocal(iso){ const d=new Date(iso||0); if(!Number.isFinite(d.getTime()))return''; return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).format(d); }
+        function weeklySummary(name){
+            const start=mondayStartMs(), end=start+7*86400000; let shifts=0,credited=0,breakMinutes=0,issues=0;
+            try{
+                Object.entries(allRecords||{}).forEach(([key,raw])=>{
+                    const idx=key.indexOf('|'); if(idx<0)return; const date=key.slice(0,idx), who=key.slice(idx+1); if(who!==name)return;
+                    const ms=dateMs(date); if(!Number.isFinite(ms)||ms<start||ms>=end)return;
+                    const rec={...(raw||{}),date,name,pod:(raw&&raw.pod)||podOf(name)||''};
+                    if(typeof isVoidedAttendanceRecord==='function'&&isVoidedAttendanceRecord(rec))return;
+                    if(rec.timeIn)shifts++;
+                    if(rec.logOut&&typeof computeDailyTotalHours==='function'){const val=computeDailyTotalHours(rec,date,name);if(Number.isFinite(Number(val)))credited+=Number(val);}
+                    breakMinutes+=actualBreakMinutes(rec,Date.now());
+                    if(typeof analyzeAttendanceRecordForDashboard==='function'&&analyzeAttendanceRecordForDashboard(rec).hasIssue)issues++;
+                });
+            }catch(_){}
+            let coachingMinutes=0;
+            try{
+                const api=window.TrinoTimeCoaching; const list=api&&typeof api.getVisibleSessions==='function'?api.getVisibleSessions():[];
+                list.filter(s=>s.agentName===name).forEach(s=>{
+                    const sms=new Date(s.startTime||0).getTime(); if(!Number.isFinite(sms))return;
+                    const localDate=phtDateKeyFromIsoLocal(s.startTime); const bits=localDate.split('-').map(Number); const dms=bits.length===3?Date.UTC(bits[0],bits[1]-1,bits[2]):sms;
+                    if(dms<start||dms>=end)return;
+                    let duration=Number(s.durationMs); if(!Number.isFinite(duration)){const endMs=s.endTime?new Date(s.endTime).getTime():Date.now();duration=Math.max(0,endMs-sms);} coachingMinutes+=duration/60000;
+                });
+            }catch(_){}
+            return {shifts,credited,breakMinutes,coachingMinutes,issues,start,end};
+        }
+        function currentStatus(name){
+            const now=Date.now(); let rec={}; try{rec=getTodayRecord(name)||{};}catch(_){}
+            let recDate='';try{recDate=attendanceRecordDate(rec,todayKeyPart());}catch(_){recDate=todayKeyPart();}
+            let coaching=false;try{coaching=!!(window.TrinoTimeCoaching&&window.TrinoTimeCoaching.isActive&&window.TrinoTimeCoaching.isActive(name));}catch(_){}
+            let label='Off Shift',cls='is-idle';
+            if(coaching){label='Coaching';cls='is-coaching';}
+            else if(rec.timeIn&&!rec.logOut&&rec.startBreak&&!rec.endBreak){label='On Break';cls='is-break';}
+            else if(rec.timeIn&&!rec.logOut){label='Active';cls='is-active';}
+            else if(rec.timeIn&&rec.logOut){label='Completed';cls='is-complete';}
+            const punches=[['Time In',rec.timeIn],['Start Break',rec.startBreak],['End Break',rec.endBreak],['Time Out',rec.logOut]].filter(x=>x[1]);
+            const last=punches.length?punches[punches.length-1]:null;
+            let credited='In progress';
+            try{if(rec.logOut){const v=computeDailyTotalHours(rec,recDate,name);credited=Number.isFinite(Number(v))?formatHours(Number(v)):'—';}}catch(_){}
+            return {rec,recDate,label,cls,last,credited,activeMs:activeWorkMs(rec,now),breakMinutes:actualBreakMinutes(rec,now)};
+        }
+        function teamLeaderForPod(pod){ try{const entry=Object.entries(TEAM_LEADER_POD_BY_NAME||{}).find(([,value])=>value===pod);return entry?(typeof agentDisplayName==='function'?agentDisplayName(entry[0]):entry[0]):'Not assigned';}catch(_){return'Not assigned';} }
+        function currentShiftLabel(name,status){ try{const pod=currentRosterPodForName(name)||podOf(name)||status.rec.pod||''; const win=getSelectedShiftWindowForToday(name,status.rec,pod); return formatShiftWindowLabel(win)+' PHT';}catch(_){return'Schedule unavailable';} }
+        function preferredName(p,name){ return String((p&&p.preferredName)||'').trim()||String((p&&p.fullName)||name); }
+        function firstProfileText(){ for(const value of arguments){const v=String(value==null?'':value).trim();if(v)return v;}return ''; }
+        function profileEmail(p){
+            const saved=firstProfileText(p&&p.email,p&&p.contactEmail,p&&p.workEmail);
+            if(saved)return saved;
+            try{const auth=(typeof firebase!=='undefined'&&firebase.auth)?firebase.auth():null;const user=auth&&auth.currentUser;return user&&user.email?String(user.email).trim():'';}catch(_){return '';}
+        }
+        function profileVisibilityLabel(value,locked){
+            if(locked)return '<span class="rc13-visibility-badge is-locked">Private · protected</span>';
+            return value==='team'?'<span class="rc13-visibility-badge is-team">Team-visible</span>':'<span class="rc13-visibility-badge is-private">Private</span>';
+        }
+        function profilePersonalSummary(p){
+            const privacy=privacyState(p);
+            const birthday=typeof profileBirthDateSummary==='function'?profileBirthDateSummary(p):firstProfileText(p&&p.birthDate);
+            return '<div class="rc13-about-list">'
+                +'<div class="rc13-about-row"><div><span>Bio</span><strong>'+esc(firstProfileText(p&&p.bio,'No bio added yet.'))+'</strong></div>'+profileVisibilityLabel(privacy.bio,false)+'</div>'
+                +'<div class="rc13-about-row"><div><span>Birthday</span><strong>'+esc(birthday||'Not provided')+'</strong></div>'+profileVisibilityLabel('private',true)+'</div>'
+                +'<div class="rc13-about-row"><div><span>Gender</span><strong>'+esc(firstProfileText(p&&p.gender,'Not provided'))+'</strong></div>'+profileVisibilityLabel('private',true)+'</div>'
+                +'<div class="rc13-about-row"><div><span>City / Region</span><strong>'+esc(firstProfileText(p&&p.location,p&&p.address,'Not provided'))+'</strong></div>'+profileVisibilityLabel(privacy.location,false)+'</div>'
+                +'</div>';
+        }
+        function completionItems(p){
+            return [
+                {key:'photo',label:'Profile photo',done:!!profilePhotoSource(p),action:'main',target:'agentProfilePhotoBtn',hint:'Add a profile photo'},
+                {key:'birthday',label:'Birthday',done:!!normalizeProfileBirthDate(p.birthDate),action:'main',target:'agentProfileBirthDate',hint:'Add your birthday'},
+                {key:'location',label:'City / Region',done:!!String(p.location||p.address||'').trim(),action:'main',target:'agentProfileAddress',hint:'Add your city or region'},
+                {key:'bio',label:'Bio',done:!!String(p.bio||'').trim(),action:'main',target:'agentProfileBio',hint:'Write a short bio'},
+                {key:'preferred-name',label:'Preferred display name',done:!!String(p.preferredName||'').trim(),action:'work',target:'myTrinoPreferredName',hint:'Choose a display name'},
+                {key:'skills',label:'Skills',done:splitTags(p.workSkills).length>0,action:'work',target:'myTrinoSkills',hint:'Add your skills'},
+                {key:'languages',label:'Languages',done:splitTags(p.languages).length>0,action:'work',target:'myTrinoLanguages',hint:'Add languages'}
+            ];
+        }
+        function completeness(p){
+            const items=completionItems(p),missing=items.filter(item=>!item.done); return {percent:Math.round((items.length-missing.length)/items.length*100),missing:missing.map(item=>item.label.toLowerCase()),items,missingItems:missing};
+        }
+        function ownershipBadge(kind){
+            if(kind==='workspace')return '<span class="rc14-ownership-badge is-workspace">Workspace managed</span>';
+            if(kind==='privacy')return '<span class="rc14-ownership-badge is-privacy">You control visibility</span>';
+            return '<span class="rc14-ownership-badge is-personal">You manage</span>';
+        }
+        function previewField(label,value,visible,note){
+            const text=visible&&String(value||'').trim()?esc(String(value).trim()):'<span class="rc14-preview-hidden">Hidden</span>';
+            return '<div class="rc14-preview-field"><span>'+esc(label)+'</span><strong>'+text+'</strong>'+(note?'<small>'+esc(note)+'</small>':'')+'</div>';
+        }
+        function profileContactText(p){
+            const email=firstProfileText(p&&p.email,p&&p.contactEmail,p&&p.workEmail);
+            const phone=firstProfileText(p&&p.phone,p&&p.phoneNumber,p&&p.contactPhone,p&&p.mobile);
+            const details=firstProfileText(p&&p.contactDetails,p&&p.contact);
+            return [email,phone,details].filter(Boolean).join(' · ');
+        }
+        function profilePreviewMarkup(name,p){
+            const privacy=privacyState(p),coworker=profilePreviewMode==='coworker',display=preferredName(p,name),pod=currentRosterPodForName(name)||p.pod||podOf(name)||'Unassigned';
+            const bio=firstProfileText(p&&p.bio,p&&p.workAbout),location=firstProfileText(p&&p.location,p&&p.address),contact=profileContactText(p),birthday=typeof profileBirthDateSummary==='function'?profileBirthDateSummary(p):firstProfileText(p&&p.birthDate),gender=firstProfileText(p&&p.gender);
+            const bioVisible=!coworker||privacy.bio==='team',locationVisible=!coworker||privacy.location==='team',contactVisible=!coworker||privacy.contact==='team';
+            const modeTitle=coworker?'Coworker preview':'Leadership context';
+            const modeCopy=coworker?'Shows what a normal coworker can see from your saved Profile Visibility settings.':'Shows your own data with a reminder that leadership access is evaluated separately by the server based on role and scope.';
+            return '<article class="mytrino-card is-wide rc14-profile-preview-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">View as…</div><h4>Profile Preview</h4><p>Check your saved visibility before other people see your Profile Directory card.</p></div><div class="rc14-preview-mode" role="group" aria-label="Profile preview mode"><button type="button" data-mytrino-preview-mode="coworker" aria-pressed="'+String(coworker)+'">Coworker</button><button type="button" data-mytrino-preview-mode="leadership" aria-pressed="'+String(!coworker)+'">Leadership</button></div></div><div class="rc14-preview-banner"><strong>'+modeTitle+'</strong><span>'+modeCopy+'</span></div><div class="rc14-preview-profile"><div class="rc14-preview-identity">'+profilePhotoMarkup(name,'profile-avatar')+'<div><strong>'+esc(display)+'</strong><span>'+esc(roleLabel())+' · '+esc(pod)+'</span></div></div><div class="rc14-preview-fields">'
+                +previewField('Bio',bio,bioVisible,coworker&&privacy.bio!=='team'?'Only you / authorized leadership':'')
+                +previewField('City / Region',location,locationVisible,coworker&&privacy.location!=='team'?'Only you / authorized leadership':'')
+                +previewField('Work contact',contact,contactVisible,coworker&&privacy.contact!=='team'?'Only you / authorized leadership':'')
+                +previewField('Birthday',birthday,!coworker,coworker?'Protected from coworker view':'Personal field; final leadership access is server-authorized')
+                +previewField('Gender',gender,!coworker,coworker?'Protected from coworker view':'Personal field; final leadership access is server-authorized')
+                +'</div></div><div class="rc14-preview-foot"><span>Preview only — it does not impersonate another account.</span><button type="button" class="mytrino-btn" data-mytrino-tab="preferences">Manage visibility</button></div></article>';
+        }
+        function profileHeroMarkup(name,p,status){
+            const display=preferredName(p,name);
+            const official=String(p.fullName||name);
+            const pod=currentRosterPodForName(name)||p.pod||podOf(name)||'Unassigned';
+            const email=profileEmail(p);
+            let presence='unavailable';try{presence=typeof agentProfilePresenceState==='function'?agentProfilePresenceState(name):'unavailable';}catch(_){}
+            const premiumBadge=(typeof isBeblessPremiumTarget==='function'&&typeof isBeblessPremiumEnabled==='function'&&isBeblessPremiumTarget(name)&&isBeblessPremiumEnabled())?'<span class="mytrino-premium-account-badge" aria-label="Premium account enabled">★ PREMIUM</span>':'';
+            const officialLine=display!==official?'<span class="rc13-profile-official">Roster identity · '+esc(official)+'</span>':'';
+            return '<div class="profile-hero rc13-profile-identity">'
+                +'<div class="profile-avatar-wrap rc13-profile-avatar-wrap">'+profilePhotoMarkup(name,'profile-avatar')+'<span class="rc13-profile-presence is-'+esc(presence)+'" aria-hidden="true"></span></div>'
+                +'<div class="profile-hero-main"><span class="profile-info-label rc13-profile-eyebrow">My TrinoTime</span><div class="profile-name-row"><h2 class="profile-public-name">'+esc(display)+'</h2>'+premiumBadge+'</div>'
+                +'<div class="rc13-profile-meta"><span class="rc13-profile-chip is-role">'+esc(roleLabel())+'</span><span class="rc13-profile-chip">'+esc(pod)+'</span>'+(email?'<span class="rc13-profile-email">'+esc(email)+'</span>':'<span class="rc13-profile-email is-muted">Work email not linked</span>')+'</div>'
+                +officialLine
+                +'<div class="mytrino-hero-status"><span class="mytrino-status-pill '+status.cls+'">'+esc(status.label)+'</span>'+(status.last?'<span>Last punch · '+esc(status.last[0])+' '+esc(fmtTime(status.last[1]))+'</span>':'<span>No punch recorded today</span>')+'</div></div>'
+                +'<div class="profile-hero-actions rc13-profile-hero-actions">'+(canEditAgentProfile(name)?'<button type="button" class="profile-edit-btn" id="agentProfileEditBtn">Edit Profile</button>':'')+'</div></div>';
+        }
+        function tabMarkup(){
+            const tabs=[['overview','Overview','Profile home'],['work','Workspace','Work & attendance'],['preferences','Preferences','Display & visibility'],['security','Security','Session & protection']];
+            return '<div class="mytrino-tabs rc13-profile-tabs" role="tablist" aria-label="My TrinoTime sections">'+tabs.map(([key,label,hint])=>'<button type="button" class="mytrino-tab" id="myTrinoTab'+key[0].toUpperCase()+key.slice(1)+'" data-mytrino-tab="'+key+'" role="tab" aria-controls="myTrinoPanel'+key[0].toUpperCase()+key.slice(1)+'" aria-selected="'+String(activeTab===key)+'" tabindex="'+(activeTab===key?'0':'-1')+'"><span>'+label+'</span><small>'+hint+'</small></button>').join('')+'</div>';
+        }
+        function completionNudge(p){
+            const c=completeness(p); if(c.percent>=100)return'<div class="mytrino-completeness-nudge rc13-completion-nudge rc14-completion-done"><div class="rc13-completion-copy"><strong>Profile 100% complete</strong><span>Your core profile details are filled in.</span></div><span class="rc14-completion-check">✓ Complete</span></div>';
+            const actions=c.missingItems.slice(0,5).map(item=>'<button type="button" class="rc14-completion-action" data-mytrino-completion="'+esc(item.action)+'" data-mytrino-completion-target="'+esc(item.target)+'"><span>＋</span>'+esc(item.hint)+'</button>').join('');
+            return '<div class="mytrino-completeness-nudge rc13-completion-nudge rc14-completion-guide"><div class="rc13-completion-copy"><strong>Profile '+c.percent+'% complete</strong><span>Choose a missing item and TrinoTime will take you directly to the right editor.</span></div><div class="rc14-completion-actions">'+actions+'</div></div>';
+        }
+        function overviewMarkup(name,p,status){
+            const week=weeklySummary(name);
+            const pod=currentRosterPodForName(name)||p.pod||podOf(name)||'Unassigned';
+            const tl=roleLabel()==='Team Leader'?name:teamLeaderForPod(pod);
+            const email=profileEmail(p);
+            const privacy=privacyState(p);
+            return '<section class="mytrino-section rc13-profile-overview" id="myTrinoPanelOverview" role="tabpanel" aria-labelledby="myTrinoTabOverview">'
+                +profileStatusPanelMarkup(name,p)
+                +completionNudge(p)
+                +'<div class="mytrino-grid rc13-profile-card-grid">'
+                +profilePreviewMarkup(name,p)
+                +'<article class="mytrino-card rc13-about-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">About You</div><h4>Your personal profile</h4><p>Optional details that help your TrinoTime profile feel like yours.</p></div><div class="rc14-card-tools">'+ownershipBadge('personal')+(canEditAgentProfile(name)?'<button type="button" class="mytrino-btn" data-mytrino-edit-profile>Edit</button>':'')+'</div></div>'+profilePersonalSummary(p)+'</article>'
+                +'<article class="mytrino-card rc13-membership-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Workspace membership</div><h4>Your TrinoTime identity</h4><p>Operational identity remains controlled by the workforce roster.</p></div>'+ownershipBadge('workspace')+'</div><dl class="mytrino-definition-list rc13-membership-list"><div class="mytrino-definition-row"><dt>Role</dt><dd>'+esc(roleLabel())+'</dd></div><div class="mytrino-definition-row"><dt>POD / Team</dt><dd>'+esc(pod)+'</dd></div><div class="mytrino-definition-row"><dt>Team Leader</dt><dd>'+esc(tl)+'</dd></div><div class="mytrino-definition-row"><dt>Work email</dt><dd>'+esc(email||'Not linked to this profile')+'</dd></div></dl></article>'
+                +'<article class="mytrino-card rc13-today-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Today</div><h4>Current work status</h4><p>'+esc(currentShiftLabel(name,status))+'</p></div><button type="button" class="mytrino-btn" data-mytrino-attendance>Attendance</button></div><div class="mytrino-stat-grid rc13-today-stats"><div class="mytrino-stat"><span>Status</span><strong>'+esc(status.label)+'</strong></div><div class="mytrino-stat"><span>Time In</span><strong>'+(status.rec.timeIn?esc(fmtTime(status.rec.timeIn)):'—')+'</strong></div><div class="mytrino-stat"><span>Worked so far</span><strong>'+esc(formatHours(status.activeMs/3600000))+'</strong></div><div class="mytrino-stat"><span>Break</span><strong>'+esc(formatMinutes(status.breakMinutes))+'</strong></div></div></article>'
+                +'<article class="mytrino-card rc13-week-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">This week</div><h4>Work snapshot</h4><p>Personal attendance and coaching totals.</p></div><button type="button" class="mytrino-btn" data-mytrino-tab="work">Workspace</button></div><div class="mytrino-week-metrics"><div class="mytrino-week-metric"><strong>'+week.shifts+'</strong><span>shifts</span></div><div class="mytrino-week-metric"><strong>'+esc(formatHours(week.credited))+'</strong><span>credited</span></div><div class="mytrino-week-metric"><strong>'+esc(formatMinutes(week.breakMinutes))+'</strong><span>break</span></div><div class="mytrino-week-metric"><strong>'+esc(formatMinutes(week.coachingMinutes))+'</strong><span>coaching</span></div></div><div class="mytrino-issue-row '+(week.issues?'':'is-clear')+'"><span>'+(week.issues?'⚠ '+week.issues+' attendance item'+(week.issues===1?'':'s')+' need review':'✓ No attendance issues found this week')+'</span>'+(week.issues?'<button type="button" class="mytrino-btn" data-mytrino-issues>Review</button>':'')+'</div></article>'
+                +'<article class="mytrino-card is-wide rc13-work-identity-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Work identity</div><h4>Skills, languages &amp; focus</h4><p>Profile-only details. They never rename your workforce roster identity.</p></div><div class="rc14-card-tools">'+ownershipBadge('personal')+(canEditAgentProfile(name)?'<button type="button" class="mytrino-btn" data-mytrino-work-edit>'+(workEditing?'Close editor':'Edit work profile')+'</button>':'')+'</div></div>'+(workEditing?workEditMarkup(p):'<div class="rc13-work-profile-grid"><div><span>Skills / specialties</span>'+tagsMarkup(p.workSkills)+'</div><div><span>Languages</span>'+tagsMarkup(p.languages)+'</div><div><span>Coaching / work focus</span><strong>'+esc(p.coachingFocus||'Not added yet.')+'</strong></div><div><span>About my work</span><strong>'+esc(p.workAbout||'Not added yet.')+'</strong></div></div>')+'</article>'
+                +'<article class="mytrino-card is-wide rc13-visibility-summary-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Profile visibility</div><h4>At-a-glance privacy</h4><p>These labels reflect your saved profile visibility. Admin authorization remains separate.</p></div><div class="rc14-card-tools">'+ownershipBadge('privacy')+'<button type="button" class="mytrino-btn" data-mytrino-tab="preferences">Manage visibility</button></div></div><div class="rc13-visibility-summary"><div><span>Bio</span>'+profileVisibilityLabel(privacy.bio,false)+'</div><div><span>City / Region</span>'+profileVisibilityLabel(privacy.location,false)+'</div><div><span>Work contact</span>'+profileVisibilityLabel(privacy.contact,false)+'</div><div><span>Birthday &amp; gender</span>'+profileVisibilityLabel('private',true)+'</div></div></article>'
+                +'</div></section>';
+        }
+        function workEditMarkup(p){ return '<form class="mytrino-form" id="myTrinoWorkForm"><div class="mytrino-form-grid"><div class="mytrino-field"><label for="myTrinoPreferredName">Preferred display name</label><input id="myTrinoPreferredName" maxlength="60" value="'+esc(p.preferredName||'')+'" placeholder="How you want your profile to greet you"><small>Your attendance identity and roster name do not change.</small></div><div class="mytrino-field"><label for="myTrinoSkills">Skills / specialties</label><input id="myTrinoSkills" maxlength="220" value="'+esc(p.workSkills||'')+'" placeholder="Customer Support, Billing, QA"><small>Separate multiple items with commas.</small></div><div class="mytrino-field"><label for="myTrinoLanguages">Languages</label><input id="myTrinoLanguages" maxlength="180" value="'+esc(p.languages||'')+'" placeholder="English, Tagalog"><small>Separate multiple items with commas.</small></div><div class="mytrino-field"><label for="myTrinoCoachingFocus">Coaching / work focus</label><input id="myTrinoCoachingFocus" maxlength="160" value="'+esc(p.coachingFocus||'')+'" placeholder="QA, attendance, customer handling"></div><div class="mytrino-field is-wide"><label for="myTrinoWorkAbout">About my work</label><textarea id="myTrinoWorkAbout" maxlength="320" placeholder="A short description of what you enjoy or focus on at work.">'+esc(p.workAbout||'')+'</textarea></div></div><div class="mytrino-actions"><button type="submit" class="mytrino-btn primary">Save work profile</button><button type="button" class="mytrino-btn" data-mytrino-work-edit>Cancel</button></div></form>'; }
+        function workMarkup(name,p,status){
+            const week=weeklySummary(name); const pod=currentRosterPodForName(name)||p.pod||podOf(name)||'Unassigned'; const rec=status.rec||{};
+            return '<section class="mytrino-section rc13-workspace-section" id="myTrinoPanelWork" role="tabpanel" aria-labelledby="myTrinoTabWork"><div class="mytrino-grid">'
+                +'<article class="mytrino-card is-wide"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Workspace membership</div><h4>'+esc(roleLabel())+' · '+esc(pod)+'</h4><p>This is your current operational assignment. Profile edits do not change roster membership.</p></div><div class="rc14-card-tools">'+ownershipBadge('workspace')+'<span class="mytrino-status-pill '+status.cls+'">'+esc(status.label)+'</span></div></div><div class="mytrino-stat-grid rc13-workspace-membership-stats"><div class="mytrino-stat"><span>Role</span><strong>'+esc(roleLabel())+'</strong></div><div class="mytrino-stat"><span>POD / Team</span><strong>'+esc(pod)+'</strong></div><div class="mytrino-stat"><span>Team Leader</span><strong>'+esc(roleLabel()==='Team Leader'?name:teamLeaderForPod(pod))+'</strong></div><div class="mytrino-stat"><span>Current shift</span><strong>'+esc(currentShiftLabel(name,status))+'</strong></div></div></article>'
+                +'<article class="mytrino-card is-wide"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Current shift</div><h4>'+esc(status.label)+'</h4><p>'+esc(currentShiftLabel(name,status))+' · '+esc(pod)+'</p></div><button type="button" class="mytrino-btn primary" data-mytrino-attendance>Open Attendance</button></div><div class="mytrino-stat-grid"><div class="mytrino-stat"><span>Time In</span><strong>'+(rec.timeIn?esc(fmtTime(rec.timeIn)):'—')+'</strong></div><div class="mytrino-stat"><span>Start Break</span><strong>'+(rec.startBreak?esc(fmtTime(rec.startBreak)):'—')+'</strong></div><div class="mytrino-stat"><span>End Break</span><strong>'+(rec.endBreak?esc(fmtTime(rec.endBreak)):'—')+'</strong></div><div class="mytrino-stat"><span>Time Out</span><strong>'+(rec.logOut?esc(fmtTime(rec.logOut)):'—')+'</strong></div><div class="mytrino-stat"><span>Credited Hours</span><strong>'+esc(status.credited)+'</strong></div><div class="mytrino-stat"><span>Break Time</span><strong>'+esc(formatMinutes(status.breakMinutes))+'</strong></div></div></article>'
+                +'<article class="mytrino-card is-wide"><div class="mytrino-card-head"><div><div class="mytrino-kicker">This week</div><h4>Attendance &amp; coaching totals</h4></div></div><div class="mytrino-week-metrics"><div class="mytrino-week-metric"><strong>'+week.shifts+'</strong><span>shifts</span></div><div class="mytrino-week-metric"><strong>'+esc(formatHours(week.credited))+'</strong><span>credited</span></div><div class="mytrino-week-metric"><strong>'+esc(formatMinutes(week.breakMinutes))+'</strong><span>break</span></div><div class="mytrino-week-metric"><strong>'+esc(formatMinutes(week.coachingMinutes))+'</strong><span>coaching</span></div></div><div class="mytrino-issue-row '+(week.issues?'':'is-clear')+'"><span>'+(week.issues?'⚠ '+week.issues+' item'+(week.issues===1?'':'s')+' need review':'✓ Your weekly attendance has no detected issues')+'</span>'+(week.issues?'<button type="button" class="mytrino-btn" data-mytrino-issues>View issues</button>':'')+'</div></article>'
+                +'</div></section>';
+        }
+        function preferenceColumns(prefs){ const defs=[['start-break','Start Break'],['end-break','End Break'],['night-diff','Night Diff'],['break-summary','Break Summary']]; return defs.map(([key,label])=>'<label class="mytrino-check"><input type="checkbox" data-mytrino-column="'+key+'" '+(prefs.columns[key]===false?'':'checked')+'> <span>'+label+'</span></label>').join(''); }
+        function preferencesMarkup(name,p){
+            const prefs=readPrefs(), privacy=privacyState(p);
+            return '<section class="mytrino-section rc13-preferences-section" id="myTrinoPanelPreferences" role="tabpanel" aria-labelledby="myTrinoTabPreferences"><div class="mytrino-grid">'
+                +'<article class="mytrino-card is-wide rc13-preference-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Display preferences</div><h4>Make TrinoTime fit your workflow</h4><p>These device-specific settings stay on this browser.</p></div></div><form class="mytrino-form" id="myTrinoPrefsForm"><div class="mytrino-form-grid"><div class="mytrino-field"><label for="myTrinoTheme">Appearance</label><select id="myTrinoTheme"><option value="system" '+(prefs.theme==='system'?'selected':'')+'>System</option><option value="light" '+(prefs.theme==='light'?'selected':'')+'>Light</option><option value="dark" '+(prefs.theme==='dark'?'selected':'')+'>Dark</option></select></div><div class="mytrino-field"><label for="myTrinoDensity">Attendance density</label><select id="myTrinoDensity"><option value="comfortable" '+(prefs.density==='comfortable'?'selected':'')+'>Comfortable</option><option value="compact" '+(prefs.density==='compact'?'selected':'')+'>Compact</option></select></div><div class="mytrino-field"><label for="myTrinoTimeFormat">Time format</label><select id="myTrinoTimeFormat"><option value="12" '+(prefs.timeFormat==='12'?'selected':'')+'>12-hour</option><option value="24" '+(prefs.timeFormat==='24'?'selected':'')+'>24-hour</option></select></div><div class="mytrino-field"><label for="myTrinoLanding">Open after sign-in</label><select id="myTrinoLanding"><option value="dashboard" '+(prefs.landing==='dashboard'?'selected':'')+'>Main Dashboard</option><option value="log" '+(prefs.landing==='log'?'selected':'')+'>Attendance Log</option><option value="status" '+(prefs.landing==='status'?'selected':'')+'>Today\'s Status</option><option value="coaching-report" '+(prefs.landing==='coaching-report'?'selected':'')+'>Coaching Report</option><option value="history" '+(prefs.landing==='history'?'selected':'')+'>History</option></select></div></div><div class="mytrino-switch-row"><div class="mytrino-switch-copy"><strong>Reduce animations</strong><small>Minimizes decorative motion and smooth transitions.</small></div><label class="mytrino-switch"><input id="myTrinoReduceMotion" type="checkbox" '+(prefs.reduceMotion?'checked':'')+'><span></span></label></div><div class="mytrino-switch-row"><div class="mytrino-switch-copy"><strong>Confirm before shift Time Out</strong><small>Adds a confirmation before recording the final attendance punch.</small></div><label class="mytrino-switch"><input id="myTrinoConfirmLogout" type="checkbox" '+(prefs.confirmLogout?'checked':'')+'><span></span></label></div><div><div class="mytrino-card-head rc13-subhead"><div><div class="mytrino-kicker">Attendance columns</div><p>Agent Name and Actions always stay visible.</p></div></div><div class="mytrino-columns">'+preferenceColumns(prefs)+'</div></div><div class="mytrino-actions"><button type="submit" class="mytrino-btn primary">Save preferences</button></div></form></article>'
+                +'<article class="mytrino-card is-wide rc13-privacy-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Profile Visibility</div><h4>Control what coworkers can see</h4><p>Your saved visibility setting describes the owner\'s preference. Admin authorization remains broader for operational needs and does not rewrite this badge.</p></div>'+ownershipBadge('privacy')+'</div><form id="myTrinoPrivacyForm" class="mytrino-form"><div class="mytrino-privacy-grid rc13-privacy-grid"><div class="mytrino-privacy-row"><div><strong>Photo</strong><small>Used in attendance and navigation.</small></div><div class="mytrino-privacy-lock">Team · required</div></div><div class="mytrino-privacy-row"><div><strong>Display name</strong><small>Roster identity remains system-managed.</small></div><div class="mytrino-privacy-lock">Team · required</div></div><div class="mytrino-privacy-row"><div><strong>Bio</strong><small>Choose whether your Bio appears to coworkers in the read-only Profile Directory.</small></div><select id="myTrinoBioPrivacy"><option value="private" '+(privacy.bio==='private'?'selected':'')+'>Only me / leadership</option><option value="team" '+(privacy.bio==='team'?'selected':'')+'>POD / Team</option></select></div><div class="mytrino-privacy-row"><div><strong>City / Region</strong><small>Keep this broad; leadership access remains role-scoped.</small></div><select id="myTrinoLocationPrivacy"><option value="private" '+(privacy.location==='private'?'selected':'')+'>Only me / leadership</option><option value="team" '+(privacy.location==='team'?'selected':'')+'>POD / Team</option></select></div><div class="mytrino-privacy-row"><div><strong>Work contact details</strong><small>Controls coworker visibility. Your TL and Admin retain authorized leadership access.</small></div><select id="myTrinoContactPrivacy"><option value="private" '+(privacy.contact==='private'?'selected':'')+'>Only me / leadership</option><option value="team" '+(privacy.contact==='team'?'selected':'')+'>POD / Team</option></select></div><div class="mytrino-privacy-row"><div><strong>Birthday</strong><small>Personal information.</small></div><div class="mytrino-privacy-lock">Private · protected</div></div><div class="mytrino-privacy-row"><div><strong>Gender</strong><small>Optional personal information.</small></div><div class="mytrino-privacy-lock">Private · protected</div></div></div><div class="rc13-privacy-note"><strong>How this works:</strong><span>The Profile Directory displays your saved visibility state. Leadership authorization is evaluated separately by the server, so an Admin viewing a private field does not turn that field into “shared.”</span></div><div class="mytrino-actions"><button type="submit" class="mytrino-btn primary">Save Profile Visibility</button></div></form></article>'
+                +'</div></section>';
+        }
+        function deviceLabel(){ const ua=navigator.userAgent||''; let browser=/Edg\//.test(ua)?'Edge':/Chrome\//.test(ua)?'Chrome':/Firefox\//.test(ua)?'Firefox':/Safari\//.test(ua)?'Safari':'Browser'; let os=/Windows/.test(ua)?'Windows':/Mac OS/.test(ua)?'macOS':/Android/.test(ua)?'Android':/(iPhone|iPad)/.test(ua)?'iOS':'this device'; return browser+' · '+os; }
+        function idleProtectionLabel(){ try{if(isAdmin)return'60 minutes';if(isTeamLeader)return'2 hours';}catch(_){} return'4 hours'; }
+        function credentialStatusLabel(){
+            try{if(isAdmin)return'Firebase Admin authentication';if(isTeamLeader)return (teamLeaderUsesDefaultPassword||teamLeaderPasswordChangeRequired)?'Password update required':'Private password set';if(agentSessionUsesDefaultPassword||agentPasswordChangeRequired)return'Password update required';}catch(_){}
+            return'Private password set';
+        }
+        function secureSessionLabel(){
+            try{if(typeof readWorkforceSecuritySession==='function'){const session=readWorkforceSecuritySession();const expiry=Number(session&&session.expiresAt||0);if(expiry>Date.now()){const mins=Math.max(1,Math.ceil((expiry-Date.now())/60000));return 'Verified · refresh in about '+mins+' min';}}}catch(_){}
+            return 'Verified by current sign-in';
+        }
+        function securityMarkup(name){
+            const canChange=!isAdmin && ((isTeamLeader&&teamLeaderName===name)||(!isTeamLeader&&agentSessionAuthenticated&&agentSessionName===name));
+            return '<section class="mytrino-section rc13-security-section rc14-security-section" id="myTrinoPanelSecurity" role="tabpanel" aria-labelledby="myTrinoTabSecurity"><div class="mytrino-grid"><article class="mytrino-card is-wide rc13-security-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Sign-in &amp; session security</div><h4>Your current TrinoTime session</h4><p>Review the identity and protections currently active on this browser.</p></div><span class="mytrino-security-status">Protected session</span></div><dl class="mytrino-definition-list rc14-security-list"><div class="mytrino-definition-row"><dt>Signed in as</dt><dd>'+esc(typeof agentDisplayName==='function'?agentDisplayName(name):name)+'</dd></div><div class="mytrino-definition-row"><dt>Role</dt><dd>'+esc(roleLabel())+'</dd></div><div class="mytrino-definition-row"><dt>Last sign-in</dt><dd id="myTrinoLastSignIn">Checking…</dd></div><div class="mytrino-definition-row"><dt>This device</dt><dd>'+esc(deviceLabel())+'</dd></div><div class="mytrino-definition-row"><dt>Credential status</dt><dd>'+esc(credentialStatusLabel())+'</dd></div><div class="mytrino-definition-row"><dt>Security session</dt><dd>'+esc(secureSessionLabel())+'</dd></div><div class="mytrino-definition-row"><dt>Idle protection</dt><dd>Auto-lock after '+esc(idleProtectionLabel())+' of no interaction</dd></div></dl><div class="mytrino-actions rc13-security-actions">'+(canChange?'<button type="button" class="mytrino-btn primary" data-mytrino-password>Change Password</button>':'<button type="button" class="mytrino-btn" disabled>Password managed by this session role</button>')+'<button type="button" class="mytrino-btn danger" data-mytrino-signout>Switch / Sign Out</button></div><div class="rc14-security-note"><strong>Session protection stays authoritative.</strong><span>Background syncing does not count as activity. Password changes and lifecycle revocation continue to use the existing secure session paths; this Profile page does not create a second login system.</span></div></article><article class="mytrino-card is-wide rc13-cloud-card"><div class="mytrino-card-head"><div><div class="mytrino-kicker">Cloud profile</div><h4>Sync &amp; profile protection</h4><p>Profile revisions, local draft recovery, and authoritative read-back remain active.</p></div></div>'+profileStatusPanelMarkup(name,profile())+'</article></div></section>';
+        }
+        function sectionMarkup(name,p,status){ if(activeTab==='work')return workMarkup(name,p,status); if(activeTab==='preferences')return preferencesMarkup(name,p); if(activeTab==='security')return securityMarkup(name); return overviewMarkup(name,p,status); }
+        function fmtTime(value){ if(!value)return'—'; const prefs=readPrefs(); const d=new Date(value); if(!Number.isFinite(d.getTime()))return String(value); if(prefs.timeFormat==='24')return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)+' PHT'; return originalFormatManilaTime?originalFormatManilaTime(value,true):new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Manila',hour:'numeric',minute:'2-digit'}).format(d)+' PHT'; }
+        function renderMyTrino(){
+            const host=document.getElementById('agentProfileDetail'); if(!host||!originalRenderProfile)return;
+            const overlay=document.getElementById('agentProfileOverlay'); if(overlay){overlay.dataset.profileExperience='rc13';overlay.dataset.profileUpgrade='rc14';}
+            const modalTitle=document.getElementById('agentProfileModalTitle'); if(modalTitle)modalTitle.textContent='My TrinoTime';
+            const modalSub=document.querySelector('#agentProfileOverlay .agent-profile-modal-sub'); if(modalSub)modalSub.textContent='Profile, workspace identity, preferences & security.';
+            if(profileEditing){ originalRenderProfile(); return; }
+            const name=identity(); if(!name){originalRenderProfile();return;}
+            const p=profile(); const status=currentStatus(name);
+            host.innerHTML='<div class="mytrino-shell rc13-profile-shell">'+profileHeroMarkup(name,p,status)+tabMarkup()+sectionMarkup(name,p,status)+'</div>';
+            if(activeTab==='security')void hydrateLastSignIn(name);
+        }
+        function focusCompletionTarget(action,target){
+            if(action==='work'){
+                activeTab='overview'; workEditing=true; renderMyTrino();
+                requestAnimationFrame(()=>{const el=document.getElementById(target);if(el){el.focus({preventScroll:true});el.scrollIntoView({block:'center',behavior:readPrefs().reduceMotion?'auto':'smooth'});}}); return;
+            }
+            const edit=document.getElementById('agentProfileEditBtn'); if(edit)edit.click();
+            setTimeout(()=>{const el=document.getElementById(target);if(el){el.focus({preventScroll:true});el.scrollIntoView({block:'center',behavior:readPrefs().reduceMotion?'auto':'smooth'});}},0);
+        }
+        async function saveWorkProfile(){
+            const name=identity(); if(!name||!canEditAgentProfile(name))return;
+            const p=getAgentProfile(name); const next={...p,preferredName:String(document.getElementById('myTrinoPreferredName')?.value||'').trim().slice(0,60),workSkills:String(document.getElementById('myTrinoSkills')?.value||'').trim().slice(0,220),languages:String(document.getElementById('myTrinoLanguages')?.value||'').trim().slice(0,180),coachingFocus:String(document.getElementById('myTrinoCoachingFocus')?.value||'').trim().slice(0,160),workAbout:String(document.getElementById('myTrinoWorkAbout')?.value||'').trim().slice(0,320),updatedAt:typeof nowIso==='function'?nowIso():new Date().toISOString()};
+            showToast('Saving work profile…'); const result=await saveAgentProfile(next); workEditing=false; renderMyTrino(); showToast(result&&result.remoteVerified?'Work profile saved to the cloud.':'Work profile saved and queued for cloud sync.');
+        }
+        function readColumnSelections(){ const out={}; document.querySelectorAll('[data-mytrino-column]').forEach(input=>{out[input.dataset.mytrinoColumn]=input.checked;}); return out; }
+        function applyColumns(columns){ Object.entries(columns||{}).forEach(([key,on])=>{const existing=document.querySelector('[data-tt-column="'+CSS.escape(key)+'"]');if(existing&&existing.checked!==on){existing.checked=on;existing.dispatchEvent(new Event('change',{bubbles:true}));}}); }
+        let systemThemeMedia=null;
+        function applyThemePref(theme){
+            let actual=theme; if(theme==='system'){systemThemeMedia=systemThemeMedia||window.matchMedia('(prefers-color-scheme: dark)');actual=systemThemeMedia.matches?'dark':'light';}
+            document.body.classList.toggle('dark-mode',actual==='dark');
+            try{localStorage.setItem('oosTimeClockTheme',theme);}catch(_){}
+            const lb=document.getElementById('themeLightBtn'),db=document.getElementById('themeDarkBtn'); if(lb)lb.classList.toggle('active',theme==='light'); if(db)db.classList.toggle('active',theme==='dark');
+        }
+        function applyPrefs(prefs){
+            document.documentElement.dataset.mytrinoReduceMotion=String(!!prefs.reduceMotion); document.documentElement.dataset.trinoTimeFormat=prefs.timeFormat;
+            applyThemePref(prefs.theme);
+            const btn=document.querySelector('[data-attendance-density="'+prefs.density+'"]'); if(btn&&btn.getAttribute('aria-pressed')!=='true')btn.click(); else {document.body.classList.toggle('attendance-density-compact',prefs.density==='compact');document.body.classList.toggle('attendance-density-comfortable',prefs.density!=='compact');}
+            applyColumns(prefs.columns);
+        }
+        async function savePreferences(){
+            const prefs=writePrefs({theme:document.getElementById('myTrinoTheme')?.value||'light',density:document.getElementById('myTrinoDensity')?.value||'comfortable',timeFormat:document.getElementById('myTrinoTimeFormat')?.value||'12',landing:document.getElementById('myTrinoLanding')?.value||'dashboard',reduceMotion:!!document.getElementById('myTrinoReduceMotion')?.checked,confirmLogout:!!document.getElementById('myTrinoConfirmLogout')?.checked,columns:readColumnSelections()});
+            applyPrefs(prefs); try{if(typeof renderTable==='function')renderTable();if(typeof refreshPunchCard==='function')refreshPunchCard();if(typeof renderTodayStatus==='function'&&document.getElementById('todayStatusOverlay')?.classList.contains('open'))renderTodayStatus();}catch(_){}
+            renderMyTrino(); showToast('My TrinoTime preferences saved.');
+        }
+        async function savePrivacy(){ const name=identity();if(!name||!canEditAgentProfile(name))return; const p=getAgentProfile(name);const privacy={photo:'team',displayName:'team',bio:document.getElementById('myTrinoBioPrivacy')?.value==='team'?'team':'private',birthday:'private',gender:'private',location:document.getElementById('myTrinoLocationPrivacy')?.value==='team'?'team':'private',contact:document.getElementById('myTrinoContactPrivacy')?.value==='team'?'team':'private'};const next={...p,myTrinoPrivacy:privacy,publicVisibility:false,profilePrivacyVersion:4,updatedAt:typeof nowIso==='function'?nowIso():new Date().toISOString()}; const result=await saveAgentProfile(next);renderMyTrino();showToast(result&&result.remoteVerified?'Privacy preferences saved.':'Privacy preferences saved and queued for cloud sync.'); }
+        function openAttendance(issuesOnly){
+            try{closeAgentProfileModal();}catch(_){}
+            const log=document.getElementById('logTabBtn'); if(log&&getComputedStyle(log).display!=='none')log.click();
+            const filter=document.getElementById('filterEmp'); const name=identity(); if(filter&&!filter.disabled){filter.value=name;filter.dispatchEvent(new Event('change',{bubbles:true}));}
+            if(issuesOnly){const issues=document.getElementById('attendanceIssuesToggle');if(issues&&issues.getAttribute('aria-pressed')!=='true')issues.click();}
+            const card=document.getElementById('logTableCard'); if(card)card.scrollIntoView({behavior:readPrefs().reduceMotion?'auto':'smooth',block:'start'});
+        }
+        async function hydrateLastSignIn(name){ const target=document.getElementById('myTrinoLastSignIn');if(!target)return; try{let record=null;if(isTeamLeader&&typeof readTeamLeaderAuthRecord==='function')record=await readTeamLeaderAuthRecord(name);else if(!isAdmin&&typeof readAgentAuthRecord==='function')record=await readAgentAuthRecord(name);const value=record&&record.lastLoginAt?new Date(record.lastLoginAt):null;target.textContent=value&&Number.isFinite(value.getTime())?new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Manila',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}).format(value)+' PHT':(isAdmin?'Current Admin session':'Not available');}catch(_){target.textContent='Not available';} }
+        function applyLandingPreference(){ const name=identity();if(!name||landingAppliedIdentity===name)return;if(window.__TRINOTIME_RESTORING_PERSISTENT_SESSION===true)return;landingAppliedIdentity=name;const landing=readPrefs().landing;setTimeout(()=>{if(landing==='dashboard'){const scroller=document.scrollingElement||document.documentElement;if(typeof window.__ttInstantScroll==='function')window.__ttInstantScroll(scroller,0);else window.scrollTo({top:0,left:0,behavior:'auto'});return;}const tab=document.querySelector('#logTabs .log-tab[data-tab="'+landing+'"]');if(tab&&getComputedStyle(tab).display!=='none')tab.click();else if(landing==='log'){const card=document.getElementById('logTableCard');if(card)card.scrollIntoView({block:'start',behavior:'auto'});}},180); }
+
+        if(originalRenderProfile) renderAgentProfileDetail = renderMyTrino;
+        if(originalEnterApp) enterApp = async function(options){ const result=await originalEnterApp.apply(this,arguments); landingAppliedIdentity=''; applyPrefs(readPrefs()); applyLandingPreference(); return result; };
+        if(originalPunch) punch = async function(field,btnEl){ if(field==='logOut'&&readPrefs().confirmLogout){const name=identity()||currentEmployee||'this agent';const dialogs=window.TrinoTimeCore&&window.TrinoTimeCore.dialogs;if(dialogs&&typeof dialogs.confirm==='function'){if(!(await dialogs.confirm('Time Out?',`Record Time Out for <strong>${esc(name)}</strong>?<br><br>This records the final attendance punch for the current shift.`,{confirmLabel:'Time Out',cancelLabel:'Cancel',tone:'danger',kind:'shift-timeout'})))return;}} return await originalPunch.apply(this,arguments); };
+        if(originalFormatManilaTime) formatManilaTime = function(value,includeSeconds){ if(readPrefs().timeFormat!=='24')return originalFormatManilaTime.apply(this,arguments);const d=new Date(value||0);if(!Number.isFinite(d.getTime()))return originalFormatManilaTime.apply(this,arguments);return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',second:includeSeconds?'2-digit':undefined,hour12:false}).format(d); };
+
+        function bind(){
+            if(typeof createAgentProfileUi==='function')createAgentProfileUi();
+            const host=document.getElementById('agentProfileDetail'); if(!host||host.dataset.myTrinoBound==='true')return; host.dataset.myTrinoBound='true';
+            host.addEventListener('click',event=>{
+                const tab=event.target.closest('[data-mytrino-tab]'); if(tab){activeTab=tab.dataset.mytrinoTab||'overview';workEditing=false;renderMyTrino();requestAnimationFrame(()=>document.querySelector('.mytrino-tab[aria-selected="true"]')?.focus({preventScroll:true}));return;}
+                if(event.target.closest('[data-mytrino-edit-profile]')){const edit=document.getElementById('agentProfileEditBtn');if(edit)edit.click();return;}
+                const completion=event.target.closest('[data-mytrino-completion]'); if(completion){focusCompletionTarget(completion.dataset.mytrinoCompletion||'main',completion.dataset.mytrinoCompletionTarget||'');return;}
+                const preview=event.target.closest('[data-mytrino-preview-mode]'); if(preview){profilePreviewMode=preview.dataset.mytrinoPreviewMode==='leadership'?'leadership':'coworker';renderMyTrino();return;}
+                if(event.target.closest('[data-mytrino-work-edit]')){workEditing=!workEditing;renderMyTrino();return;}
+                if(event.target.closest('[data-mytrino-attendance]')){openAttendance(false);return;}
+                if(event.target.closest('[data-mytrino-issues]')){openAttendance(true);return;}
+                if(event.target.closest('[data-mytrino-password]')){try{closeAgentProfileModal();if(isTeamLeader)openTeamLeaderPasswordModal();else openAgentPasswordModal();}catch(_){}return;}
+                if(event.target.closest('[data-mytrino-signout]')){try{closeAgentProfileModal();const btn=document.getElementById('sessionLogoutBtn');if(btn)btn.click();}catch(_){}return;}
+            });
+            host.addEventListener('submit',event=>{if(event.target.id==='myTrinoWorkForm'){event.preventDefault();void saveWorkProfile();}else if(event.target.id==='myTrinoPrefsForm'){event.preventDefault();void savePreferences();}else if(event.target.id==='myTrinoPrivacyForm'){event.preventDefault();void savePrivacy();}});
+            host.addEventListener('keydown',event=>{
+                const tab=event.target.closest&&event.target.closest('.mytrino-tab'); if(!tab)return;
+                const keys=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End']; if(!keys.includes(event.key))return;
+                const order=['overview','work','preferences','security']; let index=order.indexOf(tab.dataset.mytrinoTab);
+                if(event.key==='Home')index=0; else if(event.key==='End')index=order.length-1; else if(event.key==='ArrowLeft'||event.key==='ArrowUp')index=(index-1+order.length)%order.length; else index=(index+1)%order.length;
+                event.preventDefault(); activeTab=order[index]; workEditing=false; renderMyTrino();
+                requestAnimationFrame(()=>document.querySelector('.mytrino-tab[aria-selected="true"]')?.focus({preventScroll:true}));
+            });
+        }
+        if(systemThemeMedia===null&&window.matchMedia){systemThemeMedia=window.matchMedia('(prefers-color-scheme: dark)');systemThemeMedia.addEventListener?.('change',()=>{if(readPrefs().theme==='system')applyThemePref('system');});}
+        function init(){bind();applyPrefs(readPrefs());if(document.getElementById('agentProfileOverlay')?.classList.contains('open'))renderMyTrino();}
+        if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+        window.addEventListener('storage',e=>{if(e.key==='oosTimeClockTheme'||e.key===prefKey())applyPrefs(readPrefs());});
+        window.TrinoTimeMyProfile=Object.freeze({version:'45',open:function(tab='overview'){activeTab=['overview','work','preferences','security'].includes(tab)?tab:'overview';profilePreviewMode='coworker';openAgentProfileModal();renderMyTrino();},refresh:renderMyTrino,getPreferences:()=>({...readPrefs()})});
+    })();
+

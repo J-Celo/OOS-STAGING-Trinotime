@@ -1,0 +1,192 @@
+/* TrinoTime v1.1.58 — Admin Production Diagnostics & Integrity Watchdog */
+.production-diagnostics[hidden] { display: none !important; }
+.production-diagnostics {
+    margin: 18px 0 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--panel, #fff);
+    background: color-mix(in srgb, var(--panel, #fff) 92%, var(--accent-blue, #2563eb) 8%);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, .06);
+}
+.production-diagnostics-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+.production-diagnostics-head > div { min-width: 0; }
+.production-diagnostics-head span:first-child {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.production-diagnostics-head h4 {
+    margin: 0;
+    color: var(--ink);
+    font: 800 18px/1.2 'Plus Jakarta Sans', Inter, sans-serif;
+}
+.production-diagnostics-head p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.55;
+}
+#productionDiagnosticsStatus {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel, #fff);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .02em;
+    white-space: nowrap;
+}
+#productionDiagnosticsStatus[data-state='running'] { color: #1d4ed8; border-color: rgba(37,99,235,.3); background: rgba(37,99,235,.08); }
+#productionDiagnosticsStatus[data-state='pass'] { color: #166534; border-color: rgba(22,101,52,.28); background: rgba(34,197,94,.09); }
+#productionDiagnosticsStatus[data-state='warn'] { color: #92400e; border-color: rgba(180,83,9,.28); background: rgba(245,158,11,.10); }
+#productionDiagnosticsStatus[data-state='fail'] { color: #991b1b; border-color: rgba(185,28,28,.28); background: rgba(239,68,68,.09); }
+.production-diagnostics-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+.production-diagnostics-actions button:disabled { opacity: .62; cursor: wait; }
+.production-diagnostics-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+}
+.production-diagnostics-summary > div {
+    min-width: 0;
+    padding: 10px 11px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel, #fff);
+}
+.production-diagnostics-summary span {
+    display: block;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+.production-diagnostics-summary strong {
+    display: block;
+    margin-top: 5px;
+    overflow-wrap: anywhere;
+    color: var(--ink);
+    font-size: 12px;
+    line-height: 1.35;
+}
+.production-diagnostics-details {
+    margin-top: 10px;
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    overflow: hidden;
+    background: var(--panel, #fff);
+}
+.production-diagnostics-details > summary {
+    cursor: pointer;
+    padding: 11px 12px;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 800;
+    user-select: none;
+}
+.production-diagnostics-results { padding: 0 10px 10px; }
+.production-diagnostics-role + .production-diagnostics-role { margin-top: 10px; }
+.production-diagnostics-role > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 2px;
+}
+.production-diagnostics-role h5 { margin: 0; color: var(--ink); font-size: 11px; }
+.production-diagnostics-role header span { color: var(--muted); font: 9px 'IBM Plex Mono', monospace; }
+.production-diagnostics-row {
+    display: grid;
+    grid-template-columns: 8px minmax(0, 1fr) auto;
+    gap: 9px;
+    align-items: start;
+    padding: 9px 8px;
+    border-top: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+}
+.production-diagnostics-indicator {
+    width: 7px;
+    height: 7px;
+    margin-top: 5px;
+    border-radius: 50%;
+    background: #64748b;
+}
+.production-diagnostics-row[data-state='pass'] .production-diagnostics-indicator { background: #16a34a; }
+.production-diagnostics-row[data-state='warn'] .production-diagnostics-indicator { background: #d97706; }
+.production-diagnostics-row[data-state='fail'] .production-diagnostics-indicator { background: #dc2626; }
+.production-diagnostics-row strong { display: block; color: var(--ink); font-size: 11px; line-height: 1.35; }
+.production-diagnostics-row p { margin: 3px 0 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+.production-diagnostics-result {
+    margin-top: 1px;
+    color: var(--muted);
+    font: 800 8px 'IBM Plex Mono', monospace;
+    letter-spacing: .04em;
+}
+.production-diagnostics-row[data-state='pass'] .production-diagnostics-result { color: #15803d; }
+.production-diagnostics-row[data-state='warn'] .production-diagnostics-result { color: #b45309; }
+.production-diagnostics-row[data-state='fail'] .production-diagnostics-result { color: #b91c1c; }
+.production-diagnostics-empty,
+.production-diagnostics-more {
+    margin: 8px 2px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.5;
+}
+.production-integrity-clear,
+.production-diagnostics-error {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 7px;
+    padding: 11px;
+    border-radius: 9px;
+    font-size: 10px;
+    line-height: 1.5;
+}
+.production-integrity-clear { color: #166534; background: rgba(34,197,94,.09); border: 1px solid rgba(22,101,52,.18); }
+.production-diagnostics-error { color: #991b1b; background: rgba(239,68,68,.08); border: 1px solid rgba(185,28,28,.18); }
+.production-diagnostics-foot {
+    margin: 10px 2px 0;
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+/* Seven Review Center categories fit without compressing the labels. */
+.admin-review-summary { grid-template-columns: repeat(4, minmax(86px, 1fr)); }
+
+@media (max-width: 900px) {
+    .admin-review-summary { grid-template-columns: repeat(3, minmax(86px, 1fr)); }
+    .production-diagnostics-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+    .production-diagnostics { padding: 13px; }
+    .production-diagnostics-head { flex-direction: column; gap: 9px; }
+    .production-diagnostics-summary { grid-template-columns: 1fr; }
+    .admin-review-summary { grid-template-columns: repeat(2, minmax(78px, 1fr)); }
+    .production-diagnostics-row { grid-template-columns: 8px minmax(0, 1fr); }
+    .production-diagnostics-result { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .production-diagnostics *, .production-diagnostics *::before, .production-diagnostics *::after { transition: none !important; animation: none !important; }
+}

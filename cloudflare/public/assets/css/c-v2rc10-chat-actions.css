@@ -1,0 +1,32 @@
+/* RC10: isolated additions. Keep the existing white/navy/gold chat theme. */
+.tt-wm-chat-link { color:inherit; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; user-select:text; -webkit-user-select:text; }
+.tt-wm-copy-link { display:inline-block; font-family:inherit; font-size:10px; font-weight:600; line-height:1.4; margin:0 0 0 7px; padding:3px 6px; color:inherit; background:transparent; border:1px solid currentColor; border-radius:6px; cursor:pointer; vertical-align:baseline; }
+.tt-wm-bubble,.tt-wm-thread-reply { user-select:text; -webkit-user-select:text; }
+.tt-wm-link-wrap { white-space:normal; }
+.tt-wm-chat-link:focus-visible,.tt-wm-copy-link:focus-visible,.tt-wm-message-menu summary:focus-visible,.tt-wm-message-menu button:focus-visible { outline:2px solid currentColor; outline-offset:3px; }
+.tt-wm-message-menu { display:block; width:max-content; margin:3px 0 2px auto; font-size:11px; color:#64748b; max-width:100%; }
+.tt-wm-message-menu summary { display:block; cursor:pointer; padding:2px 10px; border-radius:6px; font-weight:800; list-style:none; border:1px solid #dbe3ed; }
+.tt-wm-message-menu summary::-webkit-details-marker { display:none; }
+.tt-wm-message-menu-options { display:flex; flex-direction:column; gap:3px; padding:5px; margin-top:3px; border:1px solid #dbe3ed; border-radius:9px; background:#fff; color:#263244; }
+.tt-wm-message-menu-options button { font-family:inherit; font-size:11px; font-weight:600; line-height:1.4; color:inherit; background:transparent; border:0; text-align:left; padding:8px 10px; cursor:pointer; border-radius:6px; }
+.tt-wm-message-menu-options button:hover { background:#fff5d7; }
+.tt-wm-unsent { opacity:.78; background:transparent !important; border-style:dashed; box-shadow:none; }
+.tt-wm-unsent small { display:block; margin-top:4px; font-size:10px; }
+.tt-wm-meal-card { border:1px solid #edd397; border-radius:12px; background:#fff9e9; color:#34280f; padding:10px 12px; display:flex; flex-direction:column; gap:4px; font-size:12px; }
+.tt-wm-meal-card small { font-size:10px; line-height:1.4; }
+.tt-wm-meal-hint { margin:6px 4px 0; color:#64748b; font-size:10px; line-height:1.4; }
+.tt-wm-meal-hint code { color:inherit; font-weight:700; }
+.tt-wm-msg-meta { flex-wrap:wrap; }
+.tt-wm-thread-reply .tt-wm-message-menu { clear:both; }
+@media (max-width:640px) {
+  .tt-wm-message-menu summary { padding:6px 14px; min-height:24px; }
+  .tt-wm-message-menu-options button { min-height:40px; }
+  .tt-wm-copy-link { padding:5px 8px; }
+}
+
+.tt-wm-meal-outbox { color:#64748b; font-size:11px; margin:6px 4px 0; }
+.tt-wm-meal-outbox summary { cursor:pointer; font-weight:700; padding:3px 0; }
+.tt-wm-meal-outbox-list { max-height:120px; overflow-y:auto; }
+.tt-wm-meal-outbox-list > div { margin:5px 0; padding:6px; border:1px solid #dbe3ed; border-radius:7px; }
+.tt-wm-meal-outbox-list small { display:block; margin:3px 0; }
+.tt-wm-meal-outbox button:disabled { opacity:.6; cursor:wait; }

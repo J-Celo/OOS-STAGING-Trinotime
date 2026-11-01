@@ -1,0 +1,233 @@
+/* TrinoTime v1.0.65 - Today at a Glance Liquid Glass status deck.
+   Presentation-only attendance enhancement. Status metrics remain clickable
+   filters and retain the existing attendance calculations / permissions. */
+
+/* One palette drives both the legend and the card-edge accents so the visual
+   status language cannot drift between the two surfaces. */
+#tableWrap {
+  --tt-glance-working: #7db8ff;
+  --tt-glance-break: #c8a9ff;
+  --tt-glance-complete: #78e4b1;
+  --tt-glance-not-in: #c6ceda;
+  --tt-glance-issues: #ff929e;
+}
+
+
+/* The summary surface becomes the dark glass deck that the five metric panes
+   sit on, keeping the legend readable in both Standard and Premium workspaces. */
+#tableWrap #attendanceTodaySummary.attendance-today-summary,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #attendanceTodaySummary.attendance-today-summary,
+body.dark-mode #tableWrap #attendanceTodaySummary.attendance-today-summary {
+  border-bottom: 1px solid rgba(255,255,255,.085) !important;
+  background:
+    radial-gradient(circle at 12% -18%, rgba(125,184,255,.10), transparent 34%),
+    radial-gradient(circle at 92% 0%, rgba(255,146,158,.055), transparent 29%),
+    linear-gradient(145deg, rgba(8,14,23,.84), rgba(17,25,37,.70)) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%) !important;
+  backdrop-filter: blur(18px) saturate(170%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.075), inset 0 -1px 0 rgba(255,255,255,.025) !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-head { margin-bottom: 0 !important; }
+#tableWrap #attendanceTodaySummary .attendance-summary-title,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #attendanceTodaySummary .attendance-summary-title {
+  color: rgba(255,255,255,.88) !important;
+  font-weight: 800 !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-scope,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #attendanceTodaySummary .attendance-summary-scope {
+  color: rgba(255,255,255,.48) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Status legend: translucent pills using the exact same accent variables.    */
+/* -------------------------------------------------------------------------- */
+#tableWrap #ttStatusLegend.tt-status-legend {
+  gap: 8px 9px !important;
+  margin: 10px 0 14px !important;
+  color: rgba(255,255,255,.56) !important;
+}
+#tableWrap #ttStatusLegend .tt-status-legend-label {
+  color: rgba(255,255,255,.48) !important;
+  font-weight: 750 !important;
+  letter-spacing: .07em !important;
+}
+#tableWrap #ttStatusLegend .tt-status-legend-chip {
+  --tt-legend-accent: rgba(255,255,255,.58);
+  position: relative;
+  min-height: 28px !important;
+  padding: 5px 10px !important;
+  border: 1px solid color-mix(in srgb, var(--tt-legend-accent) 34%, rgba(255,255,255,.08)) !important;
+  border-radius: 999px !important;
+  background: linear-gradient(145deg, rgba(13,20,30,.68), rgba(20,29,41,.48)) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(175%) !important;
+  backdrop-filter: blur(14px) saturate(175%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 7px 18px rgba(3,8,15,.12) !important;
+  color: color-mix(in srgb, var(--tt-legend-accent) 82%, white 18%) !important;
+  font-weight: 760 !important;
+}
+#tableWrap #ttStatusLegend .tt-status-legend-chip.is-active { --tt-legend-accent: var(--tt-glance-working); }
+#tableWrap #ttStatusLegend .tt-status-legend-chip.is-break { --tt-legend-accent: var(--tt-glance-break); }
+#tableWrap #ttStatusLegend .tt-status-legend-chip.is-complete { --tt-legend-accent: var(--tt-glance-complete); }
+#tableWrap #ttStatusLegend .tt-status-legend-chip.is-not-in { --tt-legend-accent: var(--tt-glance-not-in); }
+#tableWrap #ttStatusLegend .tt-status-legend-chip.is-review { --tt-legend-accent: var(--tt-glance-issues); }
+#tableWrap #ttStatusLegend .tt-status-legend-dot {
+  width: 8px !important;
+  height: 8px !important;
+  flex-basis: 8px !important;
+  background: var(--tt-legend-accent) !important;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--tt-legend-accent) 15%, transparent),
+    0 0 12px color-mix(in srgb, var(--tt-legend-accent) 62%, transparent) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Today at a Glance: dark frosted Liquid Glass metric cards.                 */
+/* -------------------------------------------------------------------------- */
+#tableWrap #attendanceTodaySummary .attendance-summary-grid {
+  gap: 12px !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #attendanceTodaySummary .attendance-summary-card,
+body.dark-mode #tableWrap #attendanceTodaySummary .attendance-summary-card {
+  --tt-card-accent: var(--tt-glance-not-in);
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  min-height: 82px !important;
+  padding: 15px 16px 15px 19px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  border-left: 4px solid var(--tt-card-accent) !important;
+  border-radius: 18px !important;
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--tt-card-accent) 9%, transparent), transparent 38%),
+    linear-gradient(145deg, rgba(10,16,25,.78), rgba(19,27,39,.58) 58%, rgba(8,13,21,.72)) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(185%) !important;
+  backdrop-filter: blur(24px) saturate(185%) !important;
+  box-shadow:
+    0 16px 34px rgba(3,8,15,.18),
+    0 0 0 1px rgba(255,255,255,.018),
+    inset 0 1px 0 rgba(255,255,255,.11),
+    inset 5px 0 20px -17px var(--tt-card-accent) !important;
+  transform: translateZ(0);
+  transition: transform .2s cubic-bezier(.22,.75,.22,1), border-color .2s ease, box-shadow .2s ease, filter .2s ease !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 1px;
+  border-radius: 15px;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255,255,255,.085), transparent 28%, transparent 70%, color-mix(in srgb, var(--tt-card-accent) 6%, transparent)),
+    radial-gradient(circle at 88% 6%, rgba(255,255,255,.055), transparent 28%);
+  opacity: .82;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card > * {
+  position: relative;
+  z-index: 1;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-working { --tt-card-accent: var(--tt-glance-working); }
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-break { --tt-card-accent: var(--tt-glance-break); }
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-complete { --tt-card-accent: var(--tt-glance-complete); }
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-not-in { --tt-card-accent: var(--tt-glance-not-in); }
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-issues { --tt-card-accent: var(--tt-glance-issues); }
+
+/* Force all five metrics onto the same high-contrast number treatment instead
+   of inheriting the older per-status colored-number rules. */
+#tableWrap #attendanceTodaySummary .attendance-summary-card strong,
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-working strong,
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-break strong,
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-complete strong,
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-not-in strong,
+#tableWrap #attendanceTodaySummary .attendance-summary-card.is-issues strong,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #attendanceTodaySummary .attendance-summary-card strong,
+body.dark-mode #tableWrap #attendanceTodaySummary .attendance-summary-card strong {
+  color: #fff !important;
+  font-weight: 900 !important;
+  letter-spacing: -.035em !important;
+  text-shadow:
+    0 2px 12px rgba(0,0,0,.34),
+    0 0 18px color-mix(in srgb, var(--tt-card-accent) 24%, transparent) !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card span,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #attendanceTodaySummary .attendance-summary-card span,
+body.dark-mode #tableWrap #attendanceTodaySummary .attendance-summary-card span {
+  color: rgba(255,255,255,.66) !important;
+  font-weight: 650 !important;
+}
+
+/* The summary cards are existing table filters: hover/focus communicates that
+   interactivity without changing their click/keyboard behavior. */
+#tableWrap #attendanceTodaySummary .attendance-summary-card[data-attendance-metric]:hover {
+  transform: translateY(-2px) !important;
+  border-color: color-mix(in srgb, var(--tt-card-accent) 36%, rgba(255,255,255,.10)) !important;
+  border-left-color: var(--tt-card-accent) !important;
+  box-shadow:
+    0 20px 40px rgba(3,8,15,.22),
+    0 0 18px color-mix(in srgb, var(--tt-card-accent) 11%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 6px 0 24px -18px var(--tt-card-accent) !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card[data-attendance-metric]:focus-visible {
+  outline: none !important;
+  border-color: color-mix(in srgb, var(--tt-card-accent) 58%, rgba(255,255,255,.12)) !important;
+  border-left-color: var(--tt-card-accent) !important;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--tt-card-accent) 18%, transparent),
+    0 18px 38px rgba(3,8,15,.22),
+    0 0 20px color-mix(in srgb, var(--tt-card-accent) 15%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card[data-attendance-metric].is-filter-active {
+  transform: translateY(-2px) !important;
+  border-width: 1px !important;
+  border-left-width: 4px !important;
+  border-color: color-mix(in srgb, var(--tt-card-accent) 52%, rgba(255,255,255,.10)) !important;
+  border-left-color: var(--tt-card-accent) !important;
+  filter: saturate(1.08) !important;
+  box-shadow:
+    0 20px 42px rgba(3,8,15,.24),
+    0 0 22px color-mix(in srgb, var(--tt-card-accent) 19%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 7px 0 25px -18px var(--tt-card-accent) !important;
+}
+#tableWrap #attendanceTodaySummary .attendance-summary-card[data-attendance-metric].is-filter-active strong {
+  text-shadow:
+    0 2px 14px rgba(0,0,0,.38),
+    0 0 22px color-mix(in srgb, var(--tt-card-accent) 34%, transparent) !important;
+}
+
+/* Low-performance mode keeps the dark glass composition and accent mapping but
+   removes the expensive live blur. */
+html[data-glass-performance='low'] #tableWrap #attendanceTodaySummary.attendance-today-summary,
+html[data-glass-performance='low'] #tableWrap #attendanceTodaySummary .attendance-summary-card,
+html[data-glass-performance='low'] #tableWrap #ttStatusLegend .tt-status-legend-chip {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html[data-glass-performance='low'] #tableWrap #attendanceTodaySummary.attendance-today-summary {
+  background: linear-gradient(145deg, rgba(8,14,23,.98), rgba(17,25,37,.96)) !important;
+}
+html[data-glass-performance='low'] #tableWrap #attendanceTodaySummary .attendance-summary-card {
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--tt-card-accent) 8%, transparent), transparent 38%),
+    linear-gradient(145deg, rgba(10,16,25,.96), rgba(19,27,39,.93)) !important;
+}
+
+@media (max-width: 720px) {
+  #tableWrap #attendanceTodaySummary .attendance-summary-card {
+    min-height: 76px !important;
+    padding: 13px 14px 13px 17px !important;
+    border-radius: 16px !important;
+  }
+  #tableWrap #ttStatusLegend .tt-status-legend-label { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #tableWrap #attendanceTodaySummary .attendance-summary-card {
+    transition: none !important;
+  }
+}

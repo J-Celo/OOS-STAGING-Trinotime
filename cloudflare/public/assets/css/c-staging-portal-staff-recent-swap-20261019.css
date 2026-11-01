@@ -1,0 +1,32 @@
+/* RC2 staging selection portal: swap Staff Access and recently used POD placement.
+   Existing event handlers, POD selection and staff authorization are unchanged. */
+.gate-overlay[data-gate-step="selection"] .gate-pod-section > #gateStaffAccess {
+  margin: 0 0 12px !important;
+  width: 100%;
+}
+.gate-overlay[data-gate-step="selection"] .gate-pod-section > #gatePodGrid {
+  margin-bottom: 12px !important;
+}
+.gate-overlay[data-gate-step="selection"] .gate-pod-section > #mostUsedPod.most-used {
+  margin: 0 0 6px !important;
+}
+/* Contrast repair: old inherited dark-theme copy was white on the light portal. */
+body:not(.dark-mode) .gate-overlay #mostUsedPod.most-used .most-used-copy {
+  color: #475569 !important;
+}
+body.dark-mode .gate-overlay #mostUsedPod.most-used .most-used-copy {
+  color: #d7e1ed !important;
+}
+.gate-overlay #mostUsedPod.most-used .most-used-link:focus-visible,
+.gate-overlay #gateStaffAccess > summary:focus-visible {
+  outline: 3px solid #2563eb !important;
+  outline-offset: 3px;
+}
+@media (max-width: 620px) {
+  .gate-overlay[data-gate-step="selection"] .gate-pod-section > #gateStaffAccess {
+    margin-bottom: 10px !important;
+  }
+  .gate-overlay[data-gate-step="selection"] .gate-pod-section > #gatePodGrid {
+    margin-bottom: 10px !important;
+  }
+}

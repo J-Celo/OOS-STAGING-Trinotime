@@ -1,0 +1,51 @@
+/* RC78 — canonical Admin header identity stability.
+   The legacy profile renderer may still write its generic "Administrator" fallback during
+   unrelated UI refreshes. These selectors render the UID-bound canonical Admin identity from
+   immutable data attributes without observing or repainting the application. */
+
+#agentProfileHeaderBtn[data-admin-canonical-identity='true'] #agentProfileHeaderName[data-admin-canonical-name] {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+#agentProfileHeaderBtn[data-admin-canonical-identity='true'] #agentProfileHeaderName[data-admin-canonical-name]::after {
+  content: attr(data-admin-canonical-name);
+  color: currentColor;
+  font: 600 12px/1.15 Poppins, sans-serif;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+#agentProfileHeaderBtn[data-admin-canonical-identity='true'] #agentProfileHeaderRole[data-admin-canonical-role] {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+#agentProfileHeaderBtn[data-admin-canonical-identity='true'] #agentProfileHeaderRole[data-admin-canonical-role]::after {
+  content: attr(data-admin-canonical-role);
+  color: currentColor;
+  font: 500 9.5px/1.15 Poppins, sans-serif;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+#agentProfileHeaderBtn[data-admin-canonical-identity='true'] #agentProfileHeaderAvatar[data-admin-canonical-initials] {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+#agentProfileHeaderBtn[data-admin-canonical-identity='true'] #agentProfileHeaderAvatar[data-admin-canonical-initials]:not(.tt-admin-profile-header-avatar-photo)::after {
+  content: attr(data-admin-canonical-initials);
+  color: currentColor;
+  font: 700 13px/1 Poppins, sans-serif;
+  line-height: 1;
+}
+
+.tt-admin-canonical-a11y-label {
+  position: fixed !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}

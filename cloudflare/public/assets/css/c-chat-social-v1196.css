@@ -1,0 +1,50 @@
+/* TrinoTime v1.1.96 — Social Messaging Experience
+   Seen avatars, reaction identity tooltips, Emoji 17.0 picker, GIPHY picker. */
+
+/* Read receipts — Messenger-style avatar stack under the latest message each reader has seen. */
+.tt-wm-read-receipts{display:flex;align-items:center;justify-content:flex-end;gap:0;margin:3px 3px 0;min-height:18px}
+.tt-wm-msg-row:not(.is-mine) .tt-wm-read-receipts{justify-content:flex-start}
+.tt-wm-read-avatar{position:relative;display:inline-grid;place-items:center;width:18px;height:18px;margin-left:-4px;border-radius:50%;background:#fff;border:2px solid #fff;box-sizing:content-box;cursor:default}
+.tt-wm-read-avatar:first-child{margin-left:0}.tt-wm-read-avatar-inner{width:18px!important;height:18px!important;min-width:18px!important;border-radius:50%!important;font-size:6px!important;margin:0!important;overflow:hidden;box-shadow:none!important}
+.tt-wm-read-avatar-inner img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.tt-wm-read-more{position:relative;display:grid;place-items:center;min-width:20px;height:20px;margin-left:2px;padding:0 5px;border-radius:999px;background:#eef2f6;color:#64748b;font-size:8px;font-weight:800;cursor:default}
+
+/* Shared lightweight hover tooltip for read receipts and reaction chips. */
+.tt-wm-reaction-chip[data-tooltip],.tt-wm-read-avatar[data-tooltip],.tt-wm-read-more[data-tooltip]{position:relative}
+.tt-wm-reaction-chip[data-tooltip]::after,.tt-wm-read-avatar[data-tooltip]::after,.tt-wm-read-more[data-tooltip]::after{content:attr(data-tooltip);position:absolute;left:50%;bottom:calc(100% + 7px);transform:translate(-50%,4px);z-index:130;max-width:280px;width:max-content;padding:6px 8px;border-radius:8px;background:#111827;color:#fff;font:600 10px/1.35 "Plus Jakarta Sans",sans-serif;white-space:normal;text-align:center;box-shadow:0 8px 22px rgba(15,23,42,.22);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s ease,transform .12s ease}
+.tt-wm-reaction-chip[data-tooltip]:hover::after,.tt-wm-reaction-chip[data-tooltip]:focus-visible::after,.tt-wm-read-avatar[data-tooltip]:hover::after,.tt-wm-read-avatar[data-tooltip]:focus-visible::after,.tt-wm-read-more[data-tooltip]:hover::after,.tt-wm-read-more[data-tooltip]:focus-visible::after{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.tt-wm-reaction-chip{overflow:visible}
+
+/* Emoji 17.0 picker */
+.tt-wm-emoji-pop{width:min(360px,calc(100vw - 34px))!important;max-height:min(430px,64dvh)!important;display:block!important;overflow:hidden!important;padding:0!important}
+.tt-wm-emoji-pop[hidden]{display:none!important}
+.tt-wm-emoji-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;padding:10px 12px 7px;border-bottom:1px solid #edf1f5}.tt-wm-emoji-head strong{font-size:12px;color:#263244}.tt-wm-emoji-head small{font-size:8px;color:#8a96a9}
+.tt-wm-emoji-tabs{display:flex;gap:2px;overflow-x:auto;padding:6px 7px;border-bottom:1px solid #edf1f5;scrollbar-width:thin}.tt-wm-emoji-tabs button{flex:0 0 auto;width:31px!important;height:30px!important;font-size:15px!important;border-radius:8px!important}.tt-wm-emoji-tabs button.is-active{background:#fff3c9!important;box-shadow:inset 0 0 0 1px #e9cb70}
+.tt-wm-emoji-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;max-height:320px;overflow:auto;padding:8px}.tt-wm-emoji-grid button{height:34px!important;font-size:20px!important;line-height:1!important}
+
+/* Online GIPHY picker */
+.tt-wm-gif-anchor{position:relative;width:42px;height:36px;min-width:0}
+.tt-wm-gif-pop{position:absolute;left:-44px;bottom:calc(100% + 8px);z-index:120;width:min(390px,calc(100vw - 34px));max-height:min(510px,68dvh);overflow:hidden;border:1px solid #dce4ed;background:#fff;border-radius:18px;box-shadow:0 20px 55px rgba(15,23,42,.2);display:flex;flex-direction:column}
+.tt-wm-gif-pop[hidden]{display:none!important}
+.tt-wm-gif-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 8px;border-bottom:1px solid #edf1f5}.tt-wm-gif-head>div{display:flex;flex-direction:column;gap:1px}.tt-wm-gif-head small{font-size:8px;font-weight:800;letter-spacing:.11em;color:#a37812}.tt-wm-gif-head strong{font-size:13px;color:#243043}
+.tt-wm-gif-search{display:block;padding:8px 10px 4px}.tt-wm-gif-search input{width:100%;box-sizing:border-box;border:1px solid #dce4ed;background:#f8fafc;color:#1f2937;border-radius:11px;padding:9px 11px;outline:0;font:600 11px/1.2 inherit}.tt-wm-gif-search input:focus{border-color:#d8b552;box-shadow:0 0 0 3px rgba(216,181,82,.12)}
+.tt-wm-gif-status{min-height:16px;padding:0 11px 5px;color:#7b8798;font-size:9px}
+.tt-wm-gif-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:118px;align-items:stretch;gap:6px;padding:0 8px 8px;overflow:auto;min-height:130px;max-height:340px}
+.tt-wm-gif-result{position:relative;display:block;width:100%!important;height:118px!important;min-height:118px!important;max-height:118px!important;box-sizing:border-box;border:0;border-radius:10px;padding:0!important;margin:0!important;background:#eef2f6;overflow:hidden;cursor:pointer;aspect-ratio:auto!important;line-height:0!important}.tt-wm-gif-result img{position:absolute;inset:0;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;object-fit:cover;display:block;border:0}.tt-wm-gif-result:hover,.tt-wm-gif-result:focus-visible{outline:2px solid #d4a62f;outline-offset:1px;transform:translateY(-1px)}
+.tt-wm-gif-loading,.tt-wm-gif-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:120px;padding:14px;text-align:center;color:#7b8798;font-size:10px}.tt-wm-gif-empty strong{color:#3b4656;font-size:11px}.tt-wm-gif-empty span{max-width:280px;line-height:1.45}
+.tt-wm-giphy-attribution{display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:6px 10px 8px;border-top:1px solid #edf1f5;color:#6b7280;font-size:8px}.tt-wm-giphy-attribution strong{padding:2px 5px;background:#111827;color:#fff;border-radius:4px;letter-spacing:.08em}
+.tt-wm-gif-btn.is-unavailable{opacity:.62}
+
+/* Selected GIF preview before send. */
+.tt-wm-pending-gif{position:relative;display:grid;grid-template-columns:58px minmax(0,1fr) 24px;align-items:center;gap:8px;width:min(280px,100%);padding:6px;border:1px solid #ddd5f2;background:#faf8ff;color:#453a62;border-radius:14px;box-sizing:border-box}.tt-wm-pending-gif img{width:58px;height:46px;object-fit:cover;border-radius:9px;background:#eceff3}.tt-wm-pending-gif span{min-width:0;display:flex;flex-direction:column;gap:2px}.tt-wm-pending-gif strong{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-wm-pending-gif small{font-size:8px;opacity:.72}.tt-wm-pending-gif button{border:0;background:transparent;color:#7c3aed;width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:16px}.tt-wm-pending-gif button:hover{background:rgba(124,58,237,.08)}
+
+/* Sent GIPHY card. */
+.tt-wm-gif-message{position:relative;display:block;width:min(340px,70vw);max-width:100%;border-radius:14px;overflow:hidden;background:#0f172a;text-decoration:none;box-shadow:0 5px 16px rgba(15,23,42,.12)}.tt-wm-gif-message img{display:block;width:100%;max-height:320px;object-fit:cover}.tt-wm-gif-message span{position:absolute;right:6px;bottom:6px;padding:2px 5px;border-radius:5px;background:rgba(17,24,39,.74);color:#fff;font-size:7px;font-weight:800;letter-spacing:.08em}
+
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-read-avatar{background:#1f2937;border-color:#1f2937}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-read-more{background:#344154;color:#d6deea}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-emoji-head,body.dark-mode #ttWorkspaceChatOverlay .tt-wm-emoji-tabs{border-color:#354255}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-emoji-head strong{color:#f3f6fb}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-emoji-head small{color:#a9b4c5}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-emoji-tabs button.is-active{background:#4a3b18!important;box-shadow:inset 0 0 0 1px #8b7136}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-gif-pop{background:#202a39;border-color:#39475a}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-gif-head,body.dark-mode #ttWorkspaceChatOverlay .tt-wm-giphy-attribution{border-color:#354255}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-gif-head strong{color:#f1f5f9}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-gif-search input{background:#18212e;border-color:#3a4759;color:#f1f5f9}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-gif-empty strong{color:#edf2f8}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-pending-gif{background:#302942;border-color:#5d4e7a;color:#eee7ff}
+
+@media(max-width:620px){.tt-wm-gif-pop{position:fixed;left:10px;right:10px;bottom:82px;width:auto;max-height:58dvh}.tt-wm-gif-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:104px;max-height:270px}.tt-wm-gif-result{height:104px!important;min-height:104px!important;max-height:104px!important}.tt-wm-emoji-pop{position:fixed!important;left:10px!important;right:10px!important;bottom:82px!important;width:auto!important;max-height:58dvh!important}.tt-wm-emoji-grid{grid-template-columns:repeat(7,minmax(0,1fr));max-height:260px}.tt-wm-gif-message{width:min(300px,76vw)}.tt-wm-pending-gif{grid-template-columns:50px minmax(0,1fr) 24px}.tt-wm-pending-gif img{width:50px;height:42px}}
+
+@media(prefers-reduced-motion:reduce){.tt-wm-gif-result,.tt-wm-reaction-chip[data-tooltip]::after,.tt-wm-read-avatar[data-tooltip]::after,.tt-wm-read-more[data-tooltip]::after{transition:none!important}}

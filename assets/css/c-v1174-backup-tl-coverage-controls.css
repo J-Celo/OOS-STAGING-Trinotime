@@ -1,0 +1,134 @@
+/* TrinoTime v1.1.74 - Backup TL Coverage Controls, Handoff Notes, and Audit UX */
+:root {
+  --z-backup-tl-handoff-overlay: 11650;
+}
+
+/* Persistent coverage state inside the main workspace. */
+.backup-tl-coverage-banner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:0 0 18px;
+  padding:14px 16px;
+  border:1px solid rgba(16,185,129,.38);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(16,185,129,.10),rgba(59,130,246,.07));
+  box-shadow:0 12px 34px rgba(15,23,42,.08);
+  position:relative;
+  z-index:10;
+}
+.backup-tl-coverage-banner[hidden] { display:none !important; }
+.backup-tl-coverage-banner[data-state="covering"] { border-color:rgba(16,185,129,.62); }
+.backup-tl-coverage-copy { min-width:0; display:grid; gap:3px; }
+.backup-tl-coverage-state {
+  color:#047857;
+  font:800 9px/1.2 'IBM Plex Mono',monospace;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+}
+.backup-tl-coverage-copy>strong { color:var(--text); font-size:14px; line-height:1.35; overflow-wrap:anywhere; }
+.backup-tl-coverage-copy>span:last-child { color:var(--muted); font-size:10px; line-height:1.45; }
+.backup-tl-coverage-actions { display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
+.backup-tl-coverage-countdown {
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(15,23,42,.06);
+  color:var(--text);
+  font:800 9px/1 'IBM Plex Mono',monospace;
+  white-space:nowrap;
+}
+
+/* Expand v1.1.73 summary cleanly for the new permission tile. */
+#backupTlOverlay .backup-tl-access-summary { grid-template-columns:repeat(4,minmax(0,1fr)); }
+#backupTlOverlay .backup-tl-permission-summary { grid-column:1 / -1; }
+#backupTlOverlay .backup-tl-permission-summary strong { font-size:11px; }
+.backup-tl-assignment-card[data-state="takeover"] { border-color:rgba(59,130,246,.42); }
+.backup-tl-assignment-card[data-state="conflict"] { border-color:rgba(239,68,68,.52); box-shadow:0 9px 28px rgba(239,68,68,.08); }
+.backup-tl-status-pill[data-state="takeover"] { border-color:rgba(59,130,246,.42); color:#1D4ED8; background:rgba(59,130,246,.08); }
+.backup-tl-status-pill[data-state="conflict"] { border-color:rgba(239,68,68,.42); color:#B91C1C; background:rgba(239,68,68,.08); }
+.backup-tl-status-pill[data-state="ended"] { border-color:rgba(100,116,139,.30); color:var(--muted); background:rgba(100,116,139,.08); }
+.backup-tl-handoff-strip {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:11px;
+  padding:9px 10px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:rgba(148,163,184,.07);
+  position:relative;
+  z-index:5;
+}
+.backup-tl-handoff-strip>div { min-width:0; display:grid; gap:2px; }
+.backup-tl-handoff-strip span { color:var(--muted); font:700 9px/1.2 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.04em; }
+.backup-tl-handoff-strip strong { color:var(--text); font-size:11px; }
+.backup-tl-handoff-open { flex:0 0 auto; }
+
+/* Primary TL entry point from recurring Day Off schedule. */
+.tl-dayoff-handoff-btn {
+  min-height:30px;
+  padding:6px 9px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface);
+  color:var(--text);
+  font:700 10px/1.2 'IBM Plex Mono',monospace;
+  cursor:pointer;
+}
+.tl-dayoff-handoff-btn:hover { border-color:rgba(59,130,246,.42); }
+
+/* Handoff is a nested dialog and must outrank the body-level Backup TL hub. */
+body > #backupTlHandoffOverlay[data-backup-tl-handoff-portal="body"] {
+  z-index:var(--z-backup-tl-handoff-overlay) !important;
+  isolation:isolate;
+}
+#backupTlHandoffOverlay { z-index:var(--z-backup-tl-handoff-overlay) !important; }
+#backupTlHandoffOverlay .backup-tl-handoff-box {
+  width:min(760px,calc(100vw - 28px));
+  max-width:760px;
+  max-height:min(84vh,800px);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+}
+.backup-tl-handoff-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:11px; }
+.backup-tl-handoff-date-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 10px; border:1px solid var(--border); border-radius:11px; background:var(--surface); }
+.backup-tl-handoff-date-row span { color:var(--muted); font:700 9px/1.2 'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:.05em; }
+.backup-tl-handoff-date-row input { min-height:34px; border:1px solid var(--border); border-radius:9px; background:var(--surface); color:var(--text); padding:6px 8px; }
+.backup-tl-handoff-list { display:grid; gap:8px; min-height:100px; max-height:330px; overflow:auto; overscroll-behavior:contain; margin:11px 0; padding:1px 3px 2px 1px; }
+.backup-tl-handoff-note { padding:10px 11px; border:1px solid var(--border); border-radius:11px; background:rgba(148,163,184,.06); }
+.backup-tl-handoff-note>div { display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.backup-tl-handoff-note strong { color:var(--text); font-size:11px; }
+.backup-tl-handoff-note span { color:var(--muted); font-size:9px; }
+.backup-tl-handoff-note p { margin:7px 0 0; color:var(--text); font-size:11px; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
+.backup-tl-handoff-empty { display:grid; gap:4px; padding:16px; border:1px dashed var(--border); border-radius:11px; color:var(--muted); }
+.backup-tl-handoff-empty strong { color:var(--text); }
+.backup-tl-handoff-empty span { font-size:10px; line-height:1.45; }
+.backup-tl-handoff-compose { display:grid; gap:7px; padding-top:11px; border-top:1px solid var(--border); }
+.backup-tl-handoff-compose>label { color:var(--text); font-weight:800; font-size:11px; }
+.backup-tl-handoff-compose textarea { min-height:92px; max-height:170px; resize:vertical; border:1px solid var(--border); border-radius:11px; background:var(--surface); color:var(--text); padding:10px 11px; font:inherit; }
+.backup-tl-handoff-compose>div { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.backup-tl-handoff-compose>div>span { color:var(--muted); font-size:9px; line-height:1.35; }
+#backupTlHandoffOverlay :is(button,input,textarea):focus-visible,
+.backup-tl-coverage-banner button:focus-visible,
+.tl-dayoff-handoff-btn:focus-visible { outline:2px solid currentColor; outline-offset:2px; }
+
+@media(max-width:760px){
+  .backup-tl-coverage-banner { align-items:stretch; flex-direction:column; }
+  .backup-tl-coverage-actions { justify-content:flex-start; }
+  .backup-tl-coverage-actions button { flex:1 1 auto; }
+  #backupTlOverlay .backup-tl-access-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .backup-tl-handoff-strip { align-items:stretch; flex-direction:column; }
+  .backup-tl-handoff-open { width:100%; }
+  .backup-tl-handoff-head { flex-direction:column; }
+  .backup-tl-handoff-date-row { align-items:stretch; flex-direction:column; }
+  .backup-tl-handoff-compose>div { align-items:stretch; flex-direction:column; }
+  .backup-tl-handoff-compose button { width:100%; }
+}

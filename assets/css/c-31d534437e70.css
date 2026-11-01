@@ -1,0 +1,98 @@
+/* ========================================================================== */
+/* TrinoTime v1.0.68 - Team Leader header collision / status-card containment */
+/* Presentation only. Auth, Firebase/App Check, attendance, scheduling, and   */
+/* role permission behavior remain unchanged.                                 */
+/* ========================================================================== */
+
+/* The TL attendance/status badge and authenticated profile card share the
+   profile grid column. v1.0.67 widened the action rail to keep every TL action
+   on one row; the older horizontal profile-slot layout could then extend left
+   into that rail. Stack the two profile controls vertically so each stays
+   inside the dedicated right column and neither can intercept action clicks. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot {
+  display: flex !important;
+  flex-direction: column-reverse !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 320px !important;
+  height: auto !important;
+  margin-top: 8px !important;
+  padding-top: 2px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+/* Profile remains the first visual item even though the TL badge is first in
+   DOM order. This preserves the established top-right identity position. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status #agentProfileHeaderBtn,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible #agentProfileHeaderBtn {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 0 0 70px !important;
+  margin: 0 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Keep TL status fully inside the same column. Remove the legacy 190px minimum
+   that previously forced it to overflow left when paired with the profile. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status #tlHomeStatusBadge,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible #tlHomeStatusBadge {
+  display: inline-flex !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #tlHomeStatusBadge .tl-home-status-copy,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #tlHomeStatusBadge :is(.tl-home-status-kicker,.tl-home-status-primary,.tl-home-status-detail,.tl-home-status-sync,.tl-home-status-alert) {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+/* The action capsule owns only the actions grid cell. It may scroll internally
+   at narrow desktop widths, but it must not paint over the profile/status cell. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-side {
+  position: relative !important;
+  z-index: 5 !important;
+  min-width: 0 !important;
+}
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot {
+  position: relative !important;
+  z-index: 6 !important;
+}
+
+/* Single-column Premium header (tablet/compact desktop): keep the same stacked
+   relationship and allow the profile/status group to fit its responsive cap. */
+@media (max-width: 980px) {
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status,
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot {
+    width: min(310px, 100%) !important;
+    max-width: 310px !important;
+    justify-self: end !important;
+  }
+}
+
+@media (max-width: 680px) {
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status,
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot {
+    width: min(260px, calc(100% - 68px)) !important;
+    max-width: 260px !important;
+    gap: 6px !important;
+  }
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible #agentProfileHeaderBtn {
+    flex-basis: 62px !important;
+  }
+}

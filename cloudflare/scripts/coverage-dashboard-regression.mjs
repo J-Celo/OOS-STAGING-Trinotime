@@ -1,0 +1,34 @@
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const worker=read('../src/worker.js');
+const html=read('../public/index.html');
+const client=read('../public/assets/js/j-coverage-dashboard-rc20.js');
+const css=read('../public/assets/css/c-coverage-dashboard-v1.css');
+const wrangler=read('../wrangler.jsonc');
+const must=(ok,msg)=>{if(!ok){console.error('FAIL — '+msg);process.exitCode=1}else console.log('PASS — '+msg)};
+must(worker.includes("handleWorkforceCoverageApi")&&worker.includes("/api/workforce/coverage/"),'Coverage Worker route and handler are present');
+must(worker.includes("role === 'agent'")&&worker.includes("role === 'team_leader'")&&worker.includes("role !== 'admin'"),'server-side Agent/TL/Admin scope gates are present');
+must(worker.includes("agents = agents.filter(item => item.pod === cleanText(actor.pod"),'Team Leader reads are restricted to the authenticated TL POD');
+must(worker.includes("COVERAGE_AGENT_SCOPE_FORBIDDEN"),'cross-scope Agent detail access fails closed');
+must(worker.includes("WORKFORCE_COVERAGE_BRIDGE_PURPOSE")&&worker.includes("coverageRequireBridgeActorServer"),'scoped Coverage ingest bridge is server-verified');
+must(html.includes('c-coverage-dashboard-v1.css')&&/j-coverage-dashboard-rc20(?:-rc2-ui3-[a-f0-9]+)?\.js/.test(html),'Coverage dashboard client assets are loaded');
+must(client.includes('TrinoTimeCoverageBridge')&&client.includes('data-tt-nav="coverage"')&&client.includes('ensureSidebarButton'),'dedicated Coverage sidebar tab and extension pairing bridge are exposed');
+must(client.includes("a.role==='admin'")&&client.includes("a.role==='team_leader'"),'role-specific Coverage dashboard rendering is present');
+must(css.includes('.tt-coverage-pod')&&css.includes('.tt-coverage-table'),'POD-grouped responsive dashboard styling is present');
+
+must(client.includes("'ttPremiumRightRail'"),'Coverage view owns the workspace and temporarily hides/restores the Premium right rail');
+must(css.includes("calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter))")&&css.includes("RC3 — align"),'Coverage root is aligned after the live Premium sidebar instead of rendering underneath it');
+must(wrangler.includes('/api/workforce/coverage/*'),'Cloudflare assets config routes Coverage API through Worker first');
+
+must(worker.includes('serverUpdatedAtMs:Math.max')&&worker.includes('const serverRevision='),'Coverage dashboard exposes authoritative server sync timestamps/revision');
+must(client.includes('dashboardSignature')&&client.includes('refreshQueued')&&client.includes('3000'),'Coverage client uses bounded near-live 3-second visible polling with in-flight refresh coalescing');
+must(client.includes('document.hidden')&&client.includes("state.date===phtDate()"),'near-live polling pauses when hidden and is limited to today');
+must(client.includes('data-coverage-last-sync')&&client.includes('row.serverUpdatedAtMs'),'Last Sync is rendered from server sync time instead of user activity time');
+must(client.includes('streamState')&&client.includes("'DELAYED'")&&client.includes("'OFFLINE'"),'Coverage toolbar has live/delayed/offline sync freshness states');
+must(client.includes("pendingSubmission===true")&&css.includes('data-state="submitting"'),'pending task submission is represented as a live submitting state');
+must(css.includes('.tt-coverage-stream')&&css.includes('data-state="stale"'),'near-live and stale-state styling is present');
+must(client.includes('friendlyPodLabel')&&client.includes('TrinoTimePodDisplayLabel'),'Coverage presentation resolves canonical POD IDs through the shared friendly POD directory label');
+must(client.includes("if(team==='cwh')return 'CWH Team'")&&client.includes("return 'Assigned Team'"),'Coverage has a safe human-readable fallback and never needs to display a raw custom POD ID');
+must(css.includes('RC7 — friendly Coverage POD / Team identity presentation')&&css.includes('body.dark-mode .tt-coverage-scope'),'Coverage scope chip is polished for dark mode and responsive widths');
+must(html.includes('coverage-rc20') && html.includes('sync-hotfix=1'),'RC20 Coverage client assets are cache-busted');
+if(process.exitCode)process.exit(process.exitCode);

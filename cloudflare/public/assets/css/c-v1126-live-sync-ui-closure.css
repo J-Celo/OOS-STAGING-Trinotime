@@ -1,0 +1,87 @@
+/* TrinoTime v1.1.126 — Live Workforce Sync & UI Closure Hotfix RC1
+   Presentation-only fixes: dark Leave readability and body-level floating launcher reliability.
+   Modal layering from v1.1.123/v1.1.124 remains authoritative. */
+
+/* Leave used several light-theme ink tokens inside dark cards. Keep semantic status pills/colors,
+   but make headings, labels, metadata, impact copy, HR cards, and calendar details readable. */
+body.dark-mode #leaveRequestOverlay .leave-request-modal,
+body.dark-mode #leaveRequestOverlay .leave-panel,
+body.dark-mode #leaveRequestOverlay .leave-request-card,
+body.dark-mode #leaveRequestOverlay .leave-v2-impact,
+body.dark-mode #leaveRequestOverlay .leave-v3-card,
+body.dark-mode #leaveRequestOverlay .leave-v3-admin-op,
+body.dark-mode #leaveRequestOverlay .leave-v3-kpi,
+body.dark-mode #leaveRequestOverlay .leave-v3-balance-item,
+body.dark-mode #leaveRequestOverlay .leave-v25-calendar-detail,
+body.dark-mode #leaveRequestOverlay .leave-v25-coverage-row {
+  color: #e8eef8 !important;
+  border-color: #42536b !important;
+}
+body.dark-mode #leaveRequestOverlay :is(
+  .leave-modal-title,
+  .leave-panel-head h4,
+  .leave-request-card-title strong,
+  .leave-request-reason,
+  .leave-v2-impact-title,
+  .leave-v3-hero-copy h4,
+  .leave-v3-kpi strong,
+  .leave-v3-card-head strong,
+  .leave-v3-balance-item strong,
+  .leave-v3-section-title strong,
+  .leave-v3-admin-op h5,
+  .leave-v3-preview strong,
+  .leave-v25-calendar-toolbar strong,
+  .leave-v25-calendar-detail > strong,
+  .leave-v25-calendar-detail-list b,
+  .modal-field > label
+) {
+  color: #f3f7fd !important;
+}
+body.dark-mode #leaveRequestOverlay :is(
+  .leave-modal-sub,
+  .leave-panel-head p,
+  .leave-request-card-title span:not(.leave-role-pill),
+  .leave-request-meta,
+  .leave-v2-impact-item,
+  .leave-v3-card-head span,
+  .leave-v3-balance-item b,
+  .leave-v3-section-title span,
+  .leave-v3-admin-op p,
+  .leave-v3-server-note,
+  .leave-v25-coverage-detail,
+  .leave-v25-calendar-detail,
+  .field-hint
+) {
+  color: #b8c5d8 !important;
+}
+body.dark-mode #leaveRequestOverlay .leave-request-card {
+  background: #182331 !important;
+}
+body.dark-mode #leaveRequestOverlay .leave-request-card.approved {
+  background: #1b2938 !important;
+}
+body.dark-mode #leaveRequestOverlay .leave-v2-impact,
+body.dark-mode #leaveRequestOverlay .leave-v3-preview,
+body.dark-mode #leaveRequestOverlay .leave-v25-calendar-detail,
+body.dark-mode #leaveRequestOverlay .leave-v25-coverage-row {
+  background: #142031 !important;
+}
+
+/* The launcher buttons are portaled to <body> by v1.1.126. Give both a shared utility-rail
+   layer above workspace panels while staying below ordinary application modal overlays. */
+#workspaceChatBtn.workspace-chat-floater,
+#leaveRequestFloater.leave-request-floater {
+  position: fixed !important;
+  z-index: 2147481200 !important;
+  isolation: isolate;
+}
+#leaveRequestFloater.leave-request-floater {
+  right: var(--tt-floating-edge, max(14px, env(safe-area-inset-right))) !important;
+  bottom: var(--tt-floating-bottom, calc(14px + env(safe-area-inset-bottom))) !important;
+}
+
+/* Preserve the existing modal safety rule even after the buttons move out of #appRoot. */
+body:has(.modal-overlay.open, .settings-overlay.open, .announce-overlay.open) :is(#workspaceChatBtn,#leaveRequestFloater) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

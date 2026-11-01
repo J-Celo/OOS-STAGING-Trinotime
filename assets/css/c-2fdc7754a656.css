@@ -1,0 +1,5 @@
+/* TrinoTime v1.1.34 - redundant Needs Attention row cleanup */
+#attendanceAttentionBar.attendance-attention-bar,
+.attendance-attention-bar#attendanceAttentionBar {
+  display: none !important;
+}

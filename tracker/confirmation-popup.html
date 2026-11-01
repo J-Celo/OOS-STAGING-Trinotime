@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirmation — STAGING QA</title>
+  <link rel="stylesheet" href="confirmation-popup.css">
+</head>
+<body>
+  <main class="shell">
+    <div class="topRow">
+      <a class="backLink" href="popup.html">← QC Tracker</a>
+      <a class="switchLink" href="coverage-popup.html">Coverage</a>
+    </div>
+
+    <div class="stageBar"><span></span><strong>STAGING QA</strong><small>Authorized use only</small></div>
+
+    <header class="pageHeader">
+      <div>
+        <span class="eyebrow">CONFIRMATION WORKSPACE</span>
+        <h1>Intervals & EOD</h1>
+      </div>
+      <span class="manualPill">MANUAL</span>
+    </header>
+
+      <section class="rtaCompact" aria-label="RTA assigned store (local plan)"><span>RTA ASSIGNED STORE · LOCAL QA</span><strong id="rtaCompactCurrent">Checking…</strong><small id="rtaCompactNext">This is not an Augmoto-observed store</small></section>
+
+  <section class="jobCard" aria-label="TrinoTime shift"><div><span>TRINOTIME SHIFT</span><strong id="shiftState">Checking shift…</strong></div><small id="shiftMeta">Time In starts tracking · Time Out locks final totals</small></section>
+
+    <section class="controlCard">
+      <div class="controlGrid">
+        <label><span>EOD date</span><input id="date" type="date"></label>
+        <label><span>Current interval</span><select id="interval"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+      </div>
+      <button id="apply" class="applyButton" type="button">Apply date & interval</button>
+    </section>
+
+    <section class="jobCard" aria-label="Current Confirmation job">
+      <div><span>CURRENT JOB</span><strong id="job">No active job</strong></div>
+      <small id="jobTask">Waiting for an Augmoto Confirmation task</small>
+    </section>
+
+    <section class="metricGrid" aria-label="Confirmation totals and manual corrections">
+      <article class="intervalMetric" data-interval-card="1"><span>I1</span><strong id="i1">0</strong><div class="manualStepper"><button type="button" data-adjust-interval="1" data-delta="-1" aria-label="Subtract one from Interval 1">−</button><small id="i1Manual">±0</small><button type="button" data-adjust-interval="1" data-delta="1" aria-label="Add one to Interval 1">+</button></div></article>
+      <article class="intervalMetric" data-interval-card="2"><span>I2</span><strong id="i2">0</strong><div class="manualStepper"><button type="button" data-adjust-interval="2" data-delta="-1" aria-label="Subtract one from Interval 2">−</button><small id="i2Manual">±0</small><button type="button" data-adjust-interval="2" data-delta="1" aria-label="Add one to Interval 2">+</button></div></article>
+      <article class="intervalMetric" data-interval-card="3"><span>I3</span><strong id="i3">0</strong><div class="manualStepper"><button type="button" data-adjust-interval="3" data-delta="-1" aria-label="Subtract one from Interval 3">−</button><small id="i3Manual">±0</small><button type="button" data-adjust-interval="3" data-delta="1" aria-label="Add one to Interval 3">+</button></div></article>
+      <article class="eodCard"><span>EOD</span><strong id="eodValue">0</strong><small>Corrected total</small></article>
+    </section>
+
+    <p id="counts" class="srOnly"></p>
+    <strong id="eod" class="srOnly"></strong>
+
+    <section class="bridgeCard">
+      <div class="bridgeHead">
+        <div><span>TRINOTIME BRIDGE</span><strong id="bridgeAgent">Not connected</strong></div>
+        <i id="bridgeDot" class="bridgeDot"></i>
+      </div>
+      <p id="status" role="status" aria-live="polite">Checking connection…</p>
+      <div class="buttonRow">
+        <button id="connect" class="primary" type="button">Connect</button>
+        <button id="sync" type="button">Sync now</button>
+      </div>
+    </section>
+
+    <p class="helper">Use + / − only for a missed or extra Confirmation count. Automatic submission history stays intact; completed shift totals are locked after Time Out.</p>
+  </main>
+  <script src="confirmation-popup.js"></script>
+<script src="store-queue-core.js"></script>
+<script src="store-queue-compact.js"></script>
+</body>
+</html>

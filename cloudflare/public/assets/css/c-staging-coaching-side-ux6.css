@@ -1,0 +1,39 @@
+/* STAGING UX6: Agent-only Coaching details in the right header column. */
+#ttUx6CoachingSideCard[hidden] {display:none!important;}
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='agent'] #appRoot>.band .header-profile-slot.tt-v1117-calendar-slot #ttUx6CoachingSideCard {
+  display:flex;order:4;flex-direction:column;gap:10px;width:100%;min-width:0;box-sizing:border-box;
+  padding:16px;border:1px solid rgba(217,222,229,.95);border-radius:18px;
+  background:linear-gradient(150deg,rgba(255,255,255,.97),rgba(245,249,255,.92));
+  color:#253149;box-shadow:0 12px 30px rgba(31,41,55,.065);text-align:left;
+  font-family:'Plus Jakarta Sans',Inter,Arial,sans-serif;
+}
+.tt-ux6-coaching-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.tt-ux6-coaching-title{display:flex;align-items:center;gap:10px;min-width:0;}
+.tt-ux6-coaching-title small{display:block;font-size:10px;letter-spacing:.09em;color:#937024;font-weight:750;}
+.tt-ux6-coaching-title strong{display:block;margin-top:3px;font-size:17px;line-height:1.2;color:inherit;}
+.tt-ux6-coaching-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:12px;background:#eaf1ff;color:#285caa;}
+.tt-ux6-coaching-icon svg{display:block;width:21px;height:21px;max-width:21px;max-height:21px;}
+.tt-ux6-coaching-pill{flex:none;border-radius:99px;padding:6px 9px;background:#edf1f6;color:#58657a;font-size:10px;font-weight:800;}
+#ttUx6CoachingSideCard[data-active='true'] .tt-ux6-coaching-pill{background:#dff7e9;color:#167148;}
+.tt-ux6-coaching-description{font-size:12px;color:#66768d;margin:0;line-height:1.45;}
+.tt-ux6-coaching-details{margin:1px 0 0;display:grid;gap:8px;}
+.tt-ux6-coaching-details>div{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-top:1px solid #e5ebf2;padding-top:8px;}
+.tt-ux6-coaching-details dt{color:#718199;font-size:11px;white-space:nowrap;}
+.tt-ux6-coaching-details dd{margin:0;min-width:0;max-width:65%;overflow-wrap:anywhere;text-align:right;color:#263650;font-size:12px;font-weight:750;font-variant-numeric:tabular-nums;}
+.tt-ux6-coaching-footer{border-radius:9px;padding:8px 9px;background:#eef4fb;color:#506781;font-size:10px;line-height:1.35;}
+body.dark-mode #ttUx6CoachingSideCard {background:#1d2a3b!important;color:#f3f7ff!important;border-color:#46566d!important;box-shadow:none!important;}
+body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-title strong,body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-details dd{color:#f1f6ff;}
+body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-description,body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-details dt{color:#b7c7db;}
+body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-details>div{border-color:#43536c;}
+body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-footer{background:#2c3c53;color:#d9e8fc;}
+body.dark-mode #ttUx6CoachingSideCard .tt-ux6-coaching-pill{background:#354158;color:#dee8f7;}
+body.dark-mode #ttUx6CoachingSideCard[data-active='true'] .tt-ux6-coaching-pill{background:#1d4a3a;color:#b8f7d4;}
+/* Keep exactly four real punch controls in the Agent hero; Coaching is informational at right. */
+body[data-trino-role='agent'] #ttAttendanceHeroSlot #attendanceTopActions .punch-grid {grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+@media(max-width:720px){
+  body[data-trino-role='agent'] #ttAttendanceHeroSlot #attendanceTopActions .punch-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='agent'] #appRoot>.band .header-profile-slot.tt-v1117-calendar-slot #ttUx6CoachingSideCard {padding:12px;border-radius:14px;}
+}
+
+/* Hide immediately on role change, before the next authenticated render tick. */
+body:not([data-trino-role="agent"]) #ttUx6CoachingSideCard {display:none!important;}

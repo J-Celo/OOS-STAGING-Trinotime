@@ -1,0 +1,158 @@
+{
+  "suite": "actual-worker-identity-rename",
+  "syntheticOnly": true,
+  "networkCalls": 0,
+  "messagingStoreExercised": false,
+  "passed": 37,
+  "failed": 0,
+  "results": [
+    {
+      "name": "valid HMAC session validates roster and vault",
+      "status": "PASS"
+    },
+    {
+      "name": "forged session writes nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "expired signed session writes nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "Agent cannot rename another Agent",
+      "status": "PASS"
+    },
+    {
+      "name": "TL cannot rename outside own POD",
+      "status": "PASS"
+    },
+    {
+      "name": "revoked signed session writes nothing",
+      "status": "PASS"
+    },
+    {
+      "name": "authorized TL response redacts credential material",
+      "status": "PASS"
+    },
+    {
+      "name": "Agent self rename atomically completes full identity transition",
+      "status": "PASS"
+    },
+    {
+      "name": "self rename returns a renewed valid session",
+      "status": "PASS"
+    },
+    {
+      "name": "concurrent destination credential is preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "concurrent source password reset is preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "retry never claims an unrelated destination account",
+      "status": "PASS"
+    },
+    {
+      "name": "profile read outage does not report successful no-profile migration",
+      "status": "PASS"
+    },
+    {
+      "name": "full rename preserves attendance/profile/schedule/leave and messaging evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "full rename retry recovers a lost commit response without a second write",
+      "status": "PASS"
+    },
+    {
+      "name": "full rename CAS conflict retains a concurrent unrelated punch",
+      "status": "PASS"
+    },
+    {
+      "name": "full rename denies cross-POD TL with zero writes",
+      "status": "PASS"
+    },
+    {
+      "name": "full rename denies an unrelated Agent with zero writes",
+      "status": "PASS"
+    },
+    {
+      "name": "recovery receipt cannot be replayed by another signed session",
+      "status": "PASS"
+    },
+    {
+      "name": "historical destination collision fails without modifying any record",
+      "status": "PASS"
+    },
+    {
+      "name": "old-name credential cannot fall back to a retained legacy credential",
+      "status": "PASS"
+    },
+    {
+      "name": "authorized own-POD TL can complete rename without changing TL session",
+      "status": "PASS"
+    },
+    {
+      "name": "active Admin can rename using current role authority",
+      "status": "PASS"
+    },
+    {
+      "name": "stale Admin verification cannot bypass revoked role in transaction snapshot",
+      "status": "PASS"
+    },
+    {
+      "name": "both live Tracker bridge types retain signed device binding after rename",
+      "status": "PASS"
+    },
+    {
+      "name": "Tracker rename evidence cannot bind another device",
+      "status": "PASS"
+    },
+    {
+      "name": "legacy employee without ID retains actual Messaging UID and bio state",
+      "status": "PASS"
+    },
+    {
+      "name": "surname schedule references change only in target POD",
+      "status": "PASS"
+    },
+    {
+      "name": "same operation ID with changed request cannot mutate a second time",
+      "status": "PASS"
+    },
+    {
+      "name": "revoked source session cannot recover after successful commit",
+      "status": "PASS"
+    },
+    {
+      "name": "Messaging outage after core commit is recoverable without rewriting employee records",
+      "status": "PASS"
+    },
+    {
+      "name": "current signed-in identity can recover pending Messaging projection without old session",
+      "status": "PASS"
+    },
+    {
+      "name": "rename preserves permanent Firebase identity seed, UID, email and request proof",
+      "status": "PASS"
+    },
+    {
+      "name": "allowed legacy credential is migrated in the same identity transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "vault-only policy cannot resurrect a missing credential from legacy KV",
+      "status": "PASS"
+    },
+    {
+      "name": "UX18P21 bounded receipt recovery does not reread entire Firebase root",
+      "status": "PASS"
+    },
+    {
+      "name": "UX18P21 receipt-first recovery rejects mismatched operation details",
+      "status": "PASS"
+    }
+  ]
+}

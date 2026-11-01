@@ -1,0 +1,98 @@
+/* TrinoTime v1.0.72 — authenticated workspace backdrop cleanup.
+   Presentation-only: removes the inherited legacy radial/dome pseudo-element
+   without changing auth, role gates, attendance, scheduling, or Firebase logic. */
+
+/* The legacy glass system attaches a large rounded radial pseudo-element to
+   every .wrap. In the Premium/custom workspace that element can become visible
+   as a dark/pearl curved dome because later layout rules reuse the same pseudo.
+   Remove the decorative instance everywhere inside the authenticated workspace. */
+html[data-trino-custom-workspace='enabled']
+body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent'])
+#appRoot .wrap::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 0 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+/* Keep the dashboard canvas itself as a simple full-bleed rectangle. This
+   deliberately restores only #mainContent's structural backdrop, with none of
+   the old 44% border-radius or radial-gradient geometry. */
+html[data-trino-custom-workspace='enabled']
+body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent'])
+#mainContent.wrap::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  top: -22px !important;
+  bottom: -48px !important;
+  left: calc(-1 * var(--tt-dash-gutter)) !important;
+  right: calc(-1 * (var(--tt-dash-right) + (var(--tt-dash-gutter) * 2))) !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: linear-gradient(180deg,#F8FAFC 0%,#F8FAFC 78%,#F6F8FB 100%) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  pointer-events: none !important;
+}
+
+html[data-trino-custom-workspace='enabled']
+body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent'])
+#mainContent.wrap::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  top: -22px !important;
+  bottom: -48px !important;
+  left: calc(-1 * var(--tt-dash-gutter)) !important;
+  right: calc(-1 * (var(--tt-dash-right) + (var(--tt-dash-gutter) * 2))) !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: linear-gradient(180deg,#0A0D12 0%,#0C1016 100%) !important;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  pointer-events: none !important;
+}
+
+/* Make the outer workspace surface itself continuous. Radial light blobs from
+   older global theme layers cannot bleed through around the dashboard canvas. */
+html[data-trino-custom-workspace='enabled']
+body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']),
+html[data-trino-custom-workspace='enabled']
+body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot {
+  background: linear-gradient(180deg,#F8FAFC 0%,#F6F8FB 100%) !important;
+}
+
+html[data-trino-custom-workspace='enabled']
+body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']),
+html[data-trino-custom-workspace='enabled']
+body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot {
+  background: linear-gradient(180deg,#0A0D12 0%,#0C1016 100%) !important;
+}
+
+@media (max-width:1280px) {
+  html[data-trino-custom-workspace='enabled']
+  body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent'])
+  #mainContent.wrap::before {
+    right: calc(-1 * var(--tt-dash-gutter)) !important;
+  }
+}

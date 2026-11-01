@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const html=fs.readFileSync('public/index.html','utf8');
+const css=fs.readFileSync('public/assets/css/c-production-agent-layout-safety-v304.css','utf8');
+const tag='assets/css/c-production-agent-layout-safety-v304.css?v=20261026-agent-layout-safe';
+assert.equal(html.split(tag).length,2,'safety CSS loaded exactly once');
+assert.ok(html.indexOf(tag)>html.indexOf('assets/css/c-production-agent-desktop-punch-v303.css?'),'new CSS must be last to override older desktop order');
+assert.match(css,/grid-template-areas:"actions" "clock" "profile"!important/,'profile must never precede clock on narrow layouts');
+assert.match(css,/grid-template-areas:"actions profile" "clock profile"!important/,'wide layout retains right rail');
+assert.match(css,/\.band-inner\.wrap:has\(#ttAttendanceHeroSlot\)/,'specificity must beat legacy media rules');
+assert.match(css,/body\[data-trino-role="agent"\]/,'CSS must be Agent-only');
+assert.ok(!/fetch\(|XMLHttpRequest|localStorage|sessionStorage|firebase\.|chrome\./.test(css),'no data/sync code in CSS');
+console.log('UX18P3 agent hero visibility regression PASS');

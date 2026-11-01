@@ -1,0 +1,83 @@
+/* UX18P3 / Production candidate layout safety: attendance BEFORE secondary cards.
+   Desktop/sidebar behavior must be determined by available workspace, not
+   window width alone. Pure CSS: does not touch punches, identity, or sync. */
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot,
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band,
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap,
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #mainContent.wrap {
+  box-sizing:border-box!important; min-width:0!important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band {
+  height:auto!important; min-height:0!important; max-height:none!important;
+  overflow:visible!important;
+}
+/* Two-column mode: protect clock on the LEFT while calendar/coaching stays right. */
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap:has(#ttAttendanceHeroSlot) {
+  display:grid!important; box-sizing:border-box!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,320px)!important;
+  grid-template-rows:64px auto!important;
+  grid-template-areas:"actions profile" "clock profile"!important;
+  align-items:start!important; column-gap:14px!important; row-gap:12px!important;
+  height:auto!important; min-height:0!important; max-height:none!important;
+  max-width:100%!important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .band-brand { display:none!important; }
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .band-side {
+  grid-area:actions!important; min-width:0!important; max-width:100%!important;
+  align-self:start!important; justify-self:stretch!important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .clock-box {
+  grid-area:clock!important; display:block!important; visibility:visible!important;
+  box-sizing:border-box!important; position:relative!important; transform:none!important;
+  width:100%!important; min-width:0!important; max-width:100%!important;
+  height:auto!important; min-height:0!important; max-height:none!important;
+  margin:0!important; overflow:visible!important;
+  justify-self:stretch!important; align-self:start!important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .header-profile-slot {
+  grid-area:profile!important; box-sizing:border-box!important;
+  width:100%!important; max-width:320px!important;
+  min-width:0!important; height:auto!important; min-height:0!important;
+  justify-self:stretch!important; align-self:start!important; overflow:visible!important;
+}
+/* Avoid perpetuating a previously measured, fixed-size Coaching card when the
+   width changes; content remains visible below the clock on stacked layouts. */
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band #ttUx6CoachingSideCard {
+  max-height:none!important;
+}
+/* Stacked mode includes sidebar-expanded laptop, zoom, and mobile.
+   Crucially: NEVER place the tall profile/calendar/coaching column first. */
+@media(max-width:1280px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap:has(#ttAttendanceHeroSlot) {
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto!important;
+    grid-template-areas:"actions" "clock" "profile"!important;
+    row-gap:12px!important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .header-profile-slot {
+    width:min(100%,440px)!important; max-width:440px!important;
+    justify-self:center!important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band #ttUx6CoachingSideCard {
+    height:auto!important; min-height:0!important;
+  }
+}
+/* Large browser with an expanded sidebar: same safe stacking based on the
+   actual usable workspace width, not only viewport @media breakpoints. */
+@media(min-width:1281px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-tight #appRoot > .band > .band-inner.wrap:has(#ttAttendanceHeroSlot) {
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto auto!important;
+    grid-template-areas:"actions" "clock" "profile"!important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-tight #appRoot > .band > .band-inner.wrap .header-profile-slot {
+    width:min(100%,440px)!important; max-width:440px!important;
+    justify-self:center!important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"].tt-premium-workspace-tight #appRoot > .band #ttUx6CoachingSideCard {
+    height:auto!important; min-height:0!important;
+  }
+}
+@media(max-width:680px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .clock-box { padding:12px 10px!important; }
+}

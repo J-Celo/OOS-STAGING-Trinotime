@@ -1,0 +1,11 @@
+/* UX17 - lightweight enhancements to the EXISTING secure Coaching report. */
+.coaching-ux17-insights {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:4px 0 12px;}
+.coaching-ux17-insight {min-width:0;border:1px solid var(--border,#d8e2ee);border-radius:12px;background:var(--card,rgba(120,130,150,.06));padding:10px 12px;overflow-wrap:anywhere;}
+.coaching-ux17-insight span {display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted,#64748b);font-weight:700;}
+.coaching-ux17-insight strong {display:block;margin-top:4px;font-size:13px;line-height:1.4;color:inherit;font-variant-numeric:tabular-nums;}
+#ttUx6CoachingSideCard .tt-ux17-footer{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+#ttUx6CoachingSideCard .tt-ux17-coaching-history{cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:24px;flex:none;border:1px solid #c7d8ed;border-radius:7px;background:#eaf2fd;color:#244d85;font-family:inherit;font-size:10px;line-height:1.25;font-weight:750;padding:3px 8px;}
+body.dark-mode #ttUx6CoachingSideCard .tt-ux17-coaching-history{background:#283c56;color:#d6e9ff;border-color:#557198;}
+#ttUx6CoachingSideCard .tt-ux17-coaching-history:focus-visible{outline:3px solid #55a1fc;outline-offset:2px;}
+@media(max-width:850px){.coaching-ux17-insights{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:430px){.coaching-ux17-insights{grid-template-columns:1fr;}}

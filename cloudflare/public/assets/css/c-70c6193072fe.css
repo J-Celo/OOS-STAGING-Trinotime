@@ -1,0 +1,70 @@
+/* TrinoTime v1.1.27 - Agent Coaching Time close-control containment.
+   Scope is intentionally limited to the coaching report modal. */
+#coachingReportOverlay.open {
+    overflow: hidden;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+#coachingReportOverlay .coaching-report-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(1200px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px) !important;
+    max-height: calc(100dvh - 32px) !important;
+    overflow: auto !important;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+}
+
+#coachingReportOverlay .coaching-report-head,
+#coachingReportOverlay .coaching-report-summary,
+#coachingReportOverlay .coaching-report-breakdown {
+    flex: 0 0 auto;
+}
+
+#coachingReportOverlay .coaching-report-table-wrap {
+    flex: 1 1 auto;
+    min-height: 140px;
+    max-height: clamp(180px, 42dvh, 520px);
+    overscroll-behavior: contain;
+}
+
+#coachingReportOverlay .dayoff-close-row {
+    position: sticky;
+    bottom: -1px;
+    z-index: 30;
+    flex: 0 0 auto;
+    margin-top: 10px;
+    padding: 10px 0 2px;
+    background: var(--card);
+}
+
+#coachingReportOverlay #coachingReportCloseBtn {
+    position: relative;
+    z-index: 31;
+    min-width: 96px;
+}
+
+@media (max-height: 720px) {
+    #coachingReportOverlay .coaching-report-summary {
+        grid-template-columns: repeat(4, minmax(100px, 1fr));
+    }
+    #coachingReportOverlay .coaching-report-table-wrap {
+        min-height: 120px;
+        max-height: 32dvh;
+    }
+}
+
+@media (max-width: 700px) {
+    #coachingReportOverlay.open { padding: 8px; }
+    #coachingReportOverlay .coaching-report-box {
+        width: calc(100vw - 16px);
+        max-width: calc(100vw - 16px) !important;
+        max-height: calc(100dvh - 16px) !important;
+    }
+    #coachingReportOverlay .coaching-report-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

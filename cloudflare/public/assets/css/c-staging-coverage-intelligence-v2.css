@@ -1,0 +1,90 @@
+/* TrinoTime Overview V2 — STAGING ONLY, presentation changes; no score computation changes. */
+#ttAdminOverviewPanel.tt-admin-hub{padding:22px 24px;border-radius:20px;box-shadow:0 12px 28px rgba(4,14,30,.08)}
+#ttAdminOverviewPanel .tt-admin-hub-head{margin-bottom:16px;align-items:center}
+#ttAdminOverviewPanel .tt-admin-hub-head h2{font-size:clamp(1.3rem,2vw,1.7rem);line-height:1.24;margin:5px 0}
+#ttAdminOverviewPanel .tt-admin-hub-head p{max-width:42ch;line-height:1.5;font-size:.85rem}
+#ttAdminOverviewPanel .tt-admin-snapshot-grid{gap:12px}
+#ttAdminOverviewPanel .tt-admin-snapshot-card{min-height:132px;padding:16px 17px;border-radius:15px;box-shadow:none;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+#ttAdminOverviewPanel .tt-admin-snapshot-card>strong{line-height:1.15;font-size:clamp(1.35rem,2.5vw,1.85rem);margin:0;max-width:100%;overflow-wrap:anywhere}
+#ttAdminOverviewPanel .tt-admin-snapshot-card>.tt-admin-agent-metric{font-size:1.08rem;line-height:1.3}
+#ttAdminOverviewPanel .tt-admin-snapshot-card>button{margin-top:auto}
+#ttAdminOverviewPanel .tt-admin-quick-row{gap:8px;flex-wrap:wrap;margin-top:16px}
+/* Compact, scannable productivity workspace; do not modify scoring or scope logic. */
+#ttMetricsRoot .tt-ops-shell{gap:12px;max-width:1380px;margin-inline:auto;min-width:0}
+#ttMetricsRoot .tt-ops-hero{min-height:0;padding:16px 20px;border-radius:18px;box-shadow:none}
+#ttMetricsRoot .tt-ops-hero-copy p.tt-ops-subtitle{font-size:12px;line-height:1.4;max-width:52ch}
+#ttMetricsRoot .tt-ops-title{font-size:clamp(1.35rem,2vw,1.8rem)}
+#ttMetricsRoot .tt-mx-trust-note{padding:9px 14px;border-radius:12px;margin:0;gap:10px;box-shadow:none}
+#ttMetricsRoot .tt-mx-trust-note p{margin:3px 0 0;line-height:1.4;font-size:11px}
+#ttMetricsRoot .tt-mx-trust-note strong{font-size:11px}
+#ttMetricsRoot .tt-mx-scorecard.tt-v2-scorecard{display:block;padding:18px 20px;border-radius:19px;min-width:0;box-shadow:0 8px 24px rgba(4,14,30,.08)}
+#ttMetricsRoot .tt-mx-scorecard.tt-v2-scorecard::before{width:56px;left:20px}
+/* UX18: agent identity leads; grade is a compact secondary badge at upper-right. */
+#ttMetricsRoot .tt-v2-profile-strip{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;min-width:0;margin-bottom:17px}
+#ttMetricsRoot .tt-v2-letter{box-sizing:border-box;display:flex;flex:0 0 76px;min-width:0;min-height:76px;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;border-radius:14px;border:1px solid #d5dee8;background:#f0f4f8;color:#334155;padding:9px;order:2;align-self:flex-start}
+#ttMetricsRoot .tt-v2-letter span{font-size:10px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;line-height:1.2}
+#ttMetricsRoot .tt-v2-letter strong{font-size:35px;font-weight:850;line-height:1.05;color:inherit;font-variant-numeric:tabular-nums}
+#ttMetricsRoot .tt-v2-letter[data-grade="A"]{border-color:rgba(16,160,125,.26);background:#eaf8f3;color:#087f65}
+#ttMetricsRoot .tt-v2-letter[data-grade="B"]{border-color:rgba(34,139,173,.27);background:#edf8fc;color:#127b99}
+#ttMetricsRoot .tt-v2-letter[data-grade="C"]{border-color:rgba(190,133,40,.3);background:#fff8e8;color:#986509}
+#ttMetricsRoot .tt-v2-letter[data-grade="D"],#ttMetricsRoot .tt-v2-letter[data-grade="F"]{border-color:rgba(197,91,95,.3);background:#fff0f0;color:#a73f4b}
+#ttMetricsRoot .tt-v2-letter[data-grade="NA"]{border-color:#d5dee8;background:#f0f4f8;color:#637084}
+#ttMetricsRoot .tt-v2-profile-summary{flex:1;min-width:0;order:1}
+#ttMetricsRoot .tt-v2-eyebrow{font-size:10px;letter-spacing:.095em;font-weight:760;text-transform:uppercase;color:#8ba0b8}
+#ttMetricsRoot .tt-v2-profile-summary h3{font-size:clamp(1.13rem,2vw,1.65rem);line-height:1.22;margin:5px 0 4px;overflow-wrap:anywhere}
+#ttMetricsRoot .tt-v2-profile-summary p{margin:0;font-size:12px;line-height:1.45;opacity:.82}
+#ttMetricsRoot .tt-mx-score-chips{display:flex;flex-wrap:wrap;margin-top:10px;gap:6px}
+#ttMetricsRoot .tt-mx-score-chips span{padding:5px 9px;font-size:10px;font-weight:650;line-height:1.25;border-radius:12px;white-space:normal}
+#ttMetricsRoot .tt-v2-scorecard>.tt-mx-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+#ttMetricsRoot .tt-mx-stat{min-height:78px;padding:10px 12px;gap:9px;border-radius:14px;box-shadow:none}
+#ttMetricsRoot .tt-mx-stat::before{display:none}
+#ttMetricsRoot .tt-mx-stat-icon{flex:0 0 34px;width:34px;height:34px;border-radius:10px}
+#ttMetricsRoot .tt-mx-stat-icon svg{width:16px;height:16px}
+#ttMetricsRoot .tt-mx-stat span:not(.tt-mx-stat-icon){font-size:9px;letter-spacing:.06em}
+#ttMetricsRoot .tt-mx-stat strong{font-size:clamp(1.18rem,1.7vw,1.55rem);line-height:1.15;margin:3px 0 0}
+#ttMetricsRoot .tt-mx-stat small{font-size:9px;line-height:1.3;margin-top:3px}
+#ttMetricsRoot .tt-v2-disclosure{display:block;padding:0!important;margin:0;border-radius:16px;overflow:hidden;box-shadow:none}
+#ttMetricsRoot .tt-v2-disclosure>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 17px;min-height:62px}
+#ttMetricsRoot .tt-v2-disclosure>summary::-webkit-details-marker{display:none}
+#ttMetricsRoot .tt-v2-disclosure>summary>span:first-child{display:flex;flex-direction:column;gap:3px}
+#ttMetricsRoot .tt-v2-disclosure>summary strong{font-size:14px;font-weight:760;line-height:1.25}
+#ttMetricsRoot .tt-v2-disclosure>summary small{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;opacity:.7}
+#ttMetricsRoot .tt-v2-detail-hint{display:flex;gap:9px;align-items:center;font-size:10px;line-height:1.35;opacity:.8;text-align:right}
+#ttMetricsRoot .tt-v2-detail-hint svg{width:15px;height:15px;flex:none;transition:transform .2s}
+#ttMetricsRoot .tt-v2-disclosure[open] .tt-v2-detail-hint svg{transform:rotate(180deg)}
+#ttMetricsRoot .tt-v2-disclosure>summary:focus-visible{outline:2px solid #41b8ce;outline-offset:-3px}
+#ttMetricsRoot .tt-v2-disclosure .tt-mx-stat-grid{padding:0 15px 15px;gap:8px}
+#ttMetricsRoot .tt-v2-disclosure .tt-mx-activity-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+#ttMetricsRoot .tt-v2-disclosure .tt-mx-presence-grid{grid-template-columns:repeat(4,minmax(0,1fr));border:0;box-shadow:none;background:none}
+#ttMetricsRoot .tt-v2-disclosure .tt-mx-reach-body{padding:4px 16px 16px;border:0}
+#ttMetricsRoot .tt-mx-shifts,#ttMetricsRoot .tt-mx-roster{border-radius:16px;box-shadow:none}
+#ttMetricsRoot .tt-ops-panel-head{min-height:58px;padding:12px 16px;gap:10px}
+#ttMetricsRoot .tt-mx-job-grid{gap:10px}
+/* Prevent navigation overlap; preserve the established floating dock. */
+body[data-trino-role="admin"] #ttAdminCommandBar{position:sticky;top:0;z-index:1000;box-sizing:border-box;isolation:isolate;background:#111b2a;max-width:100%;}
+#ttMetricsRoot{scroll-margin-top:100px}
+#ttMetricsRoot .tt-ops-toolbar{gap:8px;flex-wrap:wrap}
+/* Own-agent profile: use the authorized current-shift Coverage grade, not attendance rewards. */
+#agentProfileDetail .tt-v2-self-profile-grade{display:inline-flex;align-items:center;justify-content:center;font-weight:750;font-size:11px;line-height:1.3;padding:6px 10px;border:1px solid rgba(48,163,182,.4);border-radius:10px;background:rgba(32,136,155,.1);color:#1686a2;white-space:normal}
+#agentProfileDetail .tt-v2-self-profile-grade[data-grade="A"],#agentProfileDetail .tt-v2-self-profile-grade[data-grade="B"]{color:#08977b;border-color:rgba(16,162,128,.45)}
+#agentProfileDetail .tt-v2-self-profile-grade[data-grade="D"],#agentProfileDetail .tt-v2-self-profile-grade[data-grade="F"]{color:#ba624a;border-color:rgba(192,96,67,.4)}
+#agentProfileDetail .rc15-name-row{flex-wrap:wrap;gap:9px;align-items:center}
+body.dark-mode #ttAdminOverviewPanel .tt-admin-snapshot-card{background:#101b2a;border-color:#2a3a50}
+body.dark-mode #ttMetricsRoot .tt-v2-disclosure{background:rgba(14,23,37,.94);border-color:#2b3c52}
+body.dark-mode #ttMetricsRoot .tt-v2-profile-summary h3,body.dark-mode #ttMetricsRoot .tt-v2-disclosure strong{color:#edf5ff}
+body.dark-mode #ttMetricsRoot .tt-v2-letter{background:#1b293b;border-color:#35485c;color:#dae4f0}
+body.dark-mode #ttMetricsRoot .tt-v2-letter[data-grade="A"]{background:rgba(7,130,101,.22);border-color:rgba(59,217,174,.3);color:#70ebc7}
+body.dark-mode #ttMetricsRoot .tt-v2-letter[data-grade="B"]{background:rgba(19,118,145,.22);border-color:rgba(83,217,239,.3);color:#83dfee}
+body.dark-mode #ttMetricsRoot .tt-v2-letter[data-grade="C"]{background:rgba(144,97,23,.25);border-color:rgba(243,196,106,.36);color:#f3c46a}
+body.dark-mode #ttMetricsRoot .tt-v2-letter[data-grade="D"],body.dark-mode #ttMetricsRoot .tt-v2-letter[data-grade="F"]{background:rgba(164,54,67,.2);border-color:rgba(255,154,154,.34);color:#ffb5b5}
+body.dark-mode #ttMetricsRoot .tt-v2-letter[data-grade="NA"]{background:#1b293b;color:#b7c4d4}
+
+body.dark-mode #agentProfileDetail .tt-v2-self-profile-grade{background:rgba(19,130,150,.15);color:#85d7e7}
+@media (max-width:1050px){#ttMetricsRoot .tt-v2-scorecard>.tt-mx-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#ttMetricsRoot .tt-v2-disclosure .tt-mx-presence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:650px){#ttAdminOverviewPanel{padding:16px!important}#ttAdminOverviewPanel .tt-admin-snapshot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#ttMetricsRoot .tt-ops-hero{padding:14px}#ttMetricsRoot .tt-mx-scorecard.tt-v2-scorecard{padding:14px}#ttMetricsRoot .tt-v2-profile-strip{align-items:flex-start;gap:11px}#ttMetricsRoot .tt-v2-letter{flex-basis:64px;min-height:65px;padding:7px}#ttMetricsRoot .tt-v2-letter strong{font-size:29px}#ttMetricsRoot .tt-v2-letter span{font-size:8px}#ttMetricsRoot .tt-v2-profile-summary h3{font-size:1.13rem}#ttMetricsRoot .tt-v2-scorecard>.tt-mx-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#ttMetricsRoot .tt-v2-disclosure .tt-mx-activity-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#ttMetricsRoot .tt-v2-detail-hint{max-width:53%;font-size:9px}}
+@media (max-width:400px){#ttAdminOverviewPanel .tt-admin-snapshot-grid{grid-template-columns:1fr}#ttMetricsRoot .tt-v2-profile-strip{flex-wrap:nowrap;gap:8px}#ttMetricsRoot .tt-v2-letter{min-height:62px;flex-basis:60px;padding:5px}}
+@media(prefers-reduced-motion:reduce){#ttMetricsRoot .tt-v2-detail-hint svg{transition:none}}
+
+#ttAdminInspectorBody .tt-v2-inspector-grade{border:1px solid rgba(26,144,162,.42);background:rgba(26,144,162,.1);border-radius:9px;padding:5px 9px;font-size:11px;font-weight:750;color:#1985a0}
+#ttAdminInspectorBody .tt-v2-inspector-grade[data-grade="A"],#ttAdminInspectorBody .tt-v2-inspector-grade[data-grade="B"]{color:#07856e;border-color:rgba(12,143,110,.45)}
+body.dark-mode #ttAdminInspectorBody .tt-v2-inspector-grade{color:#8ddbe4}

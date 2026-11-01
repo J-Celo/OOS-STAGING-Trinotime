@@ -1,0 +1,71 @@
+/* UX17.3 STAGING — Agent attendance actions remain reachable at desktop sizes.
+   A legacy fixed 342px masthead + 262px clock with overflow:hidden clipped the
+   authenticated UX4 buttons. Change presentation only, never clone handlers. */
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band:has(#ttAttendanceHeroSlot) {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-bottom: 22px !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap:has(#ttAttendanceHeroSlot) {
+  height: auto !important;
+  min-height: 0 !important;
+  grid-template-rows: 52px auto !important;
+  align-items: start !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) {
+  box-sizing: border-box !important;
+  width: min(100%, 720px) !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  margin: 5px 0 0 !important;
+  padding: 13px 18px 14px !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) .clock-time {
+  font-size: clamp(38px, 3.2vw, 52px) !important;
+  line-height: 1.05 !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) .clock-date {
+  margin-top: 5px !important;
+  padding-bottom: 7px !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) .clock-shift {
+  margin-top: 7px !important;
+  gap: 2px !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) .clock-sync {
+  margin-top: 7px !important;
+}
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band #ttAttendanceHeroSlot {
+  margin-top: 10px !important;
+}
+/* Remove the huge empty fixed-height card after its real buttons move to the hero. */
+html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #mainContent.wrap #punchCard {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+@media (max-width: 1280px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap:has(#ttAttendanceHeroSlot) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas: "profile" "actions" "clock" !important;
+    grid-template-rows: auto auto auto !important;
+    gap: 10px !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+@media (max-width: 680px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) {
+    padding: 12px 10px !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band .clock-box:has(#ttAttendanceHeroSlot) .clock-time {
+    font-size: clamp(29px, 8vw, 40px) !important;
+  }
+}

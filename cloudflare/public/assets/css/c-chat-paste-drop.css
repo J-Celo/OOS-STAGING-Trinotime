@@ -1,0 +1,12 @@
+/* TrinoTime v1.1.95 — Messenger-style paste/drop image composer */
+.tt-wm-composer-wrap{position:relative}
+.tt-wm-drop-zone{position:absolute;inset:7px 10px;z-index:80;border:2px dashed #d3a83a;border-radius:18px;background:rgba(255,250,235,.96);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#6b4d0b;text-align:center;pointer-events:none;box-shadow:0 12px 32px rgba(15,23,42,.12)}
+.tt-wm-drop-zone[hidden]{display:none!important}.tt-wm-drop-zone>span{font-size:24px}.tt-wm-drop-zone strong{font-size:13px}.tt-wm-drop-zone small{font-size:10px;color:#8a6a21}
+.tt-wm-composer-wrap.is-dragging-image .tt-wm-composer{border-color:#d3a83a;box-shadow:0 0 0 3px rgba(211,168,58,.14)}
+.tt-wm-pending-image{position:relative;display:grid;grid-template-columns:52px minmax(0,1fr) 24px;align-items:center;gap:8px;width:min(260px,100%);padding:6px;border:1px solid #e4d29c;background:#fffaf0;color:#5e4611;border-radius:14px;box-sizing:border-box}
+.tt-wm-pending-image img{width:52px;height:52px;object-fit:cover;border-radius:10px;background:#eceff3;border:1px solid rgba(0,0,0,.06)}
+.tt-wm-pending-image span{min-width:0;display:flex;flex-direction:column;gap:2px}.tt-wm-pending-image strong{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-wm-pending-image small{font-size:9px;opacity:.7}
+.tt-wm-pending-image button{border:0;background:transparent;color:#9a3412;width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:16px}.tt-wm-pending-image button:hover{background:rgba(154,52,18,.08)}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-drop-zone{background:rgba(38,47,63,.97);border-color:#d8b552;color:#fff0c5}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-drop-zone small{color:#d6c485}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-pending-image{background:#44361c;color:#fff0c5;border-color:#89703c}body.dark-mode #ttWorkspaceChatOverlay .tt-wm-pending-image button{color:#f3d6b6}
+@media(max-width:620px){.tt-wm-pending-image{width:min(220px,100%);grid-template-columns:44px minmax(0,1fr) 24px}.tt-wm-pending-image img{width:44px;height:44px}.tt-wm-drop-zone{inset:5px 7px}}

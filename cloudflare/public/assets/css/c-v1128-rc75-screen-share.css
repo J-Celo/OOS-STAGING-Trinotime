@@ -1,0 +1,57 @@
+/* RC75: additions scoped to active screen sharing; idle camera/voice layouts are retained. */
+.tt-call-share-stage[hidden],.tt-call-share-notice[hidden],.tt-call-share-waiting[hidden]{display:none}
+.tt-call-share-stage{width:100%;min-width:0;border:1px solid var(--border,#cbd5e1);border-radius:16px;overflow:hidden;background:#0b1220}
+.tt-call-share-heading{min-height:38px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#eef3ff;background:#152237;text-align:left}
+.tt-call-share-heading strong{font:600 13px/1.4 system-ui;overflow-wrap:anywhere}
+.tt-call-share-heading small{font:500 11px/1.4 system-ui;color:#b6c5da;flex-shrink:0}
+.tt-call-share-content{position:relative;width:100%;aspect-ratio:16/9;max-height:50vh;min-height:140px;display:grid;place-items:center}
+#ttVoiceCallShareVideo{width:100%;height:100%;min-height:0;object-fit:contain;display:block;position:absolute;inset:0;transform:none}
+.tt-call-share-waiting{position:relative;padding:16px;color:#c5d0e1;font:500 14px/1.4 system-ui;text-align:center;background:#0b1220}
+.tt-call-share-notice{margin:10px 0 0;padding:10px 12px;border:1px solid var(--border,#cbd5e1);border-radius:10px;color:inherit;font:500 13px/1.5 system-ui;width:100%;box-sizing:border-box}
+#ttVoiceCallShare:disabled{opacity:.5;cursor:not-allowed}
+#ttVoiceCallShare b{white-space:nowrap}
+.tt-call-overlay.is-video:not(.is-minimized) .tt-call-actions{gap:14px}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-card{width:min(1100px,calc(100vw - 32px));min-height:0;padding:20px;gap:14px;max-height:calc(100dvh - 32px);overflow:auto;border-radius:24px}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-copy{order:-1;width:100%;margin:0;padding:0 44px 0 0;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;text-align:left;align-items:center}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-copy h3{font-size:20px;grid-column:1;grid-row:2}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-kicker{font-size:10px;grid-column:1}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-meta{display:none}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) #ttVoiceCallStatus{font-size:12px;grid-column:1}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-timer{grid-column:2;grid-row:1/4;font-size:14px}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-share-stage{flex:0 0 auto}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-video-stage{display:grid;grid-template-columns:repeat(2,minmax(0,160px));justify-content:center;gap:10px;aspect-ratio:auto;max-height:none;min-height:0;height:auto;padding:0;background:transparent;border:0;box-shadow:none;border-radius:12px;overflow:visible;flex-shrink:0}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-remote-video,.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-local-video{position:relative;inset:auto;width:100%;height:auto;max-height:90px;aspect-ratio:16/9;object-fit:contain;min-width:0;border:1px solid #65748a;border-radius:10px;box-shadow:none}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-video-empty{display:none}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-actions{width:100%;margin:0;padding-top:12px;border-top:1px solid var(--border,#d7deeb);flex-shrink:0}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-action{min-width:70px;font-size:11px;gap:6px}
+.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-action>span{width:44px;height:44px;border-radius:14px}
+.tt-call-overlay.is-minimized .tt-call-share-stage{display:none}
+/* RC24 hides all dock labels with !important; retain an explicit stop-sharing label. */
+.tt-call-overlay.is-minimized #ttVoiceCallShare b{display:block!important;font-size:9px;line-height:1.2;max-width:46px;white-space:normal}
+.tt-call-overlay.is-minimized #ttVoiceCallShare{gap:2px!important}
+.tt-call-overlay.is-minimized .tt-call-share-notice{grid-column:1/-1;font-size:11px;margin:0}
+@media(max-width:620px){
+ .tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-card{padding:12px;gap:10px;width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:18px}
+ .tt-call-share-heading{flex-wrap:wrap;gap:3px;padding:8px 10px}
+ .tt-call-share-heading small{width:100%}
+ .tt-call-share-content{max-height:40vh;min-height:110px}
+ .tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-video-stage{grid-template-columns:repeat(2,minmax(0,120px))}
+ .tt-call-overlay.is-video:not(.is-minimized) .tt-call-actions{gap:8px}
+ .tt-call-overlay.is-video:not(.is-minimized) .tt-call-action{min-width:56px;font-size:10px}
+ .tt-call-overlay.is-video:not(.is-minimized) .tt-call-action>span{width:44px;height:44px}
+ .tt-call-overlay.is-video.is-minimized .tt-call-card{grid-template-columns:minmax(0,1fr) auto}
+ .tt-call-overlay.is-video.is-minimized .tt-call-copy{grid-column:1}
+ .tt-call-overlay.is-video.is-minimized .tt-call-actions{grid-column:2}
+}
+@media(max-height:650px) and (min-width:621px){
+ .tt-call-share-content{max-height:42vh}
+ .tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-remote-video,.tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-local-video{max-height:65px}
+}
+@media(prefers-reduced-motion:reduce){#ttVoiceCallShare{transition:none}}
+
+.tt-call-overlay.is-screen-sharing .tt-call-avatar[hidden]{display:none}
+
+@media(max-width:620px){
+ .tt-call-overlay.is-screen-sharing:not(.is-minimized) .tt-call-action{flex:1;min-width:0;padding:0;font-size:10px}
+ .tt-call-overlay.is-screen-sharing:not(.is-minimized) #ttVoiceCallShare b{white-space:normal}
+}

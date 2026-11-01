@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "TrinoTime QC Tracker \u2014 STAGING QA",
+  "version": "2.2.62",
+  "description": "STAGING QA ONLY: isolated test backend; Coverage/Confirmation detection and guarded automatic confirmation recovery.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://labeling-tools.augmoto.com/*",
+    "https://oostrinotime-staging-qa.trinoadmin.workers.dev/*"
+  ],
+  "action": {
+    "default_title": "TrinoTime QC Tracker \u2014 STAGING QA",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "trinotime-icon-16.png",
+      "32": "trinotime-icon-32.png",
+      "48": "trinotime-icon-48.png",
+      "128": "trinotime-icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://labeling-tools.augmoto.com/*"
+      ],
+      "js": [
+        "job-mode.js",
+        "task-efficiency.js",
+        "hud-appearance.js",
+        "store-intelligence.js",
+        "coverage.js",
+        "confirmation.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://oostrinotime-staging-qa.trinoadmin.workers.dev/*"
+      ],
+      "js": [
+        "trinotime-session-relay.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "trinotime-icon-16.png",
+    "32": "trinotime-icon-32.png",
+    "48": "trinotime-icon-48.png",
+    "128": "trinotime-icon-128.png"
+  },
+  "version_name": "2.2.62 \u00b7 STAGING QA \u00b7 v2.3.10 counting parity"
+}

@@ -1,0 +1,88 @@
+/* TrinoTime V2.0.0 RC27 — Message Editing & Revision Safety */
+.tt-wm-inline-edit{
+  width:min(100%,34rem);
+  min-width:min(18rem,100%);
+  padding:.65rem;
+  border:1px solid color-mix(in srgb,var(--tt-wm-border,#cbd5e1) 82%,transparent);
+  border-radius:16px;
+  background:color-mix(in srgb,var(--tt-wm-surface,#fff) 96%,transparent);
+  box-shadow:0 12px 30px rgba(15,23,42,.10);
+}
+.tt-wm-msg-row.is-mine .tt-wm-inline-edit{margin-left:auto;}
+.tt-wm-edit-input{
+  box-sizing:border-box;
+  display:block;
+  width:100%;
+  min-height:72px;
+  max-height:180px;
+  resize:vertical;
+  padding:.72rem .8rem;
+  border:1px solid #94a3b8;
+  border-radius:12px;
+  outline:none;
+  background:#fff;
+  color:#0f172a;
+  font:inherit;
+  line-height:1.45;
+}
+.tt-wm-edit-input:focus{
+  border-color:#c99117;
+  box-shadow:0 0 0 3px rgba(201,145,23,.14);
+}
+.tt-wm-edit-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:.45rem;
+  margin-top:.5rem;
+}
+.tt-wm-edit-actions>span{
+  margin-right:auto;
+  color:#64748b;
+  font-size:.72rem;
+}
+.tt-wm-edit-actions button{
+  min-height:34px;
+  padding:.4rem .7rem;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  background:#fff;
+  color:#334155;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+.tt-wm-edit-actions button.is-primary{
+  border-color:#b7790c;
+  background:#c98a0b;
+  color:#fff;
+}
+.tt-wm-edit-actions button:disabled{opacity:.62;cursor:wait;}
+.tt-wm-edited{font-style:italic;opacity:.78;}
+.tt-wm-message-context-item.is-edit{font-weight:700;}
+html[data-theme="dark"] .tt-wm-inline-edit,
+body.dark-mode .tt-wm-inline-edit,
+[data-theme="dark"] .tt-wm-inline-edit{
+  border-color:#475569;
+  background:#111c2e;
+  box-shadow:0 14px 34px rgba(0,0,0,.28);
+}
+html[data-theme="dark"] .tt-wm-edit-input,
+body.dark-mode .tt-wm-edit-input,
+[data-theme="dark"] .tt-wm-edit-input{
+  border-color:#64748b;
+  background:#0b1423;
+  color:#f8fafc;
+}
+html[data-theme="dark"] .tt-wm-edit-actions>span,
+body.dark-mode .tt-wm-edit-actions>span,
+[data-theme="dark"] .tt-wm-edit-actions>span{color:#aebbd0;}
+html[data-theme="dark"] .tt-wm-edit-actions button:not(.is-primary),
+body.dark-mode .tt-wm-edit-actions button:not(.is-primary),
+[data-theme="dark"] .tt-wm-edit-actions button:not(.is-primary){background:#172235;border-color:#52627a;color:#eef2f7;}
+@media (max-width:640px){
+  .tt-wm-inline-edit{min-width:0;width:100%;padding:.55rem;border-radius:14px;}
+  .tt-wm-edit-actions{flex-wrap:wrap;}
+  .tt-wm-edit-actions>span{flex-basis:100%;margin:0 0 .15rem;text-align:left;}
+  .tt-wm-edit-actions button{flex:1 1 0;}
+}

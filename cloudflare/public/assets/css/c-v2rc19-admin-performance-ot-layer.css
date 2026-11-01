@@ -1,0 +1,11 @@
+/* TrinoTime V2.0.0 RC19 — Admin interaction priority + TL OT child-modal closure */
+:root{--z-overtime-child-modal-rc19:50000;}
+body > :is(#otOverlay,#tlOtRequestOverlay,#tlOtReviewOverlay,#tlOtCorrectionOverlay)[data-overtime-modal-portal="body"]{
+  z-index:var(--z-overtime-child-modal-rc19)!important;
+  isolation:isolate;
+}
+/* Keep operational child dialogs below credential/confirm layers but above all hubs/panels. */
+body > :is(#tlOtReviewOverlay,#tlOtCorrectionOverlay).open > .modal-box{
+  position:relative;
+  z-index:1;
+}

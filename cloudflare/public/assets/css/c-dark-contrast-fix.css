@@ -1,0 +1,83 @@
+/* Scoped dark surfaces: pair text and background instead of whitening all text. */
+body.dark-mode :is(.tt-admin-hub,#ttAdminCommandBar,#ttAdminInspectorOverlay,#ttAdminToolsOverlay,#ttAdminQuickMenu,.export-center-box,.totals-pod-group){--text:#edf2fa;--muted:#bac7d9;--surface:#1a2331;--border:#46566d;color:#edf2fa}
+body.dark-mode :is(.tt-admin-hub p,.tt-admin-hub-grid button small,.tt-admin-snapshot-card span,.tt-admin-tool-tile span,.tt-admin-inspector-grid small,.tt-admin-inspector-record span,.tt-admin-inspector-head small,.tt-admin-inspector-empty,.tt-admin-schedule-summary small,.tt-admin-schedule-summary>span,.tt-admin-context,.tt-admin-quick-menu-head span,.tt-admin-schedule-legend,.tt-admin-schedule-weekdays span,.tt-admin-access-summary span,.tt-admin-inspector-section-head span,.tt-admin-inspector-grid span){color:#bac7d9}
+body.dark-mode :is(.tt-admin-hub-kicker,.tt-admin-inspector-head>div>span,.tt-admin-snapshot-card button){color:#f2ca78}
+body.dark-mode :is(.tt-admin-hub-grid button strong,.tt-admin-inspector-empty strong,.tt-admin-schedule-summary strong,.tt-admin-embedded-title,.tt-admin-tools-head h2){color:#edf2fa}
+body.dark-mode :is(.tt-admin-quick-row button,.tt-admin-inspector-actions button,.tt-admin-inspector-empty button,.tt-admin-schedule-monthbar button,.tt-admin-tools-close,.tt-admin-inspector-close,.tt-admin-inline-inspector,.tt-admin-hub-actions button,.tt-admin-command-action){background:#253247;border-color:#52627a;color:#edf2fa}
+body.dark-mode :is(.tt-admin-quick-row button,.tt-admin-inspector-actions button,.tt-admin-schedule-monthbar button,.tt-admin-tools-close,.tt-admin-inspector-close,.tt-admin-inline-inspector,.tt-admin-hub-actions button,.tt-admin-command-action):hover{background:#35465d;color:#fff}
+body.dark-mode :is(.tt-admin-hub-grid button,.tt-admin-tool-tile):hover{background:#35465d;border-color:#d2ae61;color:#fff}
+body.dark-mode .tt-admin-embedded-back{background:#493b20;color:#ffe0a0}
+body.dark-mode :is(.tt-admin-command-tab,.tt-admin-inspector-tabs button).is-active{background:#e5bc68;color:#172033}
+body.dark-mode .tt-admin-command-tab:not(.is-active):hover{background:#35465d;color:#fff}
+body.dark-mode :is(.tt-admin-schedule-calendar,.tt-admin-schedule-summary,.tt-admin-inspector-record,.tt-admin-access-summary div){background:#1a2331;color:#edf2fa}
+body.dark-mode :is(.tt-admin-schedule-monthbar strong,.tt-admin-cal-day b,.tt-admin-inspector-record strong,.tt-admin-access-summary strong){color:#edf2fa}
+body.dark-mode .tt-admin-cal-day small{color:#bac7d9}
+body.dark-mode .tt-admin-cal-day.is-outside{opacity:1;background:#18202c}
+body.dark-mode .tt-admin-cal-day.is-outside b{color:#aab8cc}
+body.dark-mode :is(.hourly-rate-input,.export-center-field input,.export-center-field select){color-scheme:dark;background:#182231!important;color:#edf2fa!important;border-color:#52627a!important;-webkit-text-fill-color:#edf2fa}
+body.dark-mode :is(.hourly-rate-input,.export-center-field input)::placeholder{color:#bac7d9;opacity:1;-webkit-text-fill-color:#bac7d9}
+body.dark-mode :is(.totals-pay-name,.totals-pay-value,.hourly-rate-prefix){color:#edf2fa}
+body.dark-mode :is(.totals-pay-note,.totals-pay-unset){color:#bac7d9}
+
+/* Named operational dialogs: keep the actual Close control above long content. */
+:is(#moveAgentsOverlay,#otTabOverlay,#todayStatusOverlay,#totalsOverlay)>.modal-box>.history-head{position:sticky!important;top:0;z-index:50;background:var(--card,#fff);flex-shrink:0;min-height:46px;box-sizing:border-box}
+:is(#moveAgentsOverlay,#otTabOverlay,#todayStatusOverlay)>.modal-box>.history-head{padding-right:94px!important;align-items:flex-start}
+:is(#moveAgentsOverlay,#otTabOverlay,#todayStatusOverlay) .tt-sticky-close{position:absolute;top:0;right:0;margin:0;min-width:78px;min-height:40px}
+:is(#moveAgentsOverlay,#otTabOverlay,#todayStatusOverlay) .history-controls{flex-wrap:wrap}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay,#settingsOverlay){--card:#111c2c;--surface:#182638;--text:#edf2fa;--muted:#bac7d9;--border:#42536b;--line:#42536b;color:#edf2fa}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay)>.modal-box{background:#111c2c!important;color:#edf2fa!important;border-color:#42536b!important}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay)>.modal-box>.history-head{background:#111c2c!important;color:#edf2fa}
+body.dark-mode :is(.totals-pod-group,.totals-pay-table-wrap,.totals-toolbar,.ot-management-section,.ot-request-row,.ot-payroll-period-summary,.status-card,.coaching-status-card,.pod-transfer-toolbar,.pod-transfer-summary,.pod-transfer-row,.sync-diagnostic-card,.settings-section,.settings-sync-card,.settings-quick-start,.settings-common-tasks,.settings-guide-role,.settings-troubleshoot-card,.settings-identity-compare){background:#182638!important;color:#edf2fa!important;border-color:#42536b!important;box-shadow:none}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay) :is(h3,h4,strong,b,label,th,td){color:#edf2fa}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay) :is(.modal-sub,.field-hint,.ot-section-note,.ot-request-review-note,.loading-note,small){color:#bac7d9}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay) :is(table,thead,tbody,tr,th,td){background-color:transparent!important}
+body.dark-mode :is(#totalsOverlay,#otTabOverlay,#todayStatusOverlay,#moveAgentsOverlay) :is(input,select){color-scheme:dark;background:#111c2c!important;color:#edf2fa!important;border-color:#42536b!important}
+body.dark-mode :is(.sync-diagnostic-card,.settings-section,.settings-sync-card,.settings-identity-compare) :is(b,strong,h3,h4,span){color:#edf2fa}
+body.dark-mode :is(.settings-section-note,.settings-section-eyebrow,.settings-hint,.settings-guide-note){color:#bac7d9}
+body.dark-mode .status-card.online{border-left:4px solid #6ee7a2!important}
+body.dark-mode .status-card.onbreak{border-left:4px solid #f2ca78!important}
+body.dark-mode .status-card.absent{border-left:4px solid #fca5a5!important}
+body.dark-mode .status-card.late{border-left:4px solid #f2ca78!important}
+
+/* Messaging follows the existing theme toggle, without changing layout or history. */
+body.dark-mode #ttWorkspaceChatOverlay{color:#edf2fa;color-scheme:dark}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-shell{background:rgba(2,6,23,.94);border-color:#334155;backdrop-filter:blur(20px)}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-main,.tt-wm-messages,.tt-wm-welcome,.tt-wm-search-results){background:#0b1220;color:#edf2fa}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-topbar,.tt-wm-sidebar,.tt-wm-thread-head,.tt-wm-composer-wrap,.tt-wm-composer,.tt-wm-thread-panel,.tt-wm-thread-root,.tt-wm-thread-reply,.tt-wm-hover-actions,.tt-wm-emoji-pop,.tt-wm-people,.tt-wm-workforce-pop,.tt-wm-poll-pop,.tt-wm-action-menu,.tt-wm-governance-panel,.tt-wm-report-card,.tt-wm-report-dialog,.tt-wm-poll-card,.tt-wm-attachment,.tt-wm-workforce-card,.tt-wm-config-card){background:#172338;color:#edf2fa;border-color:#42536b}
+body.dark-mode #ttWorkspaceChatOverlay :is(input,textarea,select){background:#101b2d!important;color:#edf2fa!important;-webkit-text-fill-color:#edf2fa;border-color:#42536b!important}
+body.dark-mode #ttWorkspaceChatOverlay :is(input,textarea)::placeholder{color:#bac7d9!important;-webkit-text-fill-color:#bac7d9;opacity:1}
+body.dark-mode #ttWorkspaceChatOverlay :is(h2,h3,strong,.tt-wm-conv-title,.tt-wm-thread-title,.tt-wm-search-hit p,.tt-wm-person strong){color:#edf2fa}
+body.dark-mode #ttWorkspaceChatOverlay :is(small,.tt-wm-conv-preview,.tt-wm-conv-time,.tt-wm-thread-sub,.tt-wm-sender,.tt-wm-msg-meta,.tt-wm-typing,.tt-wm-day,.tt-wm-empty,.tt-wm-section-label,.tt-wm-search-hint,.tt-wm-search-note,.tt-wm-welcome-card,.tt-wm-poll-foot,.tt-wm-workforce-item em){color:#bac7d9}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-icon-btn,.tt-wm-plus-btn,.tt-wm-gif-btn,.tt-wm-notify-btn,.tt-wm-history-button,.tt-wm-reaction-chip,.tt-wm-workforce-item,.tt-wm-poll-choice,.tt-wm-poll-actions button,.tt-wm-governance-tabs button,.tt-wm-new-dm){background:#21314a;color:#edf2fa;border-color:#42536b}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-emoji-btn,.tt-wm-reply-btn,.tt-wm-action-menu button){color:#edf2fa}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-conv,.tt-wm-person,.tt-wm-search-hit,.tt-wm-search-person,.tt-wm-search-conv,.tt-wm-icon-btn,.tt-wm-emoji-btn,.tt-wm-gif-btn,.tt-wm-plus-btn,.tt-wm-workforce-item,.tt-wm-action-menu button):hover{background:#2a3c56;color:#fff}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-conv.is-active,.tt-wm-reaction-chip.is-mine,.tt-wm-poll-choice.is-mine,.tt-wm-governance-tabs button.is-active){background:#453819;border-color:#b99447;color:#ffe4a3}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-bubble{background:#1e2c41;border-color:#42536b;color:#edf2fa}
+body.dark-mode #ttWorkspaceChatOverlay .is-mine .tt-wm-bubble{background:#44361c;border-color:#89703c;color:#fff0c5}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-msg-row.is-failed .tt-wm-bubble{background:#48242b;border-color:#b96170;color:#ffe1e5}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-failed,.tt-wm-retry,.tt-wm-poll-status){color:#ffb4b4}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-seen{color:#86efac}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-kicker,.tt-wm-thread-count,.tt-wm-workforce-card small){color:#f2ca78}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-bubble a,.tt-wm-thread-reply a){color:#93c5fd;text-decoration:underline}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-live{background:#21314a;border-color:#42536b;color:#bac7d9}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-live.is-live{background:#163a2c;border-color:#3a795d;color:#a7f3c5}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-send,.tt-wm-poll-actions button.is-primary,.tt-wm-thread-composer button){background:#e6b955;color:#172033}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-day::before,body.dark-mode #ttWorkspaceChatOverlay .tt-wm-day::after{background:#42536b}
+body.dark-mode :is(.totals-period-block,.totals-overall-summary,.totals-pod-summary,.production-diagnostics,.settings-modal,.settings-modal-header){background:#182638!important;color:#edf2fa!important;border-color:#42536b!important}
+body.dark-mode :is(.totals-period-title,.totals-pod-title,.totals-overall-summary,.totals-pod-summary,.production-diagnostics) :is(span,p,strong,b){color:#edf2fa}
+body.dark-mode #settingsOverlay :is(input,select,textarea){background:#111c2c;color:#edf2fa;border-color:#42536b;color-scheme:dark}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-newdm,.tt-wm-dm-menu button,.tt-wm-report-actions button,.tt-wm-notify-menu,.tt-wm-access-row,.tt-wm-report-item,.tt-wm-activate-card,.tt-wm-diagnostic-result){background:#21314a;color:#edf2fa;border-color:#42536b}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-report-item p,.tt-wm-report-card p,.tt-wm-report-card label,.tt-wm-gov-note,.tt-wm-access-row em,.tt-wm-workforce-card span,.tt-wm-poll-field>span,.tt-wm-poll-options label>span){color:#bac7d9}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-pending-chip,.tt-wm-report-item blockquote,.tt-wm-workforce-card b,.tt-wm-workforce-item b,.tt-wm-welcome-icon){background:#44361c;color:#fff0c5;border-color:#89703c}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-action-icon,.tt-wm-workforce-item-icon,.tt-wm-attachment-icon){background:#304158;color:#f2ca78}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-dm-options,.tt-wm-pending-chip button){color:#bac7d9}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-dm-menu button.is-danger{color:#ffb4b4}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-report-status{background:#44361c;color:#fff0c5}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-report-status.is-reviewed{background:#163a2c;color:#a7f3c5}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-report-status.is-dismissed{background:#21314a;color:#bac7d9}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-notify-menu button,.tt-wm-report-item blockquote){color:#edf2fa}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-emoji-pop button,.tt-wm-react-btn,.tt-wm-reply-btn,.tt-wm-notify-menu button):hover{background:#304158}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-governance-tabs{background:#172338;border-color:#42536b}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-gov-note{background:#44361c;border-color:#89703c;color:#fff0c5}
+body.dark-mode #ttWorkspaceChatOverlay :is(.tt-wm-pref-mark,.tt-wm-report-btn){color:#f2ca78}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-report-btn:hover{background:#304158}

@@ -1,0 +1,19 @@
+/* TrinoTime V2.0.0 RC29 — POD mention autocomplete + recognized mention highlight. */
+#ttWorkspaceChatOverlay .tt-wm-composer,#ttWorkspaceChatOverlay .tt-wm-thread-composer{position:relative}
+#ttWorkspaceChatOverlay .tt-wm-mention-pop{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:min(390px,calc(100% - 16px));max-height:min(320px,42dvh);overflow:auto;padding:6px;border:1px solid #d8e1ec;border-radius:15px;background:#fff;box-shadow:0 18px 42px rgba(15,23,42,.18);z-index:86;box-sizing:border-box}
+#ttWorkspaceChatOverlay .tt-wm-mention-pop[hidden]{display:none}
+#ttWorkspaceChatOverlay .tt-wm-mention-option{width:100%;border:0;background:transparent;color:#243247;border-radius:11px;padding:8px 9px;display:flex;align-items:center;gap:9px;text-align:left;cursor:pointer;font:inherit}
+#ttWorkspaceChatOverlay .tt-wm-mention-option:hover,#ttWorkspaceChatOverlay .tt-wm-mention-option.is-active{background:#fff5d7;color:#172033}
+#ttWorkspaceChatOverlay .tt-wm-mention-option>span:last-child{min-width:0;display:grid;gap:1px}
+#ttWorkspaceChatOverlay .tt-wm-mention-option strong{font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ttWorkspaceChatOverlay .tt-wm-mention-option small{font-size:10px;color:#7b879a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ttWorkspaceChatOverlay .tt-wm-mention-avatar{width:29px;height:29px;flex:0 0 29px;border-radius:50%;display:grid;place-items:center;background:#edf2f8;color:#4b5f7a;font-size:10px;font-weight:900;letter-spacing:.02em}
+#ttWorkspaceChatOverlay .tt-wm-mention{display:inline;border-radius:5px;padding:0 2px;background:rgba(124,58,237,.10);color:#6d28d9;font-weight:800}
+#ttWorkspaceChatOverlay .tt-wm-thread-mention-pop{left:50%;width:min(340px,calc(100% - 12px));z-index:88}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention-pop{background:#172338;border-color:#42536b;box-shadow:0 20px 46px rgba(0,0,0,.35)}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention-option{color:#edf2fa}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention-option:hover,body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention-option.is-active{background:#293a55;color:#fff}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention-option small{color:#a9b7ca}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention-avatar{background:#273750;color:#d9e3f1}
+body.dark-mode #ttWorkspaceChatOverlay .tt-wm-mention{background:rgba(167,139,250,.18);color:#c4b5fd}
+@media(max-width:620px){#ttWorkspaceChatOverlay .tt-wm-mention-pop{width:calc(100% - 8px);max-height:min(280px,38dvh);bottom:calc(100% + 6px);border-radius:14px}#ttWorkspaceChatOverlay .tt-wm-mention-option{min-height:44px;padding:8px 10px}}

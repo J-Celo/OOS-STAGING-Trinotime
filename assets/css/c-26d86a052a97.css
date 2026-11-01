@@ -1,0 +1,203 @@
+        .edit-break-reset-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: -2px 0 14px;
+            padding: 10px 12px;
+            border: 1px solid #FED7AA;
+            border-radius: 10px;
+            background: #FFF7ED;
+        }
+        .edit-break-reset-copy {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .edit-break-reset-copy strong {
+            font-size: 12px;
+            color: #9A3412;
+        }
+        .edit-break-reset-copy span {
+            font-size: 10.5px;
+            line-height: 1.4;
+            color: #7C2D12;
+        }
+        .edit-break-reset-copy span.pending {
+            color: #B45309;
+            font-weight: 700;
+        }
+        .edit-break-reset-btn {
+            flex: 0 0 auto;
+            white-space: nowrap;
+            padding: 8px 11px;
+            border-color: #FDBA74 !important;
+            background: #FFFFFF !important;
+            color: #9A3412 !important;
+        }
+        .edit-break-reset-btn:not(:disabled):hover {
+            border-color: #F97316 !important;
+            background: #FFEDD5 !important;
+        }
+        .edit-break-reset-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+        body.dark-mode .edit-break-reset-panel {
+            border-color: #7C4A25;
+            background: #2A1D14;
+        }
+        body.dark-mode .edit-break-reset-copy strong { color: #FDBA74; }
+        body.dark-mode .edit-break-reset-copy span { color: #FED7AA; }
+        body.dark-mode .edit-break-reset-copy span.pending { color: #FBBF24; }
+        body.dark-mode .edit-break-reset-btn {
+            border-color: #8A552B !important;
+            background: #20170F !important;
+            color: #FDBA74 !important;
+        }
+        @media (max-width: 560px) {
+            .edit-break-reset-panel {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .edit-break-reset-btn { width: 100%; }
+        }
+        .pod-transfer-toolbar {
+            display: grid;
+            grid-template-columns: minmax(220px, 1.4fr) minmax(160px, .75fr) auto auto;
+            gap: 10px;
+            align-items: end;
+            margin: 14px 0 10px;
+        }
+        .pod-transfer-field { min-width: 0; }
+        .pod-transfer-field label {
+            display: block;
+            margin: 0 0 6px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+        }
+        .pod-transfer-field input,
+        .pod-transfer-field select,
+        .pod-transfer-inline-select {
+            width: 100%;
+            min-height: 36px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: var(--card);
+            color: var(--ink);
+            font: 600 12px/1.2 'Plus Jakarta Sans', Inter, sans-serif;
+            padding: 7px 9px;
+        }
+        .pod-transfer-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 8px 0 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: color-mix(in srgb, var(--paper) 52%, var(--card));
+            color: var(--muted);
+            font-size: 11px;
+        }
+        .pod-transfer-summary strong { color: var(--ink); }
+        .pod-transfer-list {
+            max-height: min(52vh, 520px);
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--paper) 34%, var(--card));
+        }
+        .pod-transfer-agent-row {
+            display: grid;
+            grid-template-columns: auto minmax(180px, 1fr) minmax(100px, auto);
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+        }
+        .pod-transfer-agent-row:last-child { border-bottom: 0; }
+        .pod-transfer-agent-check { width: 18px; height: 18px; accent-color: var(--accent-blue); }
+        .pod-transfer-agent-main { min-width: 0; display: flex; align-items: center; gap: 9px; }
+        .pod-transfer-agent-main .avatar { width: 30px; height: 30px; flex: 0 0 30px; }
+        .pod-transfer-agent-name { min-width: 0; }
+        .pod-transfer-agent-name strong { display:block; color:var(--ink); font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .pod-transfer-agent-name span { display:block; color:var(--muted); font-size:10.5px; margin-top:2px; }
+        .pod-transfer-current-pill,
+        .pod-transfer-open-pill {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 4px 7px;
+            font: 700 9.5px/1 'IBM Plex Mono', monospace;
+            color: var(--muted);
+            background: var(--card);
+            white-space: nowrap;
+        }
+        .pod-transfer-open-pill { border-color:#F59E0B; color:#92400E; background:#FFFBEB; }
+        body.dark-mode .pod-transfer-open-pill { color:#FDE68A; background:#2A2113; border-color:#92400E; }
+        .pod-transfer-empty { padding: 24px; text-align:center; color:var(--muted); font-size:13px; }
+        .pod-transfer-continuity-note {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 10.5px;
+            line-height: 1.55;
+        }
+        .pod-transfer-inline-select {
+            width: auto;
+            min-width: 104px;
+            max-width: 132px;
+            min-height: 30px;
+            padding: 5px 24px 5px 7px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .roster-agent-actions .pod-transfer-inline-select { min-width: 110px; }
+        .attendance-actions-stack { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:nowrap; min-width:0; }
+        .attendance-actions-cell { text-align:center; vertical-align:middle; }
+        .attendance-actions-cell .row-edit-btn { min-width:74px; display:inline-flex; align-items:center; justify-content:center; }
+        .pod-assignment-display { display:flex; flex-direction:column; align-items:center; gap:2px; }
+        .pod-assignment-current { font-weight:800; color:var(--ink); }
+        .pod-assignment-history { color:var(--muted); font:600 8.5px/1.25 'IBM Plex Mono', monospace; white-space:nowrap; }
+        .profile-pod-management {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 12px 0 0;
+            padding: 11px 12px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--paper) 52%, var(--card));
+        }
+        .profile-pod-management-copy { min-width:180px; flex:1 1 240px; }
+        .profile-pod-management-copy strong { display:block; color:var(--ink); font-size:12px; }
+        .profile-pod-management-copy span { display:block; margin-top:3px; color:var(--muted); font-size:10.5px; line-height:1.4; }
+        .profile-pod-management .pod-transfer-inline-select { flex:0 0 auto; min-width:150px; max-width:190px; }
+        html[data-glass-performance="low"] .pod-transfer-summary,
+        html[data-glass-performance="low"] .pod-transfer-list,
+        html[data-glass-performance="low"] .profile-pod-management { backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+        @media (max-width: 760px) {
+            .pod-transfer-toolbar { grid-template-columns: 1fr 1fr; }
+            .pod-transfer-toolbar .modal-btn { width:100%; }
+            .pod-transfer-agent-row { grid-template-columns:auto minmax(0,1fr); }
+            .pod-transfer-current-pill { grid-column:2; justify-self:start; }
+            .roster-agent-row { align-items:flex-start; }
+            .roster-agent-actions { flex-wrap:wrap; justify-content:flex-end; }
+            .profile-pod-management { align-items:stretch; }
+            .profile-pod-management .pod-transfer-inline-select { width:100%; max-width:none; }
+        }
+        @media (max-width: 520px) {
+            .pod-transfer-toolbar { grid-template-columns: 1fr; }
+            .attendance-actions-stack { justify-content:center; }
+        }
+    

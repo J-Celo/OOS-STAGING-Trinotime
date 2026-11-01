@@ -1,0 +1,213 @@
+/* TrinoTime v1.1.7 Phase 1 - Standard navigation and responsive polish.
+   Presentation only. No Firebase, App Check, reCAPTCHA, Auth, database, API-key,
+   entitlement, permission, or security runtime changes. */
+
+/* 1) Normalize the Standard top action rail so text can never sit high or clip. */
+html[data-trino-tier='normal'] #appRoot > .band .action-rail,
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail {
+  align-items: center !important;
+  align-content: center !important;
+}
+
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #tlAdminOverviewBtn,
+  #openShiftSettingsBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #tlAdminOverviewBtn,
+  #openShiftSettingsBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) {
+  box-sizing: border-box !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  overflow: visible !important;
+}
+
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn
+) {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+/* Explicit fix for the reported My Schedule baseline/clipping regression. */
+html[data-trino-tier='normal'] #openDayOffBtn,
+html[data-trino-custom-workspace='standard'] #openDayOffBtn {
+  line-height: 1.15 !important;
+  text-indent: 0 !important;
+  transform: none !important;
+}
+
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) > span,
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) > span {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.15 !important;
+}
+
+/* Match the icon controls to the same optical height as text navigation. */
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(
+  #installAppBtn,
+  #notifBellBtn,
+  #settingsGearBtn,
+  #sessionMeta
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #installAppBtn,
+  #notifBellBtn,
+  #settingsGearBtn,
+  #sessionMeta
+) {
+  box-sizing: border-box !important;
+  width: 54px !important;
+  min-width: 54px !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  flex-basis: 54px !important;
+  align-self: center !important;
+}
+
+html[data-trino-tier='normal'] #appRoot > .band .action-rail #sessionMetaToggle,
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail #sessionMetaToggle {
+  box-sizing: border-box !important;
+  width: 54px !important;
+  height: 54px !important;
+  min-height: 54px !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+/* 2) Stable action ordering. Visibility remains entirely controlled by existing runtime. */
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(#openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn) { order: 10; }
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(#tlAdminOverviewBtn,#openShiftSettingsBtn) { order: 12; }
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn,#sessionMeta) { order: 20; }
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > #appReloadBtn { order: 30; }
+html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(#sessionLogoutDivider,#sessionLogoutBtn) { order: 31; }
+
+/* Runtime-inserted flex breaks create intentional groups without changing button nesting. */
+.tt-action-account-break,
+.tt-action-secondary-break {
+  display: none;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  pointer-events: none;
+}
+.tt-action-account-break { order: 19; }
+.tt-action-secondary-break { order: 29; }
+
+/* 3) At laptop/tablet widths, Refresh / Log Out form a deliberate second row. */
+@media (max-width: 1180px) {
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail,
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail {
+    width: 100% !important;
+    justify-content: flex-end !important;
+    column-gap: 6px !important;
+    row-gap: 8px !important;
+  }
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail > .tt-action-secondary-break,
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > .tt-action-secondary-break {
+    display: block !important;
+  }
+}
+
+/* At smaller widths, keep navigation, account icons, and session actions in clean groups. */
+@media (max-width: 680px) {
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail,
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail {
+    justify-content: center !important;
+  }
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail > .tt-action-account-break,
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > .tt-action-account-break {
+    display: block !important;
+  }
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(#openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn),
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(#openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn) {
+    flex: 1 1 calc(33.333% - 8px) !important;
+    min-width: 0 !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,
+    #appReloadBtn,#sessionLogoutBtn
+  ),
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,
+    #appReloadBtn,#sessionLogoutBtn
+  ) {
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn,#sessionMeta),
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn,#sessionMeta),
+  html[data-trino-tier='normal'] #appRoot > .band .action-rail #sessionMetaToggle,
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail #sessionMetaToggle {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    flex-basis: 48px !important;
+  }
+}
+
+/* 4) Clear active state for whichever basic navigation surface is currently open. */
+html[data-trino-tier='normal'] #appRoot > .band .action-rail .tt-action-active,
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail .tt-action-active {
+  background: color-mix(in srgb, #D79A25 18%, rgba(255,255,255,.92)) !important;
+  border-color: color-mix(in srgb, #D79A25 52%, rgba(148,163,184,.35)) !important;
+  color: #6F4B08 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 7px 20px rgba(132,88,12,.10) !important;
+}
+html[data-trino-tier='normal'] body.dark-mode #appRoot > .band .action-rail .tt-action-active,
+html[data-trino-custom-workspace='standard'] body.dark-mode #appRoot > .band .action-rail .tt-action-active {
+  background: rgba(213,172,92,.16) !important;
+  border-color: rgba(213,172,92,.38) !important;
+  color: #F6D999 !important;
+}

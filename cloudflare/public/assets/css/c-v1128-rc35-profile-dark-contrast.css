@@ -1,0 +1,164 @@
+/* TrinoTime v1.1.128 RC35 — Profile Dark-Mode Contrast Closure
+   Presentation-only fix. Keeps the global Obsidian --ink-dark structural token
+   unchanged and remaps foreground semantics only inside My TrinoTime/Profile. */
+
+body.dark-mode #agentProfileOverlay,
+html[data-theme="dark"] #agentProfileOverlay,
+html.dark #agentProfileOverlay {
+  --ink: #E7ECF4;
+  --ink-dark: #F8FAFC;
+  --muted: #A7B3C4;
+  --slate: #B8C2D0;
+}
+
+/* Profile headings, values and legacy My TrinoTime copy must never inherit the
+   near-black structural token used elsewhere by the Obsidian shell. */
+body.dark-mode #agentProfileOverlay :is(
+  .agent-profile-modal-title,
+  .profile-public-name,
+  .rc15-name-row h2,
+  .rc15-health-title strong,
+  .rc15-completion-head strong,
+  .rc15-dashboard-card h3,
+  .rc15-overview-note strong,
+  .rc15-section-head h3,
+  .rc15-info-card > strong,
+  .rc15-work-identity-grid strong,
+  .rc15-workspace-identity strong,
+  .rc15-shift-grid strong,
+  .rc15-privacy-rows strong,
+  .rc15-privacy-locked strong,
+  .rc15-preview-person strong,
+  .rc15-preview-field strong,
+  .rc16-insight-card strong,
+  .rc16-overview-insights > article > strong,
+  .rc16-week-grid strong,
+  .rc16-weekly-grid strong,
+  .rc16-edit-section-head h3,
+  .mytrino-card h4,
+  .mytrino-stat strong,
+  .mytrino-week-metric strong,
+  .mytrino-definition-row dd,
+  .mytrino-switch-copy strong,
+  .mytrino-privacy-row strong,
+  .profile-info-value,
+  .profile-bio,
+  .profile-no-selection strong
+) {
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  text-shadow: none !important;
+}
+
+/* Supporting copy stays visibly secondary while meeting dark-surface contrast. */
+body.dark-mode #agentProfileOverlay :is(
+  .agent-profile-modal-sub,
+  .rc15-eyebrow,
+  .rc15-card-kicker,
+  .rc15-official-name,
+  .rc15-hero-meta span,
+  .rc15-health-card p,
+  .rc15-completion-head > span,
+  .rc15-dashboard-card p,
+  .rc15-section-head p,
+  .rc15-info-card span,
+  .rc15-info-card > small,
+  .rc15-work-identity-grid span,
+  .rc15-workspace-identity span,
+  .rc15-shift-grid span,
+  .rc15-privacy-rows small,
+  .rc15-privacy-locked small,
+  .rc15-action-row,
+  .rc15-preview-person span,
+  .rc15-preview-field > span,
+  .rc15-preview-field em,
+  .rc15-preview-field small,
+  .rc15-preview-note,
+  .rc16-profile-update,
+  .rc16-insight-card span,
+  .rc16-insight-card small,
+  .rc16-overview-insights > article > small,
+  .rc16-week-grid span,
+  .rc16-weekly-grid span,
+  .rc16-week-note,
+  .rc16-summary-note,
+  .rc16-edit-section-head > div > span,
+  .rc16-edit-section-head > small,
+  .mytrino-card-head p,
+  .mytrino-kicker,
+  .mytrino-stat span,
+  .mytrino-week-metric span,
+  .mytrino-definition-row dt,
+  .mytrino-switch-copy small,
+  .mytrino-privacy-row small,
+  .mytrino-privacy-lock,
+  .mytrino-note,
+  .profile-account-line,
+  .profile-info-label,
+  .profile-public-note,
+  .profile-photo-hint,
+  .profile-char-count,
+  .profile-info-empty
+) {
+  color: #A7B3C4 !important;
+  -webkit-text-fill-color: #A7B3C4 !important;
+}
+
+/* Inputs/selects/textareas keep readable typed and placeholder text in Profile. */
+body.dark-mode #agentProfileOverlay :is(input, select, textarea) {
+  color: #E7ECF4 !important;
+  -webkit-text-fill-color: #E7ECF4 !important;
+  caret-color: #E7ECF4;
+}
+body.dark-mode #agentProfileOverlay :is(input, textarea)::placeholder {
+  color: #8794A8 !important;
+  -webkit-text-fill-color: #8794A8 !important;
+  opacity: 1;
+}
+
+/* RC31+ Attendance Rewards uses its own ink system. Pin it to semantic dark-mode
+   foregrounds so reward titles/metrics never fall back to #202731. */
+body.dark-mode #agentProfileOverlay .tt-achievements,
+html[data-theme="dark"] #agentProfileOverlay .tt-achievements,
+html.dark #agentProfileOverlay .tt-achievements {
+  --tt-ink: #F1F5F9;
+  --tt-muted: #A7B3C4;
+  --tt-surface: var(--card, #171D26);
+  color: var(--tt-ink);
+  -webkit-text-fill-color: initial;
+}
+
+body.dark-mode #agentProfileOverlay .tt-achievements :is(
+  .tt-achievement-heading h3,
+  .tt-collection-heading h3,
+  .tt-streak-value strong,
+  .tt-achievement-grade .tt-grade,
+  .tt-achievement-stats strong,
+  .tt-progression-caption strong,
+  .tt-name-specimen > strong:not(.tt-blaze),
+  .tt-reward-details h4,
+  .tt-achievement-empty strong
+) {
+  color: var(--tt-ink) !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Keep intentionally colored status/reward accents intact. */
+body.dark-mode #agentProfileOverlay :is(
+  .rc15-work-chip,
+  .rc15-visibility-badge,
+  .rc15-managed-badge,
+  .rc15-owner-badge,
+  .rc15-protected-badge,
+  .rc16-personal-status,
+  .mytrino-status-pill,
+  .mytrino-security-status,
+  .tt-grade-A,
+  .tt-grade-B,
+  .tt-grade-C,
+  .tt-grade-D,
+  .tt-grade-F,
+  .tt-reward-state
+) {
+  -webkit-text-fill-color: currentColor;
+}

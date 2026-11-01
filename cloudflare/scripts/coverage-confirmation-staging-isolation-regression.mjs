@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const here=path.dirname(fileURLToPath(import.meta.url));
+const root=path.join(here,'..');
+const fail=m=>{console.error('STAGING ISOLATION FAIL:',m);process.exit(1)};
+const trackerMeta=JSON.parse(fs.readFileSync(path.join(root,'public/downloads/qc-tracker.json'),'utf8'));
+const trackerJs=fs.readFileSync(path.join(root,'public/assets/js/j-tracker-download-rc33.js'),'utf8');
+const worker=fs.readFileSync(path.join(root,'src/worker.js'),'utf8');
+if(trackerMeta.environment!=='STAGING QA')fail('Tracker metadata is not STAGING QA.');
+if(!trackerJs.includes("TRACKER_ENV = 'STAGING QA'"))fail('Tracker download client is not staging-labeled.');
+const release=JSON.parse(fs.readFileSync(path.join(root,'public/downloads/qc-tracker-current.json'),'utf8'));
+if(release.channel!=='staging-qa'||!/^\d+\.\d+\.\d+$/.test(release.version))fail('QC Tracker staging release metadata invalid.');
+if(!worker.includes('qc-tracker-v'+release.version+'-staging'))fail('Worker is not serving the declared staging Tracker version.');
+if(worker.includes("qc-tracker-v2.2.29-production"))fail('Production Tracker package channel leaked into staging Worker runtime.');
+console.log('V2.0.3 Coverage + Confirmation staging isolation regression: PASS');

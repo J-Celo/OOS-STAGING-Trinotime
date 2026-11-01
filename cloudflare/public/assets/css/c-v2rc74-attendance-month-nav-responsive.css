@@ -1,0 +1,94 @@
+/* V 2.0.1 RC74 — Attendance month navigator responsive polish.
+   CSS-only hotfix. No timers, observers, data reads, roster scans, or hidden renders. */
+
+/* Keep the control visually compact and prevent the native month picker icon from crowding the year. */
+#attendanceLogMonthNav.attendance-month-nav {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  max-width: 100%;
+}
+#attendanceLogMonthNav .attendance-month-input {
+  width: 150px;
+  min-width: 150px;
+  padding-left: 9px;
+  padding-right: 9px;
+  white-space: nowrap;
+}
+#attendanceLogMonthNav .attendance-month-input::-webkit-calendar-picker-indicator {
+  width: 15px;
+  height: 15px;
+  margin: 0 0 0 5px;
+  padding: 0;
+  opacity: .72;
+}
+/* "Current" is a navigation shortcut, not a disabled-looking status chip. Hide it while already current. */
+#attendanceLogMonthCurrent:disabled {
+  display: none;
+}
+
+/* The previous RC71 rule made the navigator consume a full quickbar row below 900px.
+   Keep that row centered and only as wide as the controls themselves. */
+@media (max-width: 1180px) and (min-width: 681px) {
+  #attendanceLogMonthNav.attendance-month-nav {
+    width: max-content !important;
+    max-width: 100% !important;
+    margin-inline: auto;
+    padding: 2px 4px;
+    justify-content: center !important;
+    gap: 4px;
+  }
+  #attendanceLogMonthNav .attendance-month-nav-label,
+  #attendanceLogMonthNav .attendance-month-mode {
+    display: none !important;
+  }
+  #attendanceLogMonthNav .attendance-month-input {
+    width: 150px !important;
+    min-width: 150px !important;
+    height: 30px;
+    min-height: 30px;
+    font-size: 11.5px;
+    font-weight: 650;
+  }
+  #attendanceLogMonthNav .attendance-month-step,
+  #attendanceLogMonthNav .attendance-month-current {
+    height: 30px;
+    min-height: 30px;
+  }
+  #attendanceLogMonthNav .attendance-month-step {
+    width: 32px;
+    min-width: 32px;
+  }
+  #attendanceLogMonthNav .attendance-month-current:not(:disabled) {
+    padding-inline: 8px;
+    font-size: 9.5px;
+    white-space: nowrap;
+  }
+}
+
+/* RC71 intentionally moves the month navigator onto its own line in tighter desktop/tablet widths.
+   Preserve that behavior, but do not stretch the control across the whole table card. */
+@media (max-width: 900px) and (min-width: 681px) {
+  #attendanceQuickbar.attendance-quickbar {
+    row-gap: 6px;
+  }
+  #attendanceLogMonthNav.attendance-month-nav {
+    order: 3;
+    align-self: center;
+  }
+}
+
+/* Extra-tight tablet / zoomed desktop protection. */
+@media (max-width: 760px) and (min-width: 681px) {
+  #attendanceLogMonthNav .attendance-month-input {
+    width: 144px !important;
+    min-width: 144px !important;
+    font-size: 11px;
+  }
+  #attendanceLogMonthNav .attendance-month-step {
+    width: 30px;
+    min-width: 30px;
+  }
+  #attendanceLogMonthNav .attendance-month-current:not(:disabled) {
+    padding-inline: 7px;
+  }
+}

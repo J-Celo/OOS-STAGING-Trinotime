@@ -1,0 +1,130 @@
+/* TrinoTime v1.1.14 — rendering/event performance layer.
+   UI-only. Keeps security, authentication, sync, and attendance logic untouched. */
+
+/* Faster activation on touch devices and less paint work for generic controls. */
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary) {
+  touch-action: manipulation;
+}
+
+/* Box-shadow interpolation is paint-heavy and adds no functional value while
+   controls are being used. Keep the visual shadows, but do not animate them. */
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]) {
+  transition-property: transform, opacity, background-color, border-color, color !important;
+}
+
+/* During active scrolling/input, pause decorative work and temporarily replace
+   live glass blur with the already-present translucent fills. */
+html.tt-is-scrolling :is(
+  .band-cloud,.band-wisp,.band-star,.band-nebula,.band-horizon,.band-shooting-star,
+  .gate-cloud-layer,.gate-cloud,.clock-glow,.sync-dot,.stamp
+) {
+  animation-play-state: paused !important;
+}
+
+html.tt-is-scrolling :is(
+  .glass-card,.clock-box,.punch-card,.action-rail,.status-card,
+  .attendance-summary-card,.attendance-sticky-controls,
+  .gate-liquid-panel,.gate-card,.tt-v116-card,
+  .settings-modal,.notification-center,.ai-chat-panel,
+  .leave-panel,.speedtest-card,.network-summary-card,
+  .profile-directory-fab-drawer,.profile-directory-search-fab,
+  .leave-request-floater,.ai-chat-floater
+) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html.tt-is-scrolling :is(
+  button,[role="button"],.attendance-summary-card,.network-summary-card,
+  .tt-v116-card,.status-card,.worksite-shortcut
+),
+html.tt-input-active :is(button,[role="button"],input,select,textarea) {
+  transition-duration: 0ms !important;
+}
+
+/* Do not keep smooth-scroll animation alive while the user is already moving
+   a scroll container. Explicit JS smooth-scroll requests still work normally. */
+html.tt-is-scrolling :is(
+  #desktopTableContainer,#rosterListWrap,#totalsListWrap,.network-table-wrap,
+  .settings-tab-panel,.announce-list,.leave-modal-scroll,.leave-v3-table-wrap,
+  #aiChatMessages
+) {
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(button,[role="button"],.band-cloud,.band-wisp,.band-star,.clock-glow) {
+    animation: none !important;
+    transition-duration: 0ms !important;
+  }
+}
+
+/* TrinoTime v1.1.82 — Admin Attendance performance hardening.
+   Keep large attendance histories smooth while preserving all data and controls. */
+
+/* Reduce sticky-cell paint during scrolling; keep row hit-testing and actions
+   available so clicking Edit immediately after scrolling still works. */
+html.tt-is-scrolling #desktopTableContainer > .desktop-table tbody td,
+html.tt-is-scrolling #desktopTableContainer > .desktop-table tbody tr {
+  transition: none !important;
+}
+html.tt-is-scrolling #desktopTableContainer[data-sticky-mode] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td:nth-child(3),
+html.tt-is-scrolling #desktopTableContainer[data-sticky-actions="true"] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td.attendance-actions-cell {
+  box-shadow: none !important;
+}
+
+/* A large Admin result set can create thousands of sticky table cells. Keep
+   only Agent Name sticky and release Date / POD / Actions from sticky layout.
+   This dramatically reduces compositor work without hiding any columns. */
+@media (min-width: 681px) {
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode="wide"] > .desktop-table thead th:nth-child(1),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode="wide"] > .desktop-table thead th:nth-child(2),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode="date-name"] > .desktop-table thead th:nth-child(1),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode="wide"] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td:nth-child(1),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode="wide"] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td:nth-child(2),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode="date-name"] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td:nth-child(1),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-actions="true"] > .desktop-table thead th.attendance-actions-header,
+  #desktopTableContainer.attendance-large-dataset[data-sticky-actions="true"] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td.attendance-actions-cell {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    box-shadow: none !important;
+  }
+
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode] > .desktop-table thead th:nth-child(3),
+  #desktopTableContainer.attendance-large-dataset[data-sticky-mode] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td:nth-child(3) {
+    left: 0 !important;
+    box-shadow: 4px 0 7px -6px rgba(15, 23, 42, .22) !important;
+  }
+
+  body.dark-mode #desktopTableContainer.attendance-large-dataset[data-sticky-mode] > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) > td:nth-child(3) {
+    box-shadow: 4px 0 7px -6px rgba(0, 0, 0, .36) !important;
+  }
+}
+
+/* Mobile cards are generated only on mobile now; content-visibility further
+   avoids layout/paint work for cards far below the viewport. */
+@media (max-width: 680px) {
+  #mobileCards > .att-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 220px;
+  }
+}
+
+/* Pages bound visible table layout without changing full-data calculations. */
+#desktopTbody > .tt-page-hidden, #mobileCards > .tt-page-hidden { display: none !important; }
+.tt-attendance-pages { display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:12px 16px; margin:8px 0; border:1px solid var(--border, #cbd5e1); border-radius:12px; color:var(--text, inherit); background:var(--card, transparent); }
+.tt-attendance-pages[hidden] { display:none; }
+.tt-attendance-pages button { padding:8px 12px; cursor:pointer; }
+.tt-attendance-pages button:disabled { opacity:.45; cursor:default; }
+.tt-attendance-pages label { display:flex; align-items:center; gap:6px; margin-left:auto; }
+html.tt-reduced-effects *, html.tt-reduced-effects *::before, html.tt-reduced-effects *::after {
+  animation: none !important; transition: none !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  scroll-behavior: auto !important;
+}
+@media print {
+  .tt-attendance-pages { display:none !important; }
+  #desktopTbody > .tt-page-hidden:not([hidden]) { display:table-row !important; }
+  #mobileCards > .tt-page-hidden:not([hidden]) { display:block !important; }
+}

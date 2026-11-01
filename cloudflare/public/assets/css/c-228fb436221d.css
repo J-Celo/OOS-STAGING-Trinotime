@@ -1,0 +1,211 @@
+        html[data-trino-tier="premium"] {
+            --premium-attendance-header-text: #0F172A;
+            --premium-attendance-body-text: #1E293B;
+            --premium-attendance-time-text: #0F172A;
+            --premium-attendance-search-text: #0F172A;
+            --premium-attendance-search-placeholder: #64748B;
+            --premium-attendance-search-bg: rgba(255, 255, 255, .98);
+            --premium-attendance-search-border: rgba(15, 23, 42, .20);
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer > .desktop-table thead th {
+            color: var(--premium-attendance-header-text) !important;
+            text-shadow: none !important;
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer > .desktop-table tbody td {
+            color: var(--premium-attendance-body-text);
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-toggle,
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-clear {
+            color: var(--premium-attendance-search-text) !important;
+            background: rgba(255, 255, 255, .90) !important;
+            border-color: var(--premium-attendance-search-border) !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-toggle:hover,
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search.open .attendance-search-toggle,
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-clear:hover {
+            color: #020617 !important;
+            background: #FFFFFF !important;
+            border-color: rgba(15, 23, 42, .32) !important;
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-toggle svg {
+            color: inherit !important;
+            stroke: currentColor !important;
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-toggle svg * {
+            stroke: currentColor !important;
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-input,
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search.open .attendance-search-input {
+            color: var(--premium-attendance-search-text) !important;
+            caret-color: var(--premium-attendance-search-text) !important;
+            background: var(--premium-attendance-search-bg) !important;
+            border-color: var(--premium-attendance-search-border) !important;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, .16) !important;
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer .attendance-search-input::placeholder {
+            color: var(--premium-attendance-search-placeholder) !important;
+            opacity: 1 !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell {
+            position: relative;
+            padding-left: 8px;
+            padding-right: 8px;
+            overflow: visible;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-inline {
+            position: relative;
+            isolation: isolate;
+            gap: 5px 8px !important;
+            padding: 2px 0;
+            overflow: visible;
+        }
+        html[data-trino-tier="premium"] body:not(.dark-mode) #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-value {
+            color: var(--premium-attendance-time-text) !important;
+            font-weight: 600 !important;
+            opacity: 1 !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-value {
+            position: relative;
+            z-index: 2;
+            flex: 0 0 auto;
+            min-width: max-content;
+            white-space: nowrap;
+            line-height: 1.35;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-inline > .time-flag {
+            position: relative;
+            z-index: 1;
+            flex: 0 0 auto;
+            margin: 0 !important;
+            white-space: nowrap;
+        }
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer > .desktop-table thead th {
+            color: #E5E7EB !important;
+            text-shadow: none !important;
+        }
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-value {
+            color: #F8FAFC !important;
+            opacity: 1 !important;
+        }
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer .attendance-search-toggle,
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer .attendance-search-clear {
+            color: #E2E8F0 !important;
+            background: rgba(15, 23, 42, .84) !important;
+            border-color: rgba(148, 163, 184, .30) !important;
+        }
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer .attendance-search-input,
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer .attendance-search.open .attendance-search-input {
+            color: #F8FAFC !important;
+            caret-color: #F8FAFC !important;
+            background: rgba(15, 23, 42, .98) !important;
+            border-color: rgba(148, 163, 184, .42) !important;
+        }
+        html[data-trino-tier="premium"] body.dark-mode #desktopTableContainer .attendance-search-input::placeholder {
+            color: #94A3B8 !important;
+            opacity: 1 !important;
+        }
+        html[data-trino-tier="premium"] {
+            --premium-table-header-text: #0F172A;
+            --premium-table-body-text: #1E293B;
+            --premium-table-time-text: #0F172A;
+            --premium-table-divider: rgba(15, 23, 42, .12);
+            --premium-table-strong-divider: rgba(37, 99, 235, .24);
+            --premium-input-text: #0F172A;
+            --premium-input-placeholder: #64748B;
+            --premium-input-bg: rgba(255, 255, 255, .98);
+            --premium-input-border: rgba(15, 23, 42, .24);
+            --premium-focus-ring: #2563EB;
+            --premium-focus-ring-shadow: rgba(37, 99, 235, .18);
+        }
+        html[data-trino-tier="premium"] body.dark-mode {
+            --premium-table-header-text: #E5E7EB;
+            --premium-table-body-text: #E2E8F0;
+            --premium-table-time-text: #F8FAFC;
+            --premium-table-divider: rgba(148, 163, 184, .28);
+            --premium-table-strong-divider: rgba(96, 165, 250, .34);
+            --premium-input-text: #F8FAFC;
+            --premium-input-placeholder: #94A3B8;
+            --premium-input-bg: rgba(15, 23, 42, .98);
+            --premium-input-border: rgba(148, 163, 184, .42);
+            --premium-focus-ring: #60A5FA;
+            --premium-focus-ring-shadow: rgba(96, 165, 250, .24);
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table thead th {
+            color: var(--premium-table-header-text) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table tbody td {
+            color: var(--premium-table-body-text);
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table th.attendance-time-header + th.attendance-time-header,
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell + td.attendance-time-cell {
+            border-left-color: var(--premium-table-divider) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table th.attendance-hours-header,
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.hours-cell {
+            border-left-color: var(--premium-table-strong-divider) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-input:focus,
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-input:focus-visible {
+            outline: 2px solid var(--premium-focus-ring) !important;
+            outline-offset: 2px !important;
+            border-color: var(--premium-focus-ring) !important;
+            box-shadow: 0 0 0 4px var(--premium-focus-ring-shadow), 0 8px 22px rgba(15, 23, 42, .16) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-toggle:focus-visible,
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-clear:focus-visible {
+            outline: 2px solid var(--premium-focus-ring) !important;
+            outline-offset: 2px !important;
+            border-color: var(--premium-focus-ring) !important;
+            box-shadow: 0 0 0 4px var(--premium-focus-ring-shadow) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-toggle svg,
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-toggle svg * {
+            color: var(--premium-input-text) !important;
+            fill: currentColor !important;
+            stroke: none !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell {
+            overflow: hidden !important;
+            overflow: clip !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-inline {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            row-gap: 6px !important;
+            column-gap: 8px !important;
+            overflow: hidden !important;
+            overflow: clip !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-value {
+            max-width: 100%;
+            color: var(--premium-table-time-text) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-inline > .time-flag {
+            max-width: calc(100% - 2px);
+            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-toggle,
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-clear {
+            color: var(--premium-input-text) !important;
+            border-color: var(--premium-input-border) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-input,
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search.open .attendance-search-input {
+            color: var(--premium-input-text) !important;
+            caret-color: var(--premium-input-text) !important;
+            background: var(--premium-input-bg) !important;
+            border-color: var(--premium-input-border) !important;
+        }
+        html[data-trino-tier="premium"] #desktopTableContainer .attendance-search-input::placeholder {
+            color: var(--premium-input-placeholder) !important;
+            opacity: 1 !important;
+        }
+        html[data-trino-tier="premium"] body.attendance-density-compact #desktopTableContainer > .desktop-table td.attendance-time-cell .attendance-time-inline {
+            row-gap: 5px !important;
+        }
+    

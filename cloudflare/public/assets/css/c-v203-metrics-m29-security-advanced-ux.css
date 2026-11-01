@@ -1,0 +1,169 @@
+/* TrinoTime V2.0.3 Shift Metrics M2.9 — Security Advanced UX.
+   UI/state-only enhancement: no password, credential-vault, authorization, audit, or server-security boundary changes. */
+
+/* Find Agent: keep the live count in-field and add a clear control only when useful. */
+#agentSecurityPanel .agent-security-search-wrap:first-of-type{position:relative!important}
+#agentSecurityPanel .agent-security-search-wrap:first-of-type input{padding-right:152px!important}
+#agentSecurityPanel .agent-security-search-tools{
+  position:absolute!important;right:9px!important;top:38px!important;transform:translateY(-50%)!important;
+  display:inline-flex!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;
+  max-width:142px!important;z-index:4!important;pointer-events:none!important
+}
+#agentSecurityPanel .agent-security-search-clear{
+  pointer-events:auto!important;width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;
+  padding:0!important;border-radius:999px!important;border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 82%,transparent)!important;
+  background:color-mix(in srgb,var(--card,#fff) 90%,var(--bg,#f8fafc))!important;color:var(--muted,#64748b)!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:16px!important;font-weight:800!important;line-height:1!important;
+  cursor:pointer!important;box-shadow:none!important
+}
+#agentSecurityPanel .agent-security-search-clear[hidden]{display:none!important}
+#agentSecurityPanel .agent-security-search-clear:hover,
+#agentSecurityPanel .agent-security-search-clear:focus-visible{color:var(--text,#182235)!important;border-color:rgba(91,130,246,.38)!important;outline:none!important;box-shadow:0 0 0 3px rgba(91,130,246,.10)!important}
+#agentSecurityPanel #agentSecurityViewCount{
+  position:static!important;right:auto!important;top:auto!important;transform:none!important;pointer-events:none!important;
+  min-height:24px!important;max-width:108px!important;padding:0 9px!important;overflow:hidden!important;text-overflow:ellipsis!important
+}
+
+/* Advanced Security container: summary stays visible while heavy controls/table are collapsed. */
+#agentSecurityPanel .firebase-identity-migration{padding:0!important;overflow:hidden!important}
+#agentSecurityPanel .firebase-migration-head{
+  min-height:88px!important;margin:0!important;padding:16px 18px!important;align-items:center!important;
+  border-bottom:1px solid color-mix(in srgb,var(--border,#d9e1ea) 64%,transparent)!important
+}
+#agentSecurityPanel .firebase-identity-migration.is-advanced-collapsed .firebase-migration-head{border-bottom-color:transparent!important}
+#agentSecurityPanel .firebase-migration-head-copy{min-width:0!important;max-width:none!important;flex:1 1 auto!important}
+#agentSecurityPanel .firebase-migration-title-row{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important}
+#agentSecurityPanel .firebase-migration-title-row h3{margin:2px 0 3px!important;font-size:17px!important}
+#agentSecurityPanel .firebase-migration-advanced-badge{
+  display:inline-flex!important;align-items:center!important;min-height:22px!important;padding:0 8px!important;border-radius:999px!important;
+  border:1px solid rgba(91,130,246,.24)!important;background:rgba(91,130,246,.09)!important;color:color-mix(in srgb,var(--sec-blue,#5b82f6) 88%,var(--text,#182235))!important;
+  font-size:8px!important;font-weight:950!important;letter-spacing:.08em!important;text-transform:uppercase!important
+}
+#agentSecurityPanel .firebase-migration-collapsed-summary{margin:5px 0 0!important;color:var(--text,#182235)!important;font-size:10.5px!important;font-weight:800!important;line-height:1.35!important}
+#agentSecurityPanel .firebase-migration-head-meta{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;margin-top:7px!important}
+#agentSecurityPanel #firebaseIdentityMigrationLastRefreshed{color:var(--muted,#718096)!important;font-size:9px!important;font-weight:750!important}
+#agentSecurityPanel .firebase-migration-attention-alert{
+  display:inline-flex!important;align-items:center!important;min-height:21px!important;padding:0 8px!important;border-radius:999px!important;
+  border:1px solid rgba(221,95,114,.28)!important;background:rgba(221,95,114,.10)!important;color:#b33b50!important;font-size:8.5px!important;font-weight:900!important
+}
+#agentSecurityPanel .firebase-migration-attention-alert[hidden]{display:none!important}
+#agentSecurityPanel .firebase-migration-advanced-toggle{
+  flex:0 0 auto!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+  min-width:128px!important;height:38px!important;padding:0 12px!important;border-radius:11px!important;
+  border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 82%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 94%,var(--bg,#f8fafc))!important;
+  color:var(--text,#182235)!important;font-size:9px!important;font-weight:900!important;cursor:pointer!important;box-shadow:none!important
+}
+#agentSecurityPanel .firebase-migration-advanced-toggle svg{width:14px!important;height:14px!important;transition:transform .18s ease!important}
+#agentSecurityPanel .firebase-migration-advanced-toggle[aria-expanded="true"] svg{transform:rotate(180deg)!important}
+#agentSecurityPanel .firebase-migration-advanced-toggle:hover,
+#agentSecurityPanel .firebase-migration-advanced-toggle:focus-visible{border-color:rgba(91,130,246,.38)!important;background:rgba(91,130,246,.07)!important;outline:none!important}
+#agentSecurityPanel .firebase-migration-advanced-content{display:block!important;padding:0 18px 18px!important}
+#agentSecurityPanel .firebase-identity-migration.is-advanced-collapsed .firebase-migration-advanced-content{display:none!important}
+
+/* Filters and migration actions: routine refresh first, migration preparation second, destructive cutover last. */
+#agentSecurityPanel .firebase-migration-command-row{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;flex-wrap:wrap!important;
+  padding:14px 0 2px!important
+}
+#agentSecurityPanel .firebase-migration-filters{display:inline-flex!important;align-items:center!important;gap:5px!important;flex-wrap:wrap!important}
+#agentSecurityPanel .firebase-migration-filters button{
+  min-height:32px!important;padding:0 10px!important;border-radius:10px!important;border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 82%,transparent)!important;
+  background:color-mix(in srgb,var(--card,#fff) 94%,var(--bg,#f8fafc))!important;color:var(--muted,#64748b)!important;
+  font-size:8.5px!important;font-weight:850!important;cursor:pointer!important;box-shadow:none!important
+}
+#agentSecurityPanel .firebase-migration-filters button.is-active{
+  border-color:rgba(91,130,246,.34)!important;background:rgba(91,130,246,.12)!important;color:color-mix(in srgb,var(--sec-blue,#5b82f6) 90%,var(--text,#182235))!important
+}
+#agentSecurityPanel .firebase-migration-primary-actions{justify-content:flex-end!important}
+#agentSecurityPanel .firebase-migration-primary-actions #firebaseIdentityMigrationRefresh{
+  border-color:rgba(91,130,246,.28)!important;background:rgba(91,130,246,.11)!important;color:color-mix(in srgb,var(--sec-blue,#5b82f6) 92%,var(--text,#182235))!important
+}
+#agentSecurityPanel .firebase-migration-primary-actions #firebaseCredentialVaultPrepare{
+  border-color:color-mix(in srgb,var(--border,#d9e1ea) 88%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 94%,var(--bg,#f8fafc))!important;color:var(--text,#182235)!important
+}
+#agentSecurityPanel .firebase-migration-primary-actions #firebaseCredentialVaultCutover.is-dangerous{
+  border-color:rgba(221,95,114,.42)!important;background:rgba(221,95,114,.10)!important;color:#b83249!important
+}
+#agentSecurityPanel .firebase-migration-primary-actions #firebaseCredentialVaultCutover.is-dangerous:hover,
+#agentSecurityPanel .firebase-migration-primary-actions #firebaseCredentialVaultCutover.is-dangerous:focus-visible{
+  border-color:rgba(221,95,114,.62)!important;background:rgba(221,95,114,.16)!important;outline:none!important
+}
+
+/* Compact technical identifiers retain full values through tooltip/aria/copy. */
+#agentSecurityPanel .firebase-migration-tech{display:inline-flex!important;align-items:center!important;gap:5px!important;max-width:100%!important}
+#agentSecurityPanel .firebase-migration-tech code{
+  display:inline-flex!important;align-items:center!important;min-height:27px!important;max-width:118px!important;padding:0 8px!important;border-radius:8px!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:10px!important;font-weight:750!important
+}
+#agentSecurityPanel .firebase-migration-tech.is-empty{color:var(--muted,#718096)!important}
+#agentSecurityPanel .firebase-migration-copy{
+  width:27px!important;height:27px!important;min-width:27px!important;padding:0!important;border-radius:8px!important;
+  border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 82%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 93%,var(--bg,#f8fafc))!important;
+  color:var(--muted,#64748b)!important;font-size:13px!important;font-weight:900!important;line-height:1!important;cursor:pointer!important;box-shadow:none!important
+}
+#agentSecurityPanel .firebase-migration-copy:hover,
+#agentSecurityPanel .firebase-migration-copy:focus-visible{color:var(--sec-blue,#5b82f6)!important;border-color:rgba(91,130,246,.36)!important;outline:none!important}
+
+/* Reduce scroll pressure, preserve scroll position during rerenders, and keep key context visible. */
+#agentSecurityPanel .firebase-migration-table-wrap{overflow:auto!important;overscroll-behavior-inline:contain!important;scrollbar-gutter:stable!important}
+#agentSecurityPanel .firebase-migration-table{min-width:860px!important;table-layout:fixed!important}
+#agentSecurityPanel .firebase-migration-table th,
+#agentSecurityPanel .firebase-migration-table td{padding:10px 11px!important;background:color-mix(in srgb,var(--card,#fff) 96%,var(--bg,#f8fafc))!important;color:var(--text,#182235)!important}
+#agentSecurityPanel .firebase-migration-table th{background:color-mix(in srgb,var(--bg,#f8fafc) 84%,var(--card,#fff))!important;color:var(--muted,#64748b)!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(1),
+#agentSecurityPanel .firebase-migration-table td:nth-child(1){width:210px!important;position:sticky!important;left:0!important;z-index:3!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(2),
+#agentSecurityPanel .firebase-migration-table td:nth-child(2){width:100px!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(3),
+#agentSecurityPanel .firebase-migration-table td:nth-child(3){width:132px!important;position:sticky!important;left:210px!important;z-index:3!important;box-shadow:8px 0 14px -14px rgba(15,23,42,.55)!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(4),
+#agentSecurityPanel .firebase-migration-table td:nth-child(4){width:145px!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(5),
+#agentSecurityPanel .firebase-migration-table td:nth-child(5){width:155px!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(6),
+#agentSecurityPanel .firebase-migration-table td:nth-child(6){width:220px!important;white-space:normal!important}
+#agentSecurityPanel .firebase-migration-table th:nth-child(1),
+#agentSecurityPanel .firebase-migration-table th:nth-child(3){z-index:5!important}
+#agentSecurityPanel .firebase-migration-table tbody tr:hover td{background:color-mix(in srgb,var(--sec-blue,#5b82f6) 5%,var(--card,#fff))!important}
+
+/* Dark mode: readable without reintroducing harsh white rows. */
+body.dark-mode #agentSecurityPanel .agent-security-search-clear,
+body.dark-mode #agentSecurityPanel .firebase-migration-advanced-toggle,
+body.dark-mode #agentSecurityPanel .firebase-migration-filters button,
+body.dark-mode #agentSecurityPanel .firebase-migration-copy,
+body.dark-mode #agentSecurityPanel .firebase-migration-primary-actions #firebaseCredentialVaultPrepare{
+  background:rgba(15,23,42,.50)!important;border-color:rgba(148,163,184,.22)!important;color:#d9e4f2!important
+}
+body.dark-mode #agentSecurityPanel .firebase-migration-collapsed-summary{color:#edf4ff!important}
+body.dark-mode #agentSecurityPanel #firebaseIdentityMigrationLastRefreshed{color:#aab8ca!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-attention-alert{background:rgba(239,68,68,.15)!important;border-color:rgba(248,113,113,.30)!important;color:#ffd0d6!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-primary-actions #firebaseIdentityMigrationRefresh{background:rgba(91,130,246,.15)!important;border-color:rgba(143,170,255,.27)!important;color:#dce7ff!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-primary-actions #firebaseCredentialVaultCutover.is-dangerous{background:rgba(239,68,68,.13)!important;border-color:rgba(248,113,113,.34)!important;color:#ffd1d7!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-table th,
+body.dark-mode #agentSecurityPanel .firebase-migration-table td{background:#131d2c!important;color:#e6edf7!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-table th{background:#101927!important;color:#aebbd0!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-table tbody tr:nth-child(even) td{background:#162132!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-table tbody tr:hover td{background:#1b2a42!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-tech code{background:rgba(7,14,26,.72)!important;border-color:rgba(103,132,182,.34)!important;color:#f0f5ff!important}
+
+@media(max-width:900px){
+  #agentSecurityPanel .firebase-migration-head{align-items:flex-start!important}
+  #agentSecurityPanel .firebase-migration-advanced-toggle{min-width:118px!important}
+  #agentSecurityPanel .firebase-migration-command-row{align-items:flex-start!important}
+  #agentSecurityPanel .firebase-migration-primary-actions{justify-content:flex-start!important}
+}
+@media(max-width:680px){
+  #agentSecurityPanel .agent-security-search-wrap:first-of-type input{padding-right:136px!important}
+  #agentSecurityPanel .agent-security-search-tools{right:8px!important;max-width:128px!important}
+  #agentSecurityPanel #agentSecurityViewCount{max-width:92px!important;padding:0 7px!important;font-size:9px!important}
+  #agentSecurityPanel .firebase-migration-head{flex-direction:column!important;gap:11px!important}
+  #agentSecurityPanel .firebase-migration-advanced-toggle{width:100%!important}
+  #agentSecurityPanel .firebase-migration-filters{width:100%!important}
+  #agentSecurityPanel .firebase-migration-filters button{flex:1 1 calc(50% - 5px)!important}
+  #agentSecurityPanel .firebase-migration-primary-actions{width:100%!important}
+  #agentSecurityPanel .firebase-migration-primary-actions button{flex:1 1 auto!important}
+}
+
+/* Staging: explicit refresh when Agent Account Security has not hydrated. */
+#agentSecurityPanel .agent-security-refresh{border:1px solid var(--border,rgba(120,140,155,.35));border-radius:8px;padding:5px 9px;font-size:11px;font-weight:650;background:var(--card,#fff);color:var(--text,#182235);cursor:pointer;white-space:nowrap;justify-self:start;pointer-events:auto}
+#agentSecurityPanel .agent-security-refresh:disabled{opacity:.55;cursor:wait}

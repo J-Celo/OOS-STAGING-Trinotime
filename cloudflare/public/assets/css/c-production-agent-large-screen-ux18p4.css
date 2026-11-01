@@ -1,0 +1,16 @@
+/* UX18P4 large-display Agent layout containment.
+   Keeps clock, punch controls, profile, calendar, and Coaching within a
+   visually cohesive desktop workspace; applies only above 1500 CSS pixels.
+   Pure visual CSS: no application state, attendance, server, or Tracker changes.
+*/
+@media (min-width: 1500px) {
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap {
+    box-sizing: border-box !important;
+    width: min(100%, 1360px) !important;
+    max-width: 1360px !important;
+    margin-inline: auto !important;
+  }
+  html[data-trino-custom-workspace="enabled"] body[data-trino-role="agent"] #appRoot > .band > .band-inner.wrap .clock-box {
+    justify-self: center !important;
+  }
+}

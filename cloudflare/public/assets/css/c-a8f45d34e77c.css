@@ -1,0 +1,105 @@
+/* TrinoTime v1.1.44 — interaction physics + fast navigation polish.
+   Presentation/input scheduling only; attendance/security calculations are untouched. */
+
+:root {
+  --tt-physics-press-ease: cubic-bezier(.2,.8,.2,1);
+  --tt-physics-release-ease: cubic-bezier(.16,1,.3,1);
+  --tt-nav-fast: 70ms;
+}
+
+/* Retain tactile feedback even while the existing input-performance guard is
+   active. The old guard intentionally removed transitions; this restores only
+   the small transform/color response on controls. */
+html.tt-input-active :where(
+  button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary
+) {
+  transition-duration: 72ms !important;
+}
+
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary) {
+  transform-origin: center center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.tt-physics-press:not(:disabled),
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary):not(:disabled):active {
+  transform: translate3d(0,1px,0) scale(.986) !important;
+  transition-duration: 54ms !important;
+  transition-timing-function: var(--tt-physics-press-ease) !important;
+  will-change: transform;
+}
+
+/* Desktop click-and-drag scrolling. Native wheel, trackpad and touch scrolling
+   are left alone. Momentum is requestAnimationFrame-based and bounded. */
+.tt-drag-scroll-candidate { cursor: grab !important; }
+.tt-drag-scroll-active {
+  cursor: grabbing !important;
+  scroll-behavior: auto !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable;
+}
+html.tt-drag-scrolling, html.tt-drag-scrolling body { cursor: grabbing !important; }
+
+/* Tabs respond immediately and modal/tab animations are deliberately short.
+   Heavy content rendering is deferred one frame by the v1.1.44 runtime patch,
+   allowing the selected state / modal shell to paint first. */
+:where(.log-tab,.settings-tab-btn,.team-tab-btn,.pod-tab,.pod-tab-solo,.today-status-view-tab,[data-notification-center-tab]) {
+  touch-action: manipulation;
+  transition-duration: 90ms !important;
+  transition-timing-function: var(--tt-physics-release-ease) !important;
+}
+html.tt-tab-switching :where(.log-tab,.settings-tab-btn,.team-tab-btn,.pod-tab,.pod-tab-solo,.today-status-view-tab,[data-notification-center-tab]) {
+  transition-duration: 55ms !important;
+}
+html.tt-tab-switching :is(.modal-overlay,.settings-overlay,.announce-overlay) {
+  transition-duration: var(--tt-nav-fast) !important;
+}
+html.tt-tab-switching :is(
+  .modal-overlay > .modal-box,
+  .settings-overlay > .settings-modal,
+  .announce-overlay > .announce-modal
+) {
+  transition-duration: var(--tt-nav-fast) !important;
+}
+.settings-tab-panel.active { animation: none !important; }
+
+/* Large help pages are paint-lazy below the viewport. This reduces the cost of
+   switching to Features/Tutorials while preserving normal search/scroll use. */
+#settingsPanelFeatures .tutorial-step,
+#settingsPanelTutorial .tutorial-step,
+#settingsPanelTutorial .settings-guide-role,
+#settingsPanelTutorial .settings-glossary-grid > div,
+#settingsPanelTutorial .settings-warning-grid > article {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 92px;
+}
+
+/* Keep scroll containers composed and prevent parent-page bounce when a modal
+   reaches its edge. */
+:where(
+  .settings-tab-panel,.announce-list,#rosterListWrap,#totalsListWrap,
+  .network-table-wrap,.leave-modal-scroll,.leave-v3-table-wrap,#aiChatMessages,
+  .tl-attendance-table-wrap,.log-tabs,.pod-tabs
+) {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.tt-input-active :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary),
+  .tt-physics-press:not(:disabled),
+  :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary):not(:disabled):active,
+  html.tt-tab-switching :is(.modal-overlay,.settings-overlay,.announce-overlay),
+  html.tt-tab-switching :is(.modal-overlay > .modal-box,.settings-overlay > .settings-modal,.announce-overlay > .announce-modal) {
+    transition-duration: 0ms !important;
+    transform: none !important;
+  }
+}
+html[data-mytrino-reduce-motion="true"] .tt-physics-press:not(:disabled),
+html[data-mytrino-reduce-motion="true"] :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary):not(:disabled):active {
+  transition-duration: 0ms !important;
+  transform: none !important;
+}

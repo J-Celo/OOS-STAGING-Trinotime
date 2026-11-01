@@ -1,0 +1,25 @@
+        #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px 8px;
+            width: 100%;
+            min-width: 0;
+            line-height: 1.3;
+        }
+        #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-value {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+        #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-content > .time-flag {
+            flex: 0 0 auto;
+            margin-left: 0 !important;
+            white-space: nowrap;
+        }
+        @media (max-width: 1024px) and (min-width: 681px) {
+            #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-content {
+                gap: 5px 6px;
+            }
+        }
+    

@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const worker=read('../src/worker.js');
+const client=read('../public/assets/js/j-coverage-dashboard-rc20.js');
+const css=read('../public/assets/css/c-coverage-dashboard-v1.css');
+const html=read('../public/index.html');
+const must=(ok,msg)=>{if(!ok){console.error('FAIL — '+msg);process.exitCode=1}else console.log('PASS — '+msg)};
+
+must(client.includes('DAILY_SUBMIT_TARGET = 300')&&client.includes('ACTIVE_DAY_HOURS = 8'),'RC11 professional daily target / pace model is present');
+must(client.includes('tt-coverage-progress')&&client.includes('Pace calculating')&&client.includes('projected')&&client.includes('@ 8h active'),'Submitted summary exposes target progress, pace, and explicitly bounded 8-hour-active projection without gamified UI');
+must(client.includes('presenceSummary(d)')&&client.includes('data-coverage-filter')&&client.includes('applyStatusFilter'),'live status summary chips filter Agent rows locally');
+must(client.includes('prettyDate(state.date)')&&client.includes('Today ·')&&client.includes('· Historical'),'date control distinguishes Today from historical dates');
+must(client.includes('data-coverage-away-now')&&client.includes('Away today'),'dashboard presents Idle and Away separately');
+must(worker.includes('awayMs: coverageSafeMsServer(source.awayMs)')&&worker.includes('coverageAwayTimingAvailableServer(source)')&&worker.includes("hasOwnProperty.call(source, 'awayTimingAvailable')")&&worker.includes("'activeMs','idleMs','awayMs','elapsedMs'"),'Worker accepts and aggregates backward-compatible Away timing without upgrading explicit legacy-false records by accident');
+must(client.includes('tt-coverage-drawer-section')&&client.includes('Current Work')&&client.includes('Performance')&&client.includes('Jobs & Task Activity'),'Agent row drill-down contains Today, Current Work, Performance, and task activity sections');
+must(css.includes('RC11 — Coverage operations-console polish')&&css.includes('position:sticky;left:0')&&css.includes('min-width:1420px'),'Product Match table keeps sticky identity and responsive horizontal containment');
+must(css.includes('margin-right:var(--tt-dash-gutter)!important')&&!css.includes('margin-right:calc(var(--tt-dash-gutter) + 76px)!important'),'Coverage uses full workspace width with floating utility controls overlaid');
+must(client.includes("document.documentElement.classList.toggle('tt-coverage-workspace-active',next)"),'Coverage-only utility-rail containment is scoped to active workspace');
+must(html.includes('coverage-rc23'),'Coverage assets are cache-busted to RC23');
+if(process.exitCode)process.exit(process.exitCode);

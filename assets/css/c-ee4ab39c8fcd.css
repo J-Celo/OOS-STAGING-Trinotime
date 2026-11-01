@@ -1,0 +1,44 @@
+/* ========================================================================== */
+/* TrinoTime v1.1.1 - Large Desktop QA Stabilization                         */
+/* 1920px / 1536px Premium shell regression fix. Runtime permissions stay     */
+/* authoritative; this layer only restores controls already made visible by JS.*/
+/* ========================================================================== */
+
+@media (min-width: 1281px) {
+  /* The legacy Premium desktop shell contains a higher-specificity hide rule
+     for role-dependent toolbar controls. Respect runtime authorization by
+     restoring only elements whose inline state is already display:inline-flex. */
+  html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail #openShiftSettingsBtn[style*='inline-flex'],
+  html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail #sessionMeta[style*='inline-flex'],
+  html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail #sessionLogoutBtn[style*='inline-flex'] {
+    display: inline-flex !important;
+  }
+
+  /* Keep the five retained Premium actions in one compact optical row. */
+  html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail :is(
+    #openShiftSettingsBtn,
+    #installAppBtn,
+    #sessionMetaToggle,
+    #appReloadBtn,
+    #sessionLogoutBtn
+  ) {
+    height: 40px !important;
+    min-height: 40px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+  }
+
+  html[data-trino-tier='premium'][data-trino-custom-workspace='enabled'] body[data-trino-role] #appRoot > .band .action-rail #sessionMeta {
+    height: 40px !important;
+    min-height: 40px !important;
+    align-items: center !important;
+  }
+}

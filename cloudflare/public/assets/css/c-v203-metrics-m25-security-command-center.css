@@ -1,0 +1,213 @@
+/* TrinoTime V2.0.3 Shift Metrics M2.5 — Security Command Center UI polish.
+   Presentation-only: no security, credential, Firebase identity, password-reset, or authorization logic changes. */
+
+#agentSecurityPanel{
+  --sec-blue:#5b82f6;--sec-cyan:#22b8cf;--sec-green:#23b683;--sec-amber:#d7a32f;--sec-rose:#dd5f72;
+  overflow:hidden!important;
+  border-radius:22px!important;
+  border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 78%,transparent)!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--card,#fff) 97%,transparent),color-mix(in srgb,var(--bg,#f8fafc) 84%,var(--card,#fff)))!important;
+  box-shadow:0 18px 46px rgba(15,23,42,.08)!important;
+}
+#agentSecurityPanel .agent-security-head{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  align-items:start!important;
+  gap:18px!important;
+  padding:22px 24px 20px!important;
+  border-bottom:1px solid color-mix(in srgb,var(--border,#d9e1ea) 70%,transparent)!important;
+  background:
+    radial-gradient(circle at 88% 0%,rgba(91,130,246,.12),transparent 34%),
+    radial-gradient(circle at 0% 100%,rgba(35,182,131,.07),transparent 28%),
+    linear-gradient(135deg,color-mix(in srgb,var(--card,#fff) 98%,transparent),color-mix(in srgb,var(--bg,#f8fafc) 82%,var(--card,#fff)))!important;
+}
+#agentSecurityPanel .agent-security-head>div:first-child{max-width:760px;min-width:0}
+#agentSecurityPanel .agent-security-eyebrow{
+  margin:0 0 6px!important;color:var(--sec-blue)!important;font-size:9px!important;font-weight:950!important;letter-spacing:.14em!important;text-transform:uppercase!important
+}
+#agentSecurityPanel .agent-security-head h2{margin:0!important;font-size:25px!important;line-height:1.08!important;letter-spacing:-.035em!important}
+#agentSecurityPanel .agent-security-sub{max-width:680px!important;margin:8px 0 0!important;color:var(--muted,#718096)!important;font-size:11px!important;font-weight:650!important;line-height:1.55!important}
+#agentSecurityPanel .agent-security-head-actions{
+  display:grid!important;
+  grid-template-columns:44px minmax(220px,1fr) minmax(260px,1fr) auto auto!important;
+  align-items:end!important;
+  gap:10px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#agentSecurityPanel .agent-security-head-actions .context-help-btn{
+  width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0!important;border-radius:13px!important;
+  border:1px solid color-mix(in srgb,var(--sec-blue) 24%,var(--border,#d9e1ea))!important;
+  background:color-mix(in srgb,var(--sec-blue) 8%,var(--card,#fff))!important;color:var(--sec-blue)!important;font-weight:950!important
+}
+#agentSecurityPanel .agent-security-search-wrap{display:grid!important;grid-template-columns:1fr!important;gap:6px!important;min-width:0!important;align-content:end!important}
+#agentSecurityPanel .agent-security-search-wrap label{margin:0!important;color:var(--muted,#718096)!important;font-size:8.5px!important;font-weight:900!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+#agentSecurityPanel .agent-security-search-wrap input,
+#agentSecurityPanel .agent-security-search-wrap select{
+  width:100%!important;min-width:0!important;height:44px!important;padding:0 13px!important;border-radius:12px!important;
+  border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 92%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 96%,var(--bg,#f8fafc))!important;color:var(--text,#182235)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important;font-size:12px!important;font-weight:700!important
+}
+#agentSecurityPanel .agent-security-search-wrap>span{min-height:14px!important;color:var(--muted,#718096)!important;font-size:8.5px!important;text-align:right!important;font-weight:700!important}
+#agentSecurityPanel .team-leader-temp-btn,
+#agentSecurityPanel .agent-security-toggle{
+  height:44px!important;min-height:44px!important;padding:0 14px!important;border-radius:12px!important;white-space:nowrap!important;font-size:9.5px!important;font-weight:900!important
+}
+#agentSecurityPanel .team-leader-temp-btn{border:1px solid rgba(91,130,246,.26)!important;background:linear-gradient(145deg,rgba(91,130,246,.14),rgba(91,130,246,.07))!important;color:color-mix(in srgb,var(--sec-blue) 88%,var(--text,#182235))!important}
+#agentSecurityPanel .agent-security-toggle{display:inline-flex!important;align-items:center!important;gap:7px!important;border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 85%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 94%,var(--bg,#f8fafc))!important;color:var(--muted,#718096)!important}
+#agentSecurityPanel .agent-security-toggle svg{width:15px!important;height:15px!important}
+
+#agentSecurityPanel .agent-security-summary{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;padding:14px 24px!important;margin:0!important;
+  background:transparent!important;border-bottom:1px solid color-mix(in srgb,var(--border,#d9e1ea) 68%,transparent)!important
+}
+#agentSecurityPanel .agent-security-summary>div{
+  position:relative!important;overflow:hidden!important;min-height:72px!important;padding:13px 15px!important;border-radius:15px!important;
+  border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 80%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 92%,var(--bg,#f8fafc))!important;
+  display:flex!important;align-items:center!important;gap:11px!important
+}
+#agentSecurityPanel .agent-security-summary>div::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--sec-accent,#64748b)}
+#agentSecurityPanel .agent-security-summary>div:nth-child(1){--sec-accent:var(--sec-green)}
+#agentSecurityPanel .agent-security-summary>div:nth-child(2){--sec-accent:var(--sec-amber)}
+#agentSecurityPanel .agent-security-summary>div:nth-child(3){--sec-accent:var(--sec-blue)}
+#agentSecurityPanel .agent-security-summary>div:nth-child(4){--sec-accent:var(--sec-rose)}
+#agentSecurityPanel .agent-security-summary strong{margin:0!important;color:var(--text,#182235)!important;font-size:25px!important;font-weight:950!important;line-height:1!important;font-variant-numeric:tabular-nums!important}
+#agentSecurityPanel .agent-security-summary span{margin:0!important;color:var(--muted,#718096)!important;font-size:9px!important;font-weight:900!important;letter-spacing:.02em!important}
+
+#agentSecurityPanel .firebase-identity-migration{
+  margin:16px 24px 18px!important;padding:18px!important;border-radius:19px!important;
+  border:1px solid color-mix(in srgb,var(--sec-blue) 18%,var(--border,#d9e1ea))!important;
+  background:
+    radial-gradient(circle at 98% 0%,rgba(91,130,246,.10),transparent 31%),
+    linear-gradient(145deg,color-mix(in srgb,var(--card,#fff) 97%,transparent),color-mix(in srgb,var(--bg,#f8fafc) 82%,var(--card,#fff)))!important;
+  box-shadow:0 12px 30px rgba(15,23,42,.045)!important
+}
+#agentSecurityPanel .firebase-migration-head{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:18px!important;margin:0 0 14px!important}
+#agentSecurityPanel .firebase-migration-head>div:first-child{max-width:760px!important}
+#agentSecurityPanel .firebase-migration-head h3{margin:3px 0 5px!important;color:var(--text,#182235)!important;font-size:20px!important;letter-spacing:-.025em!important}
+#agentSecurityPanel .firebase-migration-head p:not(.agent-security-eyebrow){margin:0!important;color:var(--muted,#718096)!important;font-size:10.5px!important;line-height:1.55!important}
+#agentSecurityPanel .firebase-migration-actions{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important}
+#agentSecurityPanel .firebase-migration-actions button{
+  min-height:38px!important;padding:0 12px!important;border-radius:11px!important;border:1px solid rgba(91,130,246,.24)!important;
+  background:linear-gradient(145deg,rgba(91,130,246,.16),rgba(91,130,246,.08))!important;color:color-mix(in srgb,var(--sec-blue) 92%,var(--text,#182235))!important;
+  font-size:9px!important;font-weight:900!important;box-shadow:none!important
+}
+#agentSecurityPanel .firebase-migration-actions button.is-secondary{border-color:color-mix(in srgb,var(--border,#d9e1ea) 85%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 93%,var(--bg,#f8fafc))!important;color:var(--text,#182235)!important}
+#agentSecurityPanel #firebaseCredentialVaultCutover{border-color:rgba(221,95,114,.24)!important;color:var(--sec-rose)!important}
+
+#agentSecurityPanel .firebase-migration-summary{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:9px!important;margin:12px 0!important}
+#agentSecurityPanel .firebase-migration-summary>div{position:relative!important;overflow:hidden!important;padding:12px 13px!important;border-radius:13px!important;border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 78%,transparent)!important;background:color-mix(in srgb,var(--card,#fff) 91%,var(--bg,#f8fafc))!important}
+#agentSecurityPanel .firebase-migration-summary>div::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--mig-accent,#64748b);opacity:.8}
+#agentSecurityPanel .firebase-migration-summary>div:nth-child(1){--mig-accent:var(--sec-green)}
+#agentSecurityPanel .firebase-migration-summary>div:nth-child(2){--mig-accent:var(--sec-amber)}
+#agentSecurityPanel .firebase-migration-summary>div:nth-child(3){--mig-accent:#8090a7}
+#agentSecurityPanel .firebase-migration-summary>div:nth-child(4){--mig-accent:var(--sec-rose)}
+#agentSecurityPanel .firebase-migration-summary strong{color:var(--text,#182235)!important;font-size:21px!important;font-weight:950!important}
+#agentSecurityPanel .firebase-migration-summary span{color:var(--muted,#718096)!important;font-size:8.5px!important;font-weight:900!important;letter-spacing:.07em!important}
+
+#agentSecurityPanel .firebase-migration-notice,
+#agentSecurityPanel .firebase-vault-action-status{padding:12px 14px!important;border-radius:13px!important;font-size:10px!important;line-height:1.55!important;font-weight:650!important}
+#agentSecurityPanel .firebase-migration-notice.is-good{border:1px solid rgba(35,182,131,.22)!important;background:rgba(35,182,131,.08)!important;color:#14785d!important}
+#agentSecurityPanel .firebase-migration-notice.is-warning{border:1px solid rgba(215,163,47,.24)!important;background:rgba(215,163,47,.09)!important;color:#8b6511!important}
+#agentSecurityPanel .firebase-migration-notice.is-danger{border:1px solid rgba(221,95,114,.24)!important;background:rgba(221,95,114,.09)!important;color:#a33c50!important}
+
+#agentSecurityPanel .firebase-migration-table-wrap,
+#agentSecurityPanel .agent-security-table-wrap{
+  overflow:auto!important;border:1px solid color-mix(in srgb,var(--border,#d9e1ea) 75%,transparent)!important;border-radius:15px!important;
+  background:color-mix(in srgb,var(--card,#fff) 96%,var(--bg,#f8fafc))!important;scrollbar-gutter:stable!important
+}
+#agentSecurityPanel .agent-security-table-wrap{margin:0 24px 24px!important}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table){border-collapse:separate!important;border-spacing:0!important;width:100%!important}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) th{
+  position:sticky!important;top:0!important;z-index:2!important;padding:11px 13px!important;background:color-mix(in srgb,var(--bg,#f8fafc) 72%,var(--card,#fff))!important;
+  border-bottom:1px solid color-mix(in srgb,var(--border,#d9e1ea) 78%,transparent)!important;color:var(--muted,#718096)!important;font-size:8.5px!important;font-weight:950!important;letter-spacing:.075em!important;text-transform:uppercase!important
+}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) td{
+  padding:12px 13px!important;border-bottom:1px solid color-mix(in srgb,var(--border,#d9e1ea) 62%,transparent)!important;background:transparent!important;color:var(--text,#182235)!important;font-size:10.5px!important
+}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) tbody tr{transition:background .16s ease!important}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) tbody tr:nth-child(even){background:color-mix(in srgb,var(--bg,#f8fafc) 36%,transparent)!important}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) tbody tr:hover{background:rgba(91,130,246,.065)!important}
+#agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) tbody tr:last-child td{border-bottom:0!important}
+#agentSecurityPanel .firebase-migration-table code{display:inline-block!important;max-width:94px!important;overflow:hidden!important;text-overflow:ellipsis!important;vertical-align:middle!important;padding:3px 6px!important;border-radius:7px!important;background:color-mix(in srgb,var(--bg,#f8fafc) 80%,var(--card,#fff))!important;color:var(--text,#182235)!important;font-size:9px!important}
+#agentSecurityPanel .agent-security-reset{min-height:34px!important;padding:0 10px!important;border-radius:10px!important;font-size:8.5px!important;font-weight:900!important}
+#agentSecurityPanel .agent-security-badge,
+#agentSecurityPanel .firebase-migration-badge{border-radius:999px!important;font-size:8px!important;font-weight:900!important;letter-spacing:.025em!important}
+#agentSecurityPanel .tt-workforce-agent-cell{gap:9px!important}
+#agentSecurityPanel .tt-workforce-agent-copy strong{color:var(--text,#182235)!important;font-size:10.5px!important}
+#agentSecurityPanel .tt-workforce-agent-copy small{color:var(--muted,#718096)!important;font-size:8px!important}
+
+/* Embedded Admin Tools context: remove the old nested-card feeling and use the available width. */
+#ttAdminToolsOverlay .tt-admin-embedded-host>#agentSecurityPanel{width:100%!important;max-width:none!important;margin:0!important}
+#ttAdminToolsOverlay .tt-admin-embedded-host{min-width:0!important}
+#ttAdminToolsOverlay .tt-admin-tools-modal.is-embedded{width:min(1380px,96vw)!important}
+#ttAdminToolsOverlay .tt-admin-embedded-title{margin:0 0 14px!important;font-size:21px!important;letter-spacing:-.025em!important}
+
+body.dark-mode #agentSecurityPanel{
+  background:linear-gradient(145deg,#101a2a,#0d1726)!important;border-color:#2c3d56!important;box-shadow:0 22px 54px rgba(0,0,0,.25)!important
+}
+body.dark-mode #agentSecurityPanel .agent-security-head{
+  background:radial-gradient(circle at 88% 0%,rgba(91,130,246,.17),transparent 34%),radial-gradient(circle at 0 100%,rgba(35,182,131,.08),transparent 28%),linear-gradient(135deg,#111d30,#0e1828)!important;
+  border-bottom-color:#2a3950!important
+}
+body.dark-mode #agentSecurityPanel .agent-security-head h2,
+body.dark-mode #agentSecurityPanel .firebase-migration-head h3{color:#f6f8fc!important}
+body.dark-mode #agentSecurityPanel .agent-security-sub,
+body.dark-mode #agentSecurityPanel .agent-security-search-wrap label,
+body.dark-mode #agentSecurityPanel .agent-security-search-wrap>span{color:#91a3bb!important}
+body.dark-mode #agentSecurityPanel .agent-security-search-wrap input,
+body.dark-mode #agentSecurityPanel .agent-security-search-wrap select,
+body.dark-mode #agentSecurityPanel .agent-security-toggle{
+  background:#111d30!important;border-color:#33465f!important;color:#e6edf7!important
+}
+body.dark-mode #agentSecurityPanel .agent-security-head-actions .context-help-btn{background:rgba(91,130,246,.12)!important;border-color:rgba(91,130,246,.28)!important;color:#8eabff!important}
+body.dark-mode #agentSecurityPanel .team-leader-temp-btn{background:linear-gradient(145deg,rgba(91,130,246,.18),rgba(91,130,246,.10))!important;border-color:rgba(91,130,246,.30)!important;color:#a9bcff!important}
+body.dark-mode #agentSecurityPanel .agent-security-summary{border-bottom-color:#26374e!important}
+body.dark-mode #agentSecurityPanel .agent-security-summary>div{background:linear-gradient(145deg,#121f33,#101b2c)!important;border-color:#304159!important}
+body.dark-mode #agentSecurityPanel .agent-security-summary strong{color:#f7f9fd!important}
+body.dark-mode #agentSecurityPanel .agent-security-summary span{color:#a4b2c5!important}
+body.dark-mode #agentSecurityPanel .firebase-identity-migration{background:radial-gradient(circle at 98% 0%,rgba(91,130,246,.13),transparent 31%),linear-gradient(145deg,#111d30,#0e1828)!important;border-color:#30425c!important;box-shadow:0 14px 34px rgba(0,0,0,.18)!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-head p:not(.agent-security-eyebrow){color:#9bacc2!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-actions button{background:rgba(91,130,246,.15)!important;border-color:rgba(91,130,246,.28)!important;color:#b3c3ff!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-actions button.is-secondary{background:#152136!important;border-color:#3a4c65!important;color:#dce5f2!important}
+body.dark-mode #agentSecurityPanel #firebaseCredentialVaultCutover{border-color:rgba(221,95,114,.28)!important;color:#ff9eac!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-summary>div{background:linear-gradient(145deg,#142137,#101b2d)!important;border-color:#304159!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-summary strong{color:#f7f9fd!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-summary span{color:#a4b2c5!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-notice.is-good{background:rgba(35,182,131,.10)!important;border-color:rgba(35,182,131,.25)!important;color:#91e7ca!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-notice.is-warning{background:rgba(215,163,47,.10)!important;border-color:rgba(215,163,47,.25)!important;color:#f0cf7b!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-notice.is-danger{background:rgba(221,95,114,.10)!important;border-color:rgba(221,95,114,.25)!important;color:#ffadb9!important}
+body.dark-mode #agentSecurityPanel :is(.firebase-migration-table-wrap,.agent-security-table-wrap){background:#0e1828!important;border-color:#304159!important}
+body.dark-mode #agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) th{background:#132036!important;border-bottom-color:#33445d!important;color:#9dafc5!important}
+body.dark-mode #agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) td{background:transparent!important;border-bottom-color:#26374e!important;color:#e9eef7!important}
+body.dark-mode #agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) tbody tr:nth-child(even){background:rgba(255,255,255,.025)!important}
+body.dark-mode #agentSecurityPanel :is(.firebase-migration-table,.agent-security-table) tbody tr:hover{background:rgba(91,130,246,.09)!important}
+body.dark-mode #agentSecurityPanel .firebase-migration-table code{background:#0b1422!important;color:#dbe7f8!important;border:1px solid #2a3c55!important}
+body.dark-mode #agentSecurityPanel .tt-workforce-agent-copy strong{color:#f5f7fb!important}
+body.dark-mode #agentSecurityPanel .tt-workforce-agent-copy small{color:#91a3bb!important}
+
+@media(max-width:1180px){
+  #agentSecurityPanel .agent-security-head-actions{grid-template-columns:44px minmax(210px,1fr) minmax(240px,1fr)!important}
+  #agentSecurityPanel .team-leader-temp-btn,#agentSecurityPanel .agent-security-toggle{grid-column:auto!important}
+  #agentSecurityPanel .firebase-migration-head{flex-direction:column!important}
+  #agentSecurityPanel .firebase-migration-actions{width:100%!important}
+}
+@media(max-width:860px){
+  #agentSecurityPanel .agent-security-head{padding:18px!important}
+  #agentSecurityPanel .agent-security-head-actions{grid-template-columns:44px minmax(0,1fr)!important}
+  #agentSecurityPanel .agent-security-search-wrap{grid-column:span 1!important}
+  #agentSecurityPanel .team-leader-temp-btn,#agentSecurityPanel .agent-security-toggle{width:100%!important}
+  #agentSecurityPanel .agent-security-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:12px 18px!important}
+  #agentSecurityPanel .firebase-identity-migration{margin:14px 18px 16px!important;padding:15px!important}
+  #agentSecurityPanel .agent-security-table-wrap{margin:0 18px 18px!important}
+  #agentSecurityPanel .firebase-migration-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:520px){
+  #agentSecurityPanel .agent-security-head-actions{grid-template-columns:1fr!important}
+  #agentSecurityPanel .agent-security-head-actions .context-help-btn{width:100%!important}
+  #agentSecurityPanel .agent-security-summary{grid-template-columns:1fr!important}
+  #agentSecurityPanel .firebase-migration-summary{grid-template-columns:1fr!important}
+  #agentSecurityPanel .firebase-migration-actions{display:grid!important;grid-template-columns:1fr!important}
+  #agentSecurityPanel .firebase-migration-actions button{width:100%!important}
+}
+@media(prefers-reduced-motion:reduce){#agentSecurityPanel *{transition:none!important}}

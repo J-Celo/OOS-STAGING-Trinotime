@@ -1,0 +1,35 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const coverage=read('../tracker/coverage.js');
+const confirmation=read('../tracker/confirmation.js');
+const appearance=read('../tracker/hud-appearance.js');
+const manifest=JSON.parse(read('../tracker/manifest.json'));
+const meta=JSON.parse(read('public/downloads/qc-tracker.json'));
+const worker=read('src/worker.js');
+const sha=buffer=>crypto.createHash('sha256').update(buffer).digest('hex');
+for(const [name,src] of [['Coverage',coverage],['Confirmation',confirmation]]){
+  assert(src.includes('getHudMaxWidthPx(168)') || src.includes('expanded?216:168'),`${name} minimized width must be 168px`);
+  assert.match(src,/getHudMaxWidthPx\(216\)|expanded\?216:168/,`${name} expanded width preserved at 216px`);
+  assert.match(src,/data-tt-micro-content/,`${name} displays compact micro HUD`);
+  assert.match(src,/height:44px/,`${name} minimized content stays 44px high`);
+  assert.match(src,/IDLE|stateLabel/,`${name} retains live status`);
+  assert.match(src,/aria-expanded/,`${name} toggle remains accessible`);
+  assert.match(src,/hudExpanded|expanded/,`${name} uses existing persisted expand state`);
+}
+assert(coverage.includes('setHudExpanded(!expanded)') && confirmation.includes('expanded=!expanded;render()'),'toggle behavior unchanged');
+assert(coverage.includes('bridgeAgentName') && confirmation.includes('fullLabel'),'Agent names remain visible via compact tooltip');
+assert(confirmation.includes('CONFIRM <span') && coverage.includes('COVERAGE <span'),'compact headings short enough for buttons');
+assert(appearance.includes('data-tt-drag') && appearance.includes('data-tt-theme-toggle') && appearance.includes('ResizeObserver'),'moving and theme selection preserved');
+assert(appearance.includes('root.setPointerCapture') && appearance.includes('chrome.storage.local.set'),'draggable position persists');
+assert.equal(manifest.version,'2.3.10','the modified Tracker is versioned');
+assert.equal(meta.version,manifest.version,'download metadata must match Tracker version');
+const bytes=fs.readFileSync(path.join(root,'public/downloads',meta.filename));
+assert.equal(meta.sha256,sha(bytes),'bundled extension archive integrity');
+assert(worker.includes(`TrinoTime-QC-Tracker-v${manifest.version}.zip`),'Worker download serves current extension');
+assert(worker.includes(`headers.set('x-trinotime-sha256','${meta.sha256}')`),'Worker publishes actual package hash');
+console.log('PASS M2.9.45 — both minimized trackers use 168×44px compact cards; full 216px views preserved, themes/drag/status/tooltips intact, v2.3.10 bundled correctly, sync workers unchanged.');

@@ -1,0 +1,36 @@
+/* TrinoTime v1.1.128 RC22 — Profile Photo Cropper State Closure
+   Nested profile-photo editor: preserve Edit Profile state and own a true top dialog layer. */
+
+#profilePhotoCropOverlay.profile-photo-crop-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147482200 !important;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: rgba(0,0,0,.80) !important;
+  isolation: isolate;
+}
+#profilePhotoCropOverlay.profile-photo-crop-overlay.open { display:flex !important; }
+#profilePhotoCropOverlay .profile-photo-crop-card {
+  position: relative;
+  z-index: 1;
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overscroll-behavior: contain;
+}
+#agentProfileOverlay[data-photo-crop-active="true"] > .agent-profile-modal {
+  pointer-events: none !important;
+}
+@media (max-height: 720px) {
+  #profilePhotoCropOverlay.profile-photo-crop-overlay { align-items:flex-start; }
+  #profilePhotoCropOverlay .profile-photo-crop-card { margin-block:auto; }
+}

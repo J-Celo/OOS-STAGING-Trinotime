@@ -1,0 +1,5 @@
+/* TrinoTime V2.0.0 RC13 — Roster child-modal / activity recovery closure.
+   Keep nested Add / assign Agent above the body-level Agents / Roster modal. */
+#rosterOverlay.open { z-index:2147481800 !important; }
+#assignOverlay.open { z-index:2147482050 !important; }
+#assignOverlay[data-roster-child-modal-portal="body"] { isolation:isolate; }

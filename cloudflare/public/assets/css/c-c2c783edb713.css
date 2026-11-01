@@ -1,0 +1,282 @@
+/* TrinoTime v1.0.56 — Luxury glassmorphism dashboard refinement.
+   Presentation-only. Attendance, Firebase/App Check, authentication, role gates,
+   notifications, presence and timekeeping business logic remain untouched. */
+
+:root{
+  --tt-lux-gold:#D4AF37;
+  --tt-lux-gold-bright:#FFD700;
+  --tt-lux-glass:rgba(255,255,255,.75);
+  --tt-lux-glass-border:rgba(212,175,55,.20);
+  --tt-lux-glass-shadow:0 20px 40px -15px rgba(0,0,0,.05);
+  --tt-lux-radius:20px;
+}
+
+/* Reusable luxury glass surface plus the principal dashboard containers. */
+.glass-card,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRecentActivity,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRightRail .tt-right-card{
+  background:var(--tt-lux-glass)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(180%)!important;
+  backdrop-filter:blur(20px) saturate(180%)!important;
+  border:1px solid var(--tt-lux-glass-border)!important;
+  box-shadow:var(--tt-lux-glass-shadow)!important;
+  border-radius:var(--tt-lux-radius)!important;
+}
+
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileHeaderBtn{
+  background:rgba(255,255,255,.74)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(180%)!important;
+  backdrop-filter:blur(20px) saturate(180%)!important;
+  border:1px solid rgba(212,175,55,.18)!important;
+  border-radius:18px!important;
+  box-shadow:0 18px 38px -16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.88)!important;
+}
+
+/* Hero clock: pearl glass with a restrained champagne radial halo. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:rgba(255,255,255,.75)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(180%)!important;
+  backdrop-filter:blur(20px) saturate(180%)!important;
+  border:1px solid rgba(212,175,55,.20)!important;
+  border-radius:20px!important;
+  box-shadow:0 20px 40px -15px rgba(0,0,0,.05),inset 0 1px 0 rgba(255,255,255,.92)!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-glow{
+  display:block!important;
+  position:absolute!important;
+  inset:-34%!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:radial-gradient(circle,rgba(212,175,55,.15) 0%,transparent 70%)!important;
+  filter:blur(2px)!important;
+  opacity:1!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box>:not(.clock-glow){
+  position:relative;
+  z-index:1;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-primary,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band :is(.clock-hour,.clock-minute-roll,.clock-seconds){
+  font-family:'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace!important;
+  font-feature-settings:"tnum" 1,"lnum" 1!important;
+  font-variant-numeric:tabular-nums lining-nums!important;
+}
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time{
+  color:#24272D!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.92),0 7px 20px rgba(85,65,20,.12)!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-zone{
+  text-shadow:0 0 14px rgba(212,175,55,.18)!important;
+}
+
+/* Top actions become one integrated floating frosted capsule rather than separate tiles. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{
+  display:flex!important;
+  align-items:center!important;
+  gap:2px!important;
+  min-height:44px!important;
+  padding:5px 6px!important;
+  border:1px solid rgba(212,175,55,.18)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.70)!important;
+  box-shadow:0 18px 38px -16px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.94)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(180%)!important;
+  backdrop-filter:blur(20px) saturate(180%)!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button{
+  min-height:36px!important;
+  height:36px!important;
+  padding:0 13px!important;
+  border:1px solid transparent!important;
+  border-radius:999px!important;
+  background:transparent!important;
+  color:#2B2E33!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button:hover{
+  background:rgba(212,175,55,.11)!important;
+  border-color:rgba(212,175,55,.18)!important;
+  color:#5D4508!important;
+  transform:translateY(-1px)!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button:focus-visible{
+  outline:2px solid rgba(212,175,55,.48)!important;
+  outline-offset:2px!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail :is(.settings-gear-btn,.notif-bell-btn){
+  width:38px!important;
+  min-width:38px!important;
+  padding:0!important;
+  justify-content:center!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail .action-rail-divider{
+  width:1px!important;
+  height:20px!important;
+  margin:0 2px!important;
+  background:linear-gradient(180deg,transparent,rgba(212,175,55,.34),transparent)!important;
+  opacity:1!important;
+}
+
+/* Metallic shift timeline with luminous status nodes. */
+.tt-hero-progress-track{
+  position:relative!important;
+  height:12px!important;
+  margin:0 6px!important;
+}
+.tt-hero-progress-track::before{
+  top:5px!important;
+  height:2px!important;
+  border-radius:999px!important;
+  background:linear-gradient(90deg,#D4AF37 0%,#FFD700 100%)!important;
+  opacity:.34!important;
+  box-shadow:0 0 10px rgba(212,175,55,.18)!important;
+}
+.tt-hero-progress-fill{
+  top:4px!important;
+  height:3px!important;
+  border-radius:999px!important;
+  background:linear-gradient(90deg,#D4AF37 0%,#FFD700 100%)!important;
+  box-shadow:0 0 9px rgba(212,175,55,.34),0 0 16px rgba(255,215,0,.16)!important;
+}
+.tt-hero-progress-dot{
+  top:1px!important;
+  width:10px!important;
+  height:10px!important;
+  background:rgba(255,255,255,.88)!important;
+  border:1px solid rgba(212,175,55,.58)!important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.72),0 0 12px rgba(212,175,55,.22)!important;
+}
+.tt-hero-progress-dot.is-done{
+  background:linear-gradient(135deg,#D4AF37 0%,#FFD700 100%)!important;
+  border-color:#C9A42E!important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.84),0 0 14px rgba(212,175,55,.44)!important;
+}
+.tt-hero-progress-dot.is-active{
+  top:0!important;
+  width:12px!important;
+  height:12px!important;
+  background:#FFFDF5!important;
+  border:2px solid #D4AF37!important;
+  box-shadow:0 0 0 4px rgba(212,175,55,.13),0 0 18px rgba(255,215,0,.42)!important;
+}
+.tt-hero-progress-state i{
+  background:linear-gradient(135deg,#D4AF37,#FFD700)!important;
+  box-shadow:0 0 0 3px rgba(212,175,55,.12),0 0 10px rgba(255,215,0,.30)!important;
+}
+
+/* Obsidian treatment: retain the same hierarchy without turning gold into glare. */
+body.dark-mode .glass-card{
+  background:rgba(15,20,28,.72)!important;
+  border-color:rgba(212,175,55,.16)!important;
+  box-shadow:0 20px 44px -16px rgba(0,0,0,.42)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) :is(#punchCard,#ttPremiumRecentActivity,#ttPremiumRightRail .tt-right-card){
+  background:rgba(15,20,28,.72)!important;
+  border-color:rgba(212,175,55,.16)!important;
+  box-shadow:0 20px 44px -16px rgba(0,0,0,.42)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:rgba(15,20,28,.70)!important;
+  border:1px solid rgba(212,175,55,.17)!important;
+  border-radius:20px!important;
+  box-shadow:0 24px 50px -16px rgba(0,0,0,.56),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time{
+  color:#F7F3EA!important;
+  text-shadow:0 1px 18px rgba(0,0,0,.30),0 0 24px rgba(212,175,55,.08)!important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{
+  background:rgba(17,22,30,.68)!important;
+  border-color:rgba(212,175,55,.16)!important;
+  box-shadow:0 20px 42px -16px rgba(0,0,0,.50),inset 0 1px 0 rgba(255,255,255,.055)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button{
+  background:transparent!important;
+  border-color:transparent!important;
+  color:#E7E3DA!important;
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button:hover{
+  background:rgba(212,175,55,.12)!important;
+  border-color:rgba(212,175,55,.17)!important;
+  color:#FFF1C6!important;
+}
+body.dark-mode .tt-hero-progress-track::before{
+  background:linear-gradient(90deg,#D4AF37 0%,#FFD700 100%)!important;
+  opacity:.26!important;
+}
+body.dark-mode .tt-hero-progress-dot{
+  background:#171D25!important;
+  border-color:rgba(212,175,55,.52)!important;
+  box-shadow:0 0 0 3px rgba(11,15,21,.82),0 0 12px rgba(212,175,55,.20)!important;
+}
+body.dark-mode .tt-hero-progress-dot.is-done{
+  background:linear-gradient(135deg,#B98F22,#F5CB2A)!important;
+  box-shadow:0 0 0 3px rgba(11,15,21,.88),0 0 15px rgba(212,175,55,.34)!important;
+}
+body.dark-mode .tt-hero-progress-dot.is-active{
+  background:#171D25!important;
+  border-color:#E1BC43!important;
+  box-shadow:0 0 0 4px rgba(212,175,55,.12),0 0 18px rgba(255,215,0,.30)!important;
+}
+
+/* Fallback for engines that cannot composite backdrop blur. */
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .glass-card,
+  html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) :is(#punchCard,#ttPremiumRecentActivity,#ttPremiumRightRail .tt-right-card,#agentProfileHeaderBtn),
+  html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band :is(.clock-box,.action-rail){
+    background:rgba(255,255,255,.94)!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) :is(#punchCard,#ttPremiumRecentActivity,#ttPremiumRightRail .tt-right-card),
+  html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band :is(.clock-box,.action-rail){
+    background:rgba(15,20,28,.94)!important;
+  }
+}
+
+@media(max-width:1280px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{
+    width:max-content!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scrollbar-width:none;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail::-webkit-scrollbar{display:none}
+}
+
+@media(max-width:680px){
+  .glass-card,
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard,
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRecentActivity,
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRightRail .tt-right-card,
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{
+    border-radius:16px!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{
+    border-radius:18px!important;
+    padding:5px!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button,
+  .tt-hero-progress-fill{transition:none!important}
+}

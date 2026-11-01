@@ -1,0 +1,177 @@
+/* ========================================================================== */
+/* TrinoTime v1.0.73 - Standard profile containment + TL Time Log control     */
+/* ========================================================================== */
+
+/* Standard/non-Premium identity widget: reserve real horizontal space for the
+   avatar, name, and role instead of forcing Premium copy into an avatar-only
+   42/60px slot. Premium layout remains owned by its existing selectors. */
+html:not([data-trino-custom-workspace='enabled']) #appRoot > .band .header-profile-slot {
+  width: auto !important;
+  min-width: 220px !important;
+  max-width: min(320px, 34vw) !important;
+  flex: 0 1 auto !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  overflow: visible !important;
+}
+
+html:not([data-trino-custom-workspace='enabled']) #appRoot > .band #agentProfileHeaderBtn {
+  width: auto !important;
+  min-width: 220px !important;
+  max-width: 320px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  padding: 7px 12px !important;
+  gap: 10px !important;
+  justify-content: flex-start !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderAvatar {
+  width: 42px !important;
+  height: 42px !important;
+  flex: 0 0 42px !important;
+}
+
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-header-copy {
+  display: flex !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  text-align: left !important;
+  overflow: hidden !important;
+}
+
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-header-copy strong {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-role {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: #CBD5E1 !important;
+  -webkit-text-fill-color: #CBD5E1 !important;
+  font-size: 9.5px !important;
+  font-weight: 600 !important;
+}
+
+/* A Standard account never advertises the Premium workspace badge. */
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-workspace-chip {
+  display: none !important;
+}
+
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-header-chevron {
+  display: inline-flex !important;
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #CBD5E1 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+/* Pin presence to the avatar edge rather than the far edge of the expanded
+   button. The dot stays centered on the lower-right avatar ring. */
+html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderStatus {
+  right: auto !important;
+  left: 47px !important;
+  bottom: 6px !important;
+  width: 11px !important;
+  height: 11px !important;
+  border-width: 2px !important;
+  box-sizing: border-box !important;
+}
+
+/* Team Leader POD-management shortcut. It reuses the audited attendance edit
+   modal and is only made visible by role-aware runtime logic. */
+.tl-edit-time-log-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid rgba(59,130,246,.34);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(37,99,235,.96), rgba(29,78,216,.96));
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+  box-shadow: 0 10px 24px rgba(37,99,235,.18), inset 0 1px 0 rgba(255,255,255,.16);
+  font: 700 12px/1.2 Inter, system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+.tl-edit-time-log-btn:hover { transform: translateY(-1px); box-shadow: 0 13px 28px rgba(37,99,235,.24), inset 0 1px 0 rgba(255,255,255,.18); }
+.tl-edit-time-log-btn:focus-visible { outline: 2px solid #93C5FD; outline-offset: 2px; }
+.tl-edit-time-log-btn:active { transform: translateY(0); }
+body.dark-mode .tl-edit-time-log-btn { border-color: rgba(96,165,250,.42); }
+
+@media (max-width: 680px) {
+  html:not([data-trino-custom-workspace='enabled']) #appRoot > .band .header-profile-slot {
+    min-width: min(220px, calc(100vw - 24px)) !important;
+    max-width: min(280px, calc(100vw - 24px)) !important;
+  }
+  html:not([data-trino-custom-workspace='enabled']) #appRoot > .band #agentProfileHeaderBtn {
+    min-width: min(220px, calc(100vw - 24px)) !important;
+    max-width: min(280px, calc(100vw - 24px)) !important;
+  }
+}
+
+/* The mobile masthead intentionally returns to the compact avatar control.
+   This avoids forcing a 220px identity card into the legacy 48px profile grid
+   column on narrow phones while keeping the full name/role card on desktop and
+   tablet layouts where the overlap bug occurs. */
+@media (max-width: 440px) {
+  html:not([data-trino-custom-workspace='enabled']) #appRoot > .band .header-profile-slot {
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    flex: 0 0 48px !important;
+  }
+  html:not([data-trino-custom-workspace='enabled']) #appRoot > .band #agentProfileHeaderBtn {
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 3px !important;
+    gap: 0 !important;
+    justify-content: center !important;
+  }
+  html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-header-copy,
+  html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderBtn .tt-profile-header-chevron {
+    display: none !important;
+  }
+  html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderAvatar {
+    width: 40px !important;
+    height: 40px !important;
+    flex-basis: 40px !important;
+  }
+  html:not([data-trino-custom-workspace='enabled']) #agentProfileHeaderStatus {
+    left: 36px !important;
+    bottom: 4px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-edit-time-log-btn { transition: none !important; }
+}

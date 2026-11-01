@@ -1,0 +1,498 @@
+/* TrinoTime v1.0.37 — Premium Dashboard workspace shell.
+   Presentation-only adapter for verified Customized Workspace sessions.
+   Existing attendance, Firebase/App Check, trusted time, notifications and role gates remain authoritative. */
+
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){
+  --tt-dash-sidebar:266px;
+  --tt-dash-right:316px;
+  --tt-dash-gutter:24px;
+  --tt-dash-bg:#F8FAFC;
+  --tt-dash-card:#FFFFFF;
+  --tt-dash-card-soft:rgba(255,255,255,.82);
+  --tt-dash-border:#E6EAF0;
+  --tt-dash-line:#E8ECF2;
+  --tt-dash-ink:#17191D;
+  --tt-dash-muted:#697386;
+  --tt-dash-soft:#98A2B3;
+  --tt-dash-gold:#C78B18;
+  --tt-dash-gold-dark:#9F6810;
+  --tt-dash-gold-pale:#FFF5DF;
+  --tt-dash-shadow:0 18px 55px rgba(15,23,42,.07),0 2px 10px rgba(15,23,42,.035);
+  background:var(--tt-dash-bg)!important;
+  color:var(--tt-dash-ink)!important;
+}
+
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot{
+  min-height:100vh;
+  background:var(--tt-dash-bg)!important;
+  color:var(--tt-dash-ink)!important;
+  padding-bottom:48px;
+}
+
+/* The target dashboard keeps the cinematic clouds in the hero only, not behind the whole app. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .tt-rivr-ambient{
+  display:none!important;
+}
+
+/* ---------- Left navigation ---------- */
+#ttPremiumSidebar,
+#ttPremiumRightRail,
+#ttPremiumPodHeading,
+#ttPremiumRecentActivity,
+#ttPremiumSidebarToggle{display:none}
+
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumSidebar{
+  display:flex;
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--tt-dash-sidebar);
+  z-index:130;
+  flex-direction:column;
+  padding:18px 18px 16px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:rgba(255,255,255,.96);
+  border-right:1px solid var(--tt-dash-border);
+  box-shadow:5px 0 28px rgba(15,23,42,.035);
+  color:var(--tt-dash-ink);
+  -webkit-backdrop-filter:blur(18px) saturate(1.04);
+  backdrop-filter:blur(18px) saturate(1.04);
+}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumSidebar{
+  background:rgba(9,14,22,.96);border-color:rgba(255,255,255,.08);color:#F8FAFC;box-shadow:8px 0 34px rgba(0,0,0,.18)
+}
+.tt-premium-badge{display:inline-flex;align-items:center;gap:7px;width:max-content;padding:5px 9px;border:1px solid #E5E7EB;border-radius:9px;color:#737985;font:600 9px/1 Poppins,sans-serif;letter-spacing:.10em;text-transform:uppercase;background:rgba(255,255,255,.86)}
+.tt-premium-badge svg{width:12px;height:12px;color:#B77812}
+.tt-premium-brand{display:flex;align-items:baseline;margin:13px 0 22px;padding:0 3px;font-family:Poppins,sans-serif;font-size:31px;line-height:1;font-weight:700;letter-spacing:-.055em;white-space:nowrap}
+.tt-premium-brand .tt-brand-trino{background:linear-gradient(108deg,#7D4D09 0%,#BF7E12 17%,#F7D789 39%,#C4871C 55%,#8A570D 71%,#E6B85B 86%,#A5680F 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(255,255,255,.8))}
+.tt-premium-brand .tt-brand-time{color:#24272D;font-weight:700;margin-left:2px}
+body.dark-mode .tt-premium-brand .tt-brand-time{color:#F5F7FA}
+.tt-workspace-chip{display:flex;align-items:flex-start;gap:10px;padding:14px 13px;margin-bottom:18px;border:1px solid #E7EAF0;border-radius:13px;background:rgba(255,255,255,.75);box-shadow:0 8px 24px rgba(15,23,42,.025)}
+body.dark-mode .tt-workspace-chip{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.tt-workspace-dot{width:7px;height:7px;border-radius:50%;background:#34C77B;box-shadow:0 0 0 4px rgba(52,199,123,.10);margin-top:4px;flex:none}
+.tt-workspace-copy{min-width:0}.tt-workspace-copy strong{display:block;font:600 11px/1.25 Poppins,sans-serif;color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-workspace-copy span{display:block;margin-top:6px;font:500 9px/1.2 Poppins,sans-serif;color:#98A2B3}
+.tt-premium-nav{display:flex;flex-direction:column;gap:4px}
+.tt-premium-nav-btn{appearance:none;border:0;background:transparent;color:#262B33;display:flex;align-items:center;gap:12px;width:100%;min-height:46px;padding:0 12px;border-radius:10px;font:500 11px/1 Poppins,sans-serif;text-align:left;cursor:pointer;transition:background .16s ease,color .16s ease,transform .16s ease}
+.tt-premium-nav-btn svg{width:18px;height:18px;stroke-width:1.8;flex:none}.tt-premium-nav-btn .tt-nav-label{flex:1}.tt-premium-nav-btn .tt-nav-chevron{width:14px;height:14px;color:#9CA3AF}.tt-premium-nav-btn:hover{background:#F7F8FA}.tt-premium-nav-btn.is-active{background:linear-gradient(90deg,#FFF6E7,#F9EDDA);color:#3D2A0A;box-shadow:inset 0 0 0 1px rgba(197,135,27,.13)}.tt-premium-nav-btn.is-active svg{color:#B77812}
+body.dark-mode .tt-premium-nav-btn{color:#DCE2EA}body.dark-mode .tt-premium-nav-btn:hover{background:rgba(255,255,255,.055)}body.dark-mode .tt-premium-nav-btn.is-active{background:linear-gradient(90deg,rgba(202,145,39,.20),rgba(202,145,39,.07));color:#F8E6BE}
+.tt-nav-count{display:none;min-width:21px;height:21px;padding:0 6px;border-radius:999px;align-items:center;justify-content:center;background:#F5DBA9;color:#8B5A09;font:700 9px/1 Poppins,sans-serif}.tt-nav-count.has-count{display:inline-flex}
+.tt-sidebar-spacer{flex:1;min-height:22px}
+.tt-server-card{padding:14px 13px;margin-top:18px;border:1px solid #E7EAF0;border-radius:13px;background:linear-gradient(145deg,#FFFFFF,#FBFCFD)}body.dark-mode .tt-server-card{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08)}
+.tt-server-card strong{display:flex;align-items:center;gap:8px;font:600 11px/1.2 Poppins,sans-serif}.tt-server-card strong::before{content:"";width:7px;height:7px;border-radius:50%;background:#33C375;box-shadow:0 0 0 4px rgba(51,195,117,.09)}.tt-server-card span{display:block;margin-top:10px;color:#2EA966;font:600 9px/1.25 Poppins,sans-serif}.tt-server-card small{display:block;margin-top:9px;color:#98A2B3;font:500 8.5px/1.25 Poppins,sans-serif}
+.tt-theme-switch{margin-top:14px;display:flex;align-items:center;gap:11px;width:100%;min-height:49px;padding:0 12px;border:1px solid #E7EAF0;border-radius:12px;background:#FFFFFF;color:#22262D;cursor:pointer;font:500 11px/1 Poppins,sans-serif;text-align:left}.tt-theme-switch svg{width:18px;height:18px;color:#C88916}.tt-theme-switch span{flex:1}.tt-theme-switch .tt-nav-chevron{width:14px;height:14px;color:#9CA3AF}body.dark-mode .tt-theme-switch{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);color:#E5E7EB}
+
+/* ---------- Dashboard hero ---------- */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band{
+  box-sizing:border-box!important;
+  width:calc(100% - var(--tt-dash-sidebar))!important;
+  min-height:342px!important;
+  margin-left:var(--tt-dash-sidebar)!important;
+  padding:22px var(--tt-dash-gutter) 18px!important;
+  border:0!important;
+  border-bottom:1px solid rgba(255,255,255,.58)!important;
+  background:
+    linear-gradient(180deg,rgba(248,250,252,.22) 0%,rgba(248,250,252,.05) 62%,rgba(248,250,252,.22) 100%),
+    radial-gradient(circle at 22% 12%,rgba(255,240,215,.34),transparent 35%),
+    url('../img/portal-cloud-1.webp') center 45%/cover no-repeat!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.02) 60%,rgba(255,255,255,.18));z-index:0}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .band-sky{display:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band>.band-inner.wrap{
+  position:relative!important;z-index:2!important;display:grid!important;width:100%!important;max-width:none!important;height:100%!important;margin:0!important;padding:0!important;
+  grid-template-columns:minmax(40px,1fr) minmax(520px,660px) minmax(260px,320px)!important;
+  grid-template-rows:auto 1fr!important;
+  grid-template-areas:"blank actions profile" "blank clock profile"!important;
+  column-gap:22px!important;row-gap:18px!important;align-items:start!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .band-brand{display:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .band-side{grid-area:actions!important;justify-self:center!important;width:auto!important;margin:0!important;align-self:start!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{display:flex!important;align-items:center!important;gap:7px!important;padding:6px!important;border:1px solid rgba(255,255,255,.70)!important;border-radius:13px!important;background:rgba(255,255,255,.66)!important;box-shadow:0 8px 30px rgba(50,63,82,.08),inset 0 1px 0 rgba(255,255,255,.92)!important;-webkit-backdrop-filter:blur(16px) saturate(1.06)!important;backdrop-filter:blur(16px) saturate(1.06)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button{min-height:38px!important;padding:0 13px!important;border:1px solid transparent!important;border-radius:9px!important;background:rgba(255,255,255,.50)!important;color:#242A33!important;box-shadow:none!important;font:600 10px/1 Poppins,sans-serif!important;text-transform:none!important;letter-spacing:0!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button:hover{background:#fff!important;border-color:#E5E7EB!important;transform:translateY(-1px)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail :is(.settings-gear-btn,.notif-bell-btn){width:42px!important;padding:0!important;justify-content:center!important}.action-rail-divider{opacity:.34!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{
+  grid-area:clock!important;align-self:center!important;justify-self:stretch!important;width:100%!important;max-width:660px!important;min-height:222px!important;margin:0!important;padding:28px 34px 22px!important;border:1px solid rgba(255,255,255,.78)!important;border-radius:19px!important;background:linear-gradient(145deg,rgba(255,255,255,.70),rgba(248,250,252,.50))!important;box-shadow:0 22px 55px rgba(47,59,77,.10),inset 0 1px 0 rgba(255,255,255,.96),inset 0 0 0 1px rgba(255,255,255,.30)!important;-webkit-backdrop-filter:blur(20px) saturate(1.05)!important;backdrop-filter:blur(20px) saturate(1.05)!important;color:#20252D!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-glow{display:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time{font-family:'IBM Plex Mono',monospace!important;font-size:clamp(46px,4.4vw,63px)!important;font-weight:500!important;line-height:1!important;letter-spacing:-.065em!important;color:#24272D!important;text-align:center!important;text-shadow:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-zone{margin-left:9px!important;color:#C58A1C!important;font-family:Poppins,sans-serif!important;font-size:.36em!important;font-weight:700!important;letter-spacing:.06em!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-date{margin-top:12px!important;padding-bottom:15px!important;border-bottom:1px solid rgba(93,103,117,.16)!important;color:#535B67!important;text-align:center!important;font:500 11px/1.2 'IBM Plex Mono',monospace!important;letter-spacing:.15em!important;text-transform:uppercase!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift{margin-top:14px!important;gap:5px!important;text-align:center!important;color:#1E242C!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift-primary{font:600 12px/1.3 'IBM Plex Mono',monospace!important;letter-spacing:.01em!important;color:#252A31!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift-secondary{font:500 11px/1.25 'IBM Plex Mono',monospace!important;color:#B87912!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-sync{width:max-content!important;margin:12px auto 0!important;padding:6px 12px!important;border:1px solid rgba(36,175,104,.20)!important;border-radius:999px!important;background:rgba(255,255,255,.68)!important;color:#5C6674!important;box-shadow:0 5px 18px rgba(15,23,42,.04)!important;font:600 8.5px/1 Poppins,sans-serif!important;letter-spacing:.09em!important;text-transform:uppercase!important}
+
+/* Top-right identity card: the existing authenticated profile control remains the actual profile opener. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .header-profile-slot{grid-area:profile!important;align-self:start!important;justify-self:stretch!important;display:flex!important;margin:0!important;padding:0!important;z-index:8!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileHeaderBtn{
+  width:100%!important;min-height:70px!important;padding:10px 14px!important;gap:12px!important;border:1px solid rgba(224,228,235,.85)!important;border-radius:13px!important;background:rgba(255,255,255,.78)!important;box-shadow:0 12px 32px rgba(31,41,55,.07),inset 0 1px 0 #fff!important;-webkit-backdrop-filter:blur(16px)!important;backdrop-filter:blur(16px)!important;color:#22262D!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileHeaderAvatar{width:46px!important;height:46px!important;flex:0 0 46px!important;border-radius:50%!important;box-shadow:0 0 0 4px rgba(246,195,96,.23)!important}
+#agentProfileHeaderAvatar img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:inherit!important}
+.tt-profile-header-copy{display:flex;min-width:0;flex:1;flex-direction:column;align-items:flex-start;gap:5px;text-align:left}.tt-profile-header-copy strong{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#17191D;font:600 12px/1.15 Poppins,sans-serif}.tt-profile-header-copy span{color:#5F6876;font:500 9.5px/1.15 Poppins,sans-serif;white-space:nowrap}.tt-profile-header-chevron{width:15px;height:15px;flex:none;color:#606977}.tt-profile-privileged-badge{display:none!important}
+
+/* ---------- Main workspace ---------- */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.executive-status-strip,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.team-tabs-outer,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.pod-tabs-outer{
+  margin-left:var(--tt-dash-sidebar)!important;width:calc(100% - var(--tt-dash-sidebar))!important;box-sizing:border-box!important
+}
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='agent'] #appRoot>.executive-status-strip,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='agent'] #appRoot>.team-tabs-outer,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='agent'] #appRoot>.pod-tabs-outer{display:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent.wrap{
+  width:auto!important;max-width:none!important;margin:0 calc(var(--tt-dash-right) + var(--tt-dash-gutter)) 0 calc(var(--tt-dash-sidebar) + var(--tt-dash-gutter))!important;padding:22px 0 0!important;box-sizing:border-box!important
+}
+#ttPremiumPodHeading{margin:0 0 10px;padding:0 2px;color:#1E2228;font:700 19px/1.2 Poppins,sans-serif;letter-spacing:-.02em}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumPodHeading{display:block}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard{
+  margin:0!important;padding:16px!important;border:1px solid var(--tt-dash-border)!important;border-radius:14px!important;background:rgba(255,255,255,.94)!important;box-shadow:var(--tt-dash-shadow)!important;color:#23272E!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;overflow:visible!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(255px,31%)!important;gap:14px!important;margin:0 0 12px!important;padding:0!important;align-items:end!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select>.field{min-width:0!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select label{margin:0 0 6px!important;color:#7C8594!important;font:500 9.5px/1 Poppins,sans-serif!important;text-transform:none!important;letter-spacing:0!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard :is(#empSearch,#todayShiftSelect){height:43px!important;border:1px solid #EBEEF2!important;border-radius:9px!important;background:#FAFBFC!important;color:#17191D!important;-webkit-text-fill-color:#17191D!important;box-shadow:inset 0 1px 2px rgba(15,23,42,.02)!important;font:600 12px/1 Poppins,sans-serif!important;color-scheme:light!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .field-hint{margin:7px 0 0!important;color:#8C95A2!important;font:500 8px/1.35 Poppins,sans-serif!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .agent-quick-status{margin-top:7px!important;min-height:22px!important;border:1px solid #ECEFF3!important;border-radius:6px!important;background:#FBFCFD!important;color:#687385!important;font:500 8.5px/1.3 'IBM Plex Mono',monospace!important;padding:5px 8px!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .add-emp{display:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .status-line{margin:0 0 12px!important;min-height:35px!important;padding:8px 10px!important;border:1px solid #EBEEF2!important;border-radius:8px!important;background:#FAFBFC!important;color:#646F7E!important;font:500 9px/1.3 Poppins,sans-serif!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin:0 0 12px!important;padding:5px!important;border:1px solid #EBEEF2!important;border-radius:9px!important;background:#FBFCFD!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper .step{min-height:30px!important;padding:0 8px!important;border-radius:7px!important;color:#838C99!important;font:500 8.5px/1 Poppins,sans-serif!important;justify-content:flex-start!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper .step.active{background:#FFFFFF!important;color:#2A3038!important;box-shadow:inset 0 0 0 1px #E7EAF0!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper .num{width:18px!important;height:18px!important;font-size:8px!important;border-color:#CFD5DE!important;background:#fff!important;color:#606A77!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #selectedEmployeeDisplay{margin:0!important;color:#252A31!important;font:600 10px/1 Poppins,sans-serif!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #selectedEmployeeDisplay .avatar{width:28px!important;height:28px!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .speedtest-reminder{margin:9px 0!important;padding:10px 12px!important;border:1px solid #E9C77F!important;border-radius:8px!important;background:linear-gradient(90deg,#FFF9ED,#FFFDF9)!important;color:#A7660A!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .speedtest-reminder-copy strong{font:600 9px/1.2 Poppins,sans-serif!important}.speedtest-reminder-copy span{font-size:8px!important}.speedtest-reminder-btn{min-height:30px!important;padding:0 11px!important;border-color:#D9A347!important;background:#fff!important;color:#9A620E!important;border-radius:7px!important;font-size:8px!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .break-alert-readiness{margin:9px 0!important;padding:8px 10px!important;border:1px solid #E9EDF2!important;border-radius:8px!important;background:#FAFBFD!important;color:#657181!important}.break-alert-readiness-copy strong{font-size:8.5px!important}.break-alert-readiness-copy small{font-size:7.5px!important}.break-alert-settings-btn{font-size:7.5px!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin-top:10px!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn{min-height:53px!important;padding:9px 10px!important;border:1px solid #EDF0F3!important;border-radius:9px!important;background:#F8F9FB!important;color:#798391!important;box-shadow:none!important;font:600 10px/1.15 Poppins,sans-serif!important;text-transform:uppercase!important;letter-spacing:.02em!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn .sub{margin-top:4px!important;color:#A0A8B3!important;font:500 7.5px/1 Poppins,sans-serif!important;text-transform:none!important;letter-spacing:0!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn.primary:not(:disabled),
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn.time-in:not(:disabled){background:linear-gradient(115deg,#B8750D 0%,#E8B54A 43%,#C98B17 76%,#9A6008 100%)!important;color:#FFFFFF!important;border-color:#C48618!important;box-shadow:0 9px 22px rgba(186,122,16,.20),inset 0 1px 0 rgba(255,255,255,.38)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn.primary:not(:disabled) .sub,
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn.time-in:not(:disabled) .sub{color:rgba(255,255,255,.82)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .coaching-action-row{margin-top:10px!important;gap:10px!important}.coaching-action-row .coaching-btn{max-width:210px!important}.coaching-action-hint{color:#929AA6!important;font-size:8px!important}
+
+/* Dashboard recent activity preview. Full attendance/reporting remains below and is still reachable. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRecentActivity{display:block;margin-top:12px;padding:0;border:1px solid var(--tt-dash-border);border-radius:13px;background:#fff;box-shadow:0 12px 38px rgba(15,23,42,.045);overflow:hidden}
+.tt-recent-head{display:flex;align-items:center;gap:8px;padding:13px 15px 10px}.tt-recent-head svg{width:15px;height:15px}.tt-recent-head strong{font:600 10px/1 Poppins,sans-serif;color:#22272E}.tt-recent-head button{margin-left:auto;border:1px solid #ECEFF3;border-radius:7px;background:#fff;color:#A8690B;padding:6px 9px;font:500 8px/1 Poppins,sans-serif;cursor:pointer}
+.tt-recent-table{width:100%;border-collapse:collapse;font:500 8.5px/1.3 Poppins,sans-serif}.tt-recent-table th{padding:8px 14px;border-top:1px solid #EEF1F4;border-bottom:1px solid #EEF1F4;color:#8B94A1;text-align:left;font-size:7.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}.tt-recent-table td{padding:11px 14px;color:#424A55;border-bottom:0}.tt-recent-table .tt-recent-status{display:inline-flex;padding:4px 8px;border-radius:999px;background:#EAF8EE;color:#319050;font-size:7.5px;font-weight:600}.tt-recent-empty{padding:16px;color:#8B94A1;font:500 9px/1.4 Poppins,sans-serif}
+
+/* Full log is intentionally kept, but no longer dominates the opening dashboard. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent>.log-section{margin-top:28px!important;padding-top:0!important}
+
+/* ---------- Right dashboard rail ---------- */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRightRail{
+  display:flex;position:absolute;right:var(--tt-dash-gutter);top:364px;width:var(--tt-dash-right);z-index:12;flex-direction:column;gap:14px;color:#20242B
+}
+.tt-right-card{border:1px solid var(--tt-dash-border);border-radius:13px;background:rgba(255,255,255,.96);box-shadow:0 14px 40px rgba(15,23,42,.055);overflow:hidden}.tt-right-card-head{display:flex;align-items:center;gap:9px;padding:13px 14px;border-bottom:1px solid #EEF1F4}.tt-right-card-head svg{width:16px;height:16px;color:#B67610}.tt-right-card-head strong{font:600 10.5px/1 Poppins,sans-serif}.tt-right-card-head button{margin-left:auto;border:1px solid #ECEFF3;border-radius:7px;background:#fff;color:#AA6A0B;padding:6px 9px;font:500 8px/1 Poppins,sans-serif;cursor:pointer}
+.tt-announcement-preview{padding:14px}.tt-announcement-preview strong{display:block;font:600 9.5px/1.2 Poppins,sans-serif}.tt-announcement-preview small{display:block;margin-top:5px;color:#98A2B3;font:500 8px/1.25 Poppins,sans-serif}.tt-announcement-preview p{margin:10px 0 0;color:#687385;font:500 8.5px/1.45 Poppins,sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tt-upcoming{padding:15px}.tt-upcoming strong{display:block;font:600 10px/1.3 Poppins,sans-serif}.tt-upcoming>span{display:block;margin-top:6px;color:#7E8794;font:500 9px/1.2 Poppins,sans-serif}.tt-upcoming-kicker{margin-top:17px!important;color:#8D95A1!important;font-size:8px!important}.tt-upcoming-countdown{margin-top:7px!important;color:#23272D!important;font:600 22px/1 'IBM Plex Mono',monospace!important;letter-spacing:.04em}.tt-upcoming-countdown small{display:block;margin-top:6px;color:#9BA3AE;font:500 6.8px/1 Poppins,sans-serif;letter-spacing:.15em;word-spacing:14px}
+.tt-quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.tt-quick-btn{min-height:78px;border:1px solid #ECEFF3;border-radius:10px;background:#fff;color:#333942;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;cursor:pointer;font:500 8.5px/1.2 Poppins,sans-serif;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}.tt-quick-btn:hover{transform:translateY(-1px);border-color:#E1D2B5;box-shadow:0 8px 22px rgba(15,23,42,.05)}.tt-quick-btn svg{width:19px;height:19px;color:#262B33}
+
+/* ---------- Dark mode keeps the same premium architecture ---------- */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){--tt-dash-bg:#080D14;--tt-dash-card:#101720;--tt-dash-border:rgba(255,255,255,.09);--tt-dash-ink:#F3F6FA;--tt-dash-muted:#99A3B1;background:#080D14!important}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot{background:#080D14!important;color:#F4F7FA!important}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band{background:linear-gradient(180deg,rgba(4,9,15,.30),rgba(5,10,17,.58)),url('../img/portal-cloud-1.webp') center 45%/cover no-repeat!important}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail,
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box,
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileHeaderBtn{background:rgba(12,18,27,.68)!important;border-color:rgba(255,255,255,.11)!important;color:#F5F7FA!important;box-shadow:0 18px 48px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.08)!important}
+body.dark-mode .tt-profile-header-copy strong{color:#F8FAFC}.body-dark-mode .tt-profile-header-copy span,body.dark-mode .tt-profile-header-copy span{color:#A8B0BC}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time,
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift-primary{color:#F7F9FC!important}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-date{color:#AEB7C3!important;border-bottom-color:rgba(255,255,255,.12)!important}
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard,
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRecentActivity,
+body.dark-mode .tt-right-card{background:#101720!important;border-color:rgba(255,255,255,.09)!important;color:#E8EDF3!important}.body-dark-mode .tt-right-card-head,body.dark-mode .tt-right-card-head{border-bottom-color:rgba(255,255,255,.08)}body.dark-mode .tt-right-card-head button,body.dark-mode .tt-quick-btn{background:#141C27;border-color:rgba(255,255,255,.08);color:#D8DEE7}body.dark-mode .tt-announcement-preview p,body.dark-mode .tt-upcoming>span{color:#9DA7B4}body.dark-mode .tt-upcoming-countdown{color:#F6F8FB!important}body.dark-mode .tt-quick-btn svg{color:#E5E7EB}
+
+/* ---------- Sidebar collapse + responsive ---------- */
+html[data-trino-custom-workspace='enabled'] body.tt-premium-sidebar-collapsed{--tt-dash-sidebar:84px}
+html[data-trino-custom-workspace='enabled'] body.tt-premium-sidebar-collapsed #ttPremiumSidebar{padding-left:12px;padding-right:12px}
+body.tt-premium-sidebar-collapsed .tt-premium-badge span,body.tt-premium-sidebar-collapsed .tt-premium-brand,body.tt-premium-sidebar-collapsed .tt-workspace-copy,body.tt-premium-sidebar-collapsed .tt-nav-label,body.tt-premium-sidebar-collapsed .tt-nav-chevron,body.tt-premium-sidebar-collapsed .tt-server-card span,body.tt-premium-sidebar-collapsed .tt-server-card small,body.tt-premium-sidebar-collapsed .tt-theme-switch span,body.tt-premium-sidebar-collapsed .tt-theme-switch .tt-nav-chevron{display:none!important}
+body.tt-premium-sidebar-collapsed .tt-premium-badge{width:46px;justify-content:center;padding:8px 0}body.tt-premium-sidebar-collapsed .tt-workspace-chip{justify-content:center;padding:14px 0}body.tt-premium-sidebar-collapsed .tt-premium-nav-btn{justify-content:center;padding:0}body.tt-premium-sidebar-collapsed .tt-server-card{display:flex;justify-content:center;padding:14px 0}body.tt-premium-sidebar-collapsed .tt-server-card strong{font-size:0}body.tt-premium-sidebar-collapsed .tt-theme-switch{justify-content:center;padding:0}
+#ttPremiumSidebarToggle{position:fixed;left:calc(var(--tt-dash-sidebar) - 15px);top:91px;z-index:135;width:30px;height:30px;border:1px solid #E5E9EF;border-radius:50%;background:#fff;color:#5D6673;box-shadow:0 6px 18px rgba(15,23,42,.09);align-items:center;justify-content:center;cursor:pointer}#ttPremiumSidebarToggle svg{width:14px;height:14px;transition:transform .18s ease}body.tt-premium-sidebar-collapsed #ttPremiumSidebarToggle svg{transform:rotate(180deg)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumSidebarToggle{display:flex}
+
+@media(max-width:1280px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){--tt-dash-right:0px}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRightRail{display:none!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band>.band-inner.wrap{grid-template-columns:minmax(20px,1fr) minmax(500px,680px) minmax(230px,280px)!important}
+}
+@media(max-width:980px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){--tt-dash-sidebar:0px;--tt-dash-gutter:16px}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumSidebar{transform:translateX(-100%);width:250px;transition:transform .2s ease;box-shadow:14px 0 44px rgba(15,23,42,.14)}
+  html[data-trino-custom-workspace='enabled'] body.tt-premium-mobile-nav-open #ttPremiumSidebar{transform:translateX(0)}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumSidebarToggle{left:14px;top:14px}
+  html[data-trino-custom-workspace='enabled'] body.tt-premium-mobile-nav-open #ttPremiumSidebarToggle{left:235px}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band{width:100%!important;margin-left:0!important;padding:60px 16px 18px!important;min-height:390px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band>.band-inner.wrap{grid-template-columns:1fr!important;grid-template-rows:auto auto auto!important;grid-template-areas:"profile" "actions" "clock"!important;gap:12px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .header-profile-slot{max-width:310px!important;justify-self:end!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent.wrap{margin:0 16px!important;padding-top:18px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.executive-status-strip,
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.team-tabs-outer,
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.pod-tabs-outer{margin-left:0!important;width:100%!important}
+}
+@media(max-width:680px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{max-width:100%;overflow-x:auto;justify-content:flex-start!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{min-height:205px!important;padding:24px 16px 20px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time{font-size:clamp(39px,12vw,52px)!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select{grid-template-columns:1fr!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-grid{grid-template-columns:1fr 1fr!important}
+  .tt-recent-table th:nth-child(3),.tt-recent-table td:nth-child(3),.tt-recent-table th:nth-child(4),.tt-recent-table td:nth-child(4){display:none}
+}
+
+@media(prefers-reduced-motion:reduce){.tt-premium-nav-btn,.tt-quick-btn,#ttPremiumSidebar,#ttPremiumSidebarToggle svg{transition:none!important}}
+
+/* ========================================================================== */
+/* TrinoTime v1.0.38 — screenshot-fidelity Premium Dashboard refinement.      */
+/* Presentation only. No auth, Firebase, App Check, attendance or audit APIs. */
+/* Target reference: 1536x1024 Premium Attendance Dashboard supplied by user. */
+/* ========================================================================== */
+
+@media (min-width:1281px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){
+    --tt-dash-sidebar:266px;
+    --tt-dash-right:314px;
+    --tt-dash-gutter:16px;
+    --tt-dash-bg:#F8FAFC;
+    --tt-dash-card:#FFFFFF;
+    --tt-dash-border:#E6E9EE;
+    --tt-dash-ink:#17191D;
+    --tt-dash-muted:#747D8B;
+    --tt-dash-gold:#C98A16;
+    --tt-dash-gold-deep:#9C6208;
+    --tt-dash-shadow:0 16px 40px rgba(27,35,48,.055),0 2px 7px rgba(27,35,48,.025);
+  }
+
+  html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']),
+  html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot{
+    background:#F8FAFC!important;
+    color:#17191D!important;
+  }
+
+  /* ----- fixed 266px left rail ----- */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumSidebar{
+    width:266px;
+    padding:17px 18px 180px;
+    background:rgba(255,255,255,.965);
+    border-right:1px solid #E5E8ED;
+    box-shadow:4px 0 22px rgba(24,32,44,.025);
+    -webkit-backdrop-filter:blur(16px) saturate(1.02);
+    backdrop-filter:blur(16px) saturate(1.02);
+  }
+  .tt-premium-badge{
+    height:24px;box-sizing:border-box;padding:0 9px;border-radius:8px;border-color:#E5E7EB;
+    background:#FFF;color:#737983;font-size:9px;font-weight:600;letter-spacing:.105em;
+  }
+  .tt-premium-badge svg{width:12px;height:12px;color:#C78B18}
+  .tt-premium-brand{
+    margin:15px 0 27px;padding:0 1px;font-size:31px;font-weight:750;letter-spacing:-.06em;
+  }
+  .tt-premium-brand .tt-brand-trino{
+    background:linear-gradient(102deg,#F8D88B 0%,#C78210 24%,#F5CF77 45%,#A96809 64%,#E8B757 82%,#B56E0A 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 1px 0 rgba(255,255,255,.92));
+  }
+  .tt-premium-brand .tt-brand-time{color:#22252B;font-weight:750;margin-left:1px}
+  .tt-workspace-chip{
+    min-height:63px;box-sizing:border-box;margin-bottom:20px;padding:14px 13px;border-radius:12px;
+    background:#FFF;border-color:#E5E8ED;box-shadow:none;
+  }
+  .tt-workspace-copy strong{font-size:11px}.tt-workspace-copy span{margin-top:6px;font-size:9px;color:#9AA2AE}
+  .tt-premium-nav{gap:2px}
+  .tt-premium-nav-btn{
+    min-height:46px;padding:0 12px;border-radius:10px;gap:12px;font-size:11px;font-weight:500;color:#242A31;
+  }
+  .tt-premium-nav-btn svg{width:18px;height:18px}
+  .tt-premium-nav-btn.is-active{
+    background:linear-gradient(90deg,#FFF7E9 0%,#FAECD6 100%);
+    color:#31240D;box-shadow:inset 0 0 0 1px rgba(199,139,24,.16);
+  }
+  .tt-nav-count{background:#F5D9A6;color:#8D5A08}
+  .tt-sidebar-spacer{flex:1;min-height:18px}
+  .tt-server-card{
+    margin-top:18px;min-height:120px;box-sizing:border-box;padding:15px 13px;border-radius:12px;
+    background:#FFF;border-color:#E6E9EE;box-shadow:none;
+  }
+  .tt-server-card strong{font-size:11px}.tt-server-card span{font-size:9px}.tt-server-card small{font-size:8.5px}
+  .tt-theme-switch{
+    position:absolute;left:18px;right:18px;bottom:37px;width:auto;min-height:51px;margin:0;padding:0 13px;
+    border-radius:12px;background:#FFF;border-color:#E5E8ED;box-shadow:none;font-size:11px;
+  }
+  #ttPremiumSidebarToggle{opacity:0;top:88px;left:251px;width:28px;height:28px;transition:opacity .15s ease,box-shadow .15s ease}
+  #ttPremiumSidebar:hover ~ #ttPremiumSidebarToggle,#ttPremiumSidebarToggle:hover,#ttPremiumSidebarToggle:focus-visible{opacity:1}
+
+  /* ----- 342px cloud hero: toolbar, clock, profile ----- */
+  html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band{
+    width:calc(100% - 266px)!important;
+    height:342px!important;min-height:342px!important;
+    margin-left:266px!important;
+    padding:15px 18px 16px!important;
+    background:
+      linear-gradient(180deg,rgba(255,251,245,.46) 0%,rgba(250,252,254,.14) 54%,rgba(248,250,252,.62) 100%),
+      radial-gradient(ellipse at 8% 7%,rgba(255,236,202,.72) 0%,rgba(255,236,202,.26) 27%,transparent 54%),
+      radial-gradient(ellipse at 74% 5%,rgba(255,255,255,.50),transparent 45%),
+      url('../img/portal-cloud-4.webp') center 58%/cover no-repeat!important;
+    background-blend-mode:screen,soft-light,screen,normal!important;
+    border-bottom:1px solid rgba(222,227,233,.75)!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band::after{
+    background:
+      linear-gradient(90deg,rgba(255,244,226,.18),rgba(255,255,255,.03) 42%,rgba(245,249,252,.19)),
+      linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.18));
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band>.band-inner.wrap{
+    grid-template-columns:minmax(0,1fr) 630px 122px 268px!important;
+    grid-template-rows:56px 255px!important;
+    grid-template-areas:"blank actions spacer profile" "blank clock spacer profile"!important;
+    column-gap:0!important;row-gap:0!important;align-items:start!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .band-side{
+    grid-area:actions!important;justify-self:start!important;align-self:start!important;margin-top:8px!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail{
+    min-height:42px!important;box-sizing:border-box!important;gap:10px!important;padding:0!important;
+    border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail button{
+    min-height:40px!important;height:40px!important;padding:0 17px!important;border:1px solid rgba(223,228,234,.88)!important;
+    border-radius:10px!important;background:rgba(255,255,255,.78)!important;color:#20252C!important;
+    box-shadow:0 7px 20px rgba(44,56,72,.055),inset 0 1px 0 rgba(255,255,255,.94)!important;
+    -webkit-backdrop-filter:blur(13px)!important;backdrop-filter:blur(13px)!important;font-size:10px!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail :is(.settings-gear-btn,.notif-bell-btn){width:49px!important;min-width:49px!important;padding:0!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail :is(.settings-gear-btn,.notif-bell-btn) svg{width:18px!important;height:18px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail .dayoff-btn{white-space:nowrap!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail :is(#sessionMeta,#sessionLogoutBtn,#sessionLogoutDivider,#tlAdminOverviewBtn,#openShiftSettingsBtn){display:none!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .action-rail .action-rail-divider{display:none!important}
+  #notifBellBadge{top:-7px!important;right:-7px!important;min-width:20px!important;height:20px!important;background:#C98916!important;color:#FFF!important;border:2px solid rgba(255,255,255,.96)!important;font-size:8px!important}
+  #notifReleaseBadge{display:none!important}
+
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{
+    grid-area:clock!important;justify-self:start!important;align-self:start!important;
+    width:582px!important;max-width:582px!important;height:239px!important;min-height:239px!important;box-sizing:border-box!important;
+    margin:16px 0 0!important;padding:27px 28px 20px!important;
+    border:1px solid rgba(255,255,255,.82)!important;border-radius:18px!important;
+    background:linear-gradient(145deg,rgba(255,255,255,.67),rgba(248,250,252,.47))!important;
+    box-shadow:0 18px 45px rgba(43,55,71,.095),inset 0 1px 0 rgba(255,255,255,.98),inset 0 0 0 1px rgba(255,255,255,.18)!important;
+    -webkit-backdrop-filter:blur(21px) saturate(1.04)!important;backdrop-filter:blur(21px) saturate(1.04)!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-time{
+    font-size:61px!important;line-height:.98!important;letter-spacing:-.062em!important;font-weight:500!important;color:#272A2F!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-zone{
+    margin-left:8px!important;font-size:.34em!important;color:#C68A19!important;font-weight:700!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-date{
+    margin-top:11px!important;padding-bottom:13px!important;font-size:10.5px!important;letter-spacing:.17em!important;color:#4C535D!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift{margin-top:13px!important;gap:4px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift-primary{font-size:11.5px!important;font-weight:600!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-shift-secondary{font-size:10.5px!important;color:#B8780F!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-sync{
+    margin-top:10px!important;padding:6px 12px!important;background:rgba(255,255,255,.74)!important;border-color:rgba(52,195,117,.18)!important;
+  }
+
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .header-profile-slot{
+    grid-area:profile!important;align-self:start!important;justify-self:stretch!important;margin:0!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileHeaderBtn{
+    min-height:74px!important;height:74px!important;box-sizing:border-box!important;padding:10px 13px!important;gap:12px!important;
+    border-radius:12px!important;background:rgba(255,255,255,.80)!important;border-color:rgba(221,226,232,.88)!important;
+    box-shadow:0 9px 28px rgba(34,45,59,.065),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileHeaderAvatar{
+    width:47px!important;height:47px!important;flex:0 0 47px!important;box-shadow:0 0 0 4px rgba(246,194,91,.22)!important;
+  }
+  .tt-profile-header-copy{gap:5px}.tt-profile-header-copy strong{font-size:12px}.tt-profile-header-copy span{font-size:9.5px;color:#535C68}.tt-profile-header-chevron{width:15px;height:15px;color:#232A32}
+
+  /* ----- content starts at the exact hero seam ----- */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent.wrap{
+    width:auto!important;max-width:none!important;
+    margin:0 348px 0 282px!important;
+    padding:0!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard{
+    min-height:531px!important;box-sizing:border-box!important;margin:0!important;padding:15px 15px 13px!important;
+    border-radius:14px!important;border:1px solid #E5E8ED!important;background:rgba(255,255,255,.975)!important;
+    box-shadow:0 10px 32px rgba(29,38,51,.045)!important;
+  }
+  #ttPremiumPodHeading{
+    margin:0 0 11px!important;padding:0 1px!important;font-size:19px!important;line-height:23px!important;font-weight:700!important;letter-spacing:-.025em!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select{
+    grid-template-columns:minmax(0,1fr) 260px!important;gap:14px!important;margin:0 0 10px!important;padding:0!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .row-select label{margin-bottom:6px!important;font-size:9.5px!important;color:#717A88!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard :is(#empSearch,#todayShiftSelect){height:43px!important;border-radius:9px!important;background:#FBFCFD!important;border-color:#E8EBEF!important;font-size:12px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .agent-quick-status{height:27px!important;min-height:27px!important;box-sizing:border-box!important;margin-top:8px!important;padding:6px 8px!important;border-radius:6px!important;background:#FCFDFE!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .field-hint{font-size:8px!important;margin-top:7px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .status-line{
+    min-height:35px!important;margin:0 0 9px!important;padding:8px 10px!important;border-radius:7px!important;background:#FCFDFE!important;border-color:#E9ECF0!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper{
+    min-height:43px!important;box-sizing:border-box!important;margin:0 0 9px!important;padding:5px!important;gap:8px!important;border-radius:8px!important;background:#FCFDFE!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper .step{min-height:31px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-stepper + div{
+    min-height:40px!important;margin-bottom:0!important;padding:0 1px!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #selectedEmployeeDisplay{font-size:10px!important;gap:8px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #selectedEmployeeDisplay .avatar{width:29px!important;height:29px!important}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .speedtest-reminder{
+    min-height:51px!important;box-sizing:border-box!important;margin:0 0 8px!important;padding:9px 12px!important;border-radius:8px!important;
+    background:linear-gradient(90deg,#FFF9EE 0%,#FFFCF7 100%)!important;border-color:#EAC77C!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .break-alert-readiness{
+    min-height:31px!important;box-sizing:border-box!important;margin:0 0 9px!important;padding:7px 9px!important;border-radius:7px!important;background:#FCFDFE!important;border-color:#E9ECF0!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .break-alert-settings-btn{
+    width:27px!important;min-width:27px!important;height:23px!important;padding:0!important;font-size:0!important;border-radius:6px!important;opacity:.66!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .break-alert-settings-btn::after{content:'⚙';font-size:11px;line-height:1}
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;margin:0!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn{
+    min-height:54px!important;height:54px!important;border-radius:9px!important;background:#FAFBFC!important;border-color:#ECEFF2!important;font-size:10px!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn.primary:not(:disabled),
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .punch-btn.time-in:not(:disabled){
+    background:linear-gradient(118deg,#A96A09 0%,#EAB84D 39%,#D19622 61%,#9C6208 100%)!important;
+    border-color:#C98B18!important;box-shadow:0 7px 18px rgba(183,119,12,.20),inset 0 1px 0 rgba(255,255,255,.45)!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .coaching-action-row{
+    min-height:43px!important;margin-top:9px!important;gap:10px!important;
+  }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #punchCard .coaching-action-row .coaching-btn{min-height:43px!important;max-width:205px!important;border-radius:9px!important}
+
+  /* ----- recent activity, screenshot proportions ----- */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRecentActivity{
+    margin-top:12px!important;min-height:112px;border-radius:13px;background:#FFF;box-shadow:0 10px 30px rgba(29,38,51,.04);
+  }
+  .tt-recent-head{height:43px;box-sizing:border-box;padding:12px 14px 9px}.tt-recent-head strong{font-size:10px}.tt-recent-table th{padding:7px 14px;font-size:7.5px}.tt-recent-table td{padding:11px 14px;font-size:8.5px}
+
+  /* ----- right rail: 314px, starts 2px below hero seam ----- */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #ttPremiumRightRail{
+    right:18px;top:344px;width:314px;gap:14px;
+  }
+  .tt-right-card{border-radius:13px;border-color:#E5E8ED;background:rgba(255,255,255,.985);box-shadow:0 12px 32px rgba(29,38,51,.055)}
+  .tt-right-card:nth-child(1){min-height:165px}.tt-right-card:nth-child(2){min-height:223px}.tt-right-card:nth-child(3){min-height:240px}
+  .tt-right-card-head{height:57px;box-sizing:border-box;padding:13px 14px;border-bottom-color:#EDF0F3}.tt-right-card-head strong{font-size:10.5px}.tt-right-card-head button{padding:6px 9px}
+  .tt-announcement-preview{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr) auto;grid-template-areas:'avatar title time' 'avatar meta pin' 'avatar msg pin';column-gap:9px;row-gap:4px;padding:14px}
+  .tt-announcement-avatar{grid-area:avatar;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#D8E8F8;color:#315D89;margin-top:1px}.tt-announcement-avatar svg{width:13px;height:13px}
+  .tt-announcement-title{grid-area:title;font:600 9.5px/1.2 Poppins,sans-serif;color:#20242B;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tt-announcement-time{grid-area:time;color:#8E97A3;font:500 8px/1.2 Poppins,sans-serif;white-space:nowrap}
+  .tt-announcement-meta{grid-area:meta;color:#8E97A3;font:500 8px/1.2 Poppins,sans-serif}
+  .tt-announcement-msg{grid-area:msg;margin:2px 0 0!important;color:#687385;font:500 8.5px/1.45 Poppins,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tt-announcement-pin{grid-area:pin;align-self:center;color:#B7770E}.tt-announcement-pin svg{width:12px;height:12px}
+  .tt-upcoming{position:relative;min-height:166px;box-sizing:border-box;padding:19px 15px 15px;overflow:hidden}.tt-upcoming strong{font-size:10px}.tt-upcoming>span{font-size:9px}.tt-upcoming-kicker{margin-top:24px!important}.tt-upcoming-countdown{font-size:22px!important;position:relative;z-index:2}.tt-upcoming-decor{position:absolute;right:18px;bottom:18px;width:72px;height:72px;color:#C8CDD4;opacity:.23;transform:rotate(-9deg)}
+  .tt-quick-grid{gap:8px;padding:12px}.tt-quick-btn{min-height:79px;border-radius:10px;background:#FFF}.tt-quick-btn svg{width:19px;height:19px}
+
+  /* Keep legacy operations/reporting sections visually downstream and untouched. */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent>.log-section{margin-top:28px!important}
+}

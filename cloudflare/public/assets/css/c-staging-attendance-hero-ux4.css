@@ -1,0 +1,84 @@
+/* STAGING UX4: real, single attendance controls above the fold. No punch logic. */
+#ttAttendanceHeroSlot[hidden], #coachingActionRow[hidden] { display:none !important; }
+#ttAttendanceHeroSlot { width:100%; min-width:0; margin-top:12px; position:relative; z-index:3; }
+body[data-trino-role="agent"] .band { padding-top:12px; padding-bottom:12px; }
+body[data-trino-role="agent"] .band .clock-box { padding:13px 18px 14px; max-width:980px; }
+body[data-trino-role="agent"] .band .clock-time { font-size:clamp(33px,3.2vw,48px); }
+body[data-trino-role="agent"] .band .clock-shift { margin-top:8px; padding-top:8px; }
+body[data-trino-role="agent"] .band .clock-sync { margin-top:9px; }
+body[data-trino-role="agent"] .band .clock-date { margin-bottom:5px; }
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-panel {
+  padding:11px; margin:0; min-width:0; border-radius:16px;
+  border:1px solid rgba(112,137,180,.24); background:rgba(248,250,255,.97);
+  color:#253149; text-align:left; box-shadow:0 5px 20px rgba(15,23,42,.10);
+  font-family:'Plus Jakarta Sans',Inter,Arial,sans-serif;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-head {
+  display:flex; align-items:center; justify-content:space-between; gap:6px 12px;
+  margin:0 0 9px; flex-wrap:wrap;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-head strong {
+  font-size:13px; font-weight:800; color:#24334b;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-head span {
+  font-size:11px; color:#61738e;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot #ttNextActionHint {
+  padding:6px 9px; margin:0 0 9px; border-radius:9px; font-size:11px;
+  line-height:1.3; text-align:left; color:#455b76; background:#edf3fc;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-grid {
+  display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  margin:0 !important; padding:0 !important; gap:8px !important;
+  border:0 !important; background:transparent !important; box-shadow:none !important;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-grid:has(> #coachingActionRow:not([hidden])) {
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn,
+body[data-trino-role="agent"] #ttAttendanceHeroSlot #btnCoaching {
+  display:flex !important; flex-direction:column; align-items:center; justify-content:center;
+  gap:3px !important; box-sizing:border-box; min-width:0; width:100%; height:auto !important;
+  min-height:82px !important; padding:9px 5px !important; border-radius:12px !important;
+  font-size:11px !important; line-height:1.2; font-weight:800; letter-spacing:0;
+  text-align:center; transition:transform .15s ease,box-shadow .15s ease;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn .sub {
+  display:block; margin:0 !important; font-size:9px !important;
+  font-weight:600; line-height:1.2; max-width:100%; overflow-wrap:anywhere;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn .tt-ux4-icon {
+  display:flex; flex:0 0 auto; height:22px; align-items:center; justify-content:center;
+  line-height:1; color:currentColor; opacity:.95;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn .tt-ux4-icon svg {
+  display:block; width:20px; height:20px; fill:none; stroke:currentColor;
+  stroke-width:1.85; stroke-linecap:round; stroke-linejoin:round;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn:disabled:not(.done) {
+  background:#f0f3f9 !important; color:#7b8799 !important; opacity:.82 !important; cursor:not-allowed;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn:not(:disabled):hover { transform:translateY(-1px); }
+body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn:focus-visible { outline:3px solid #3287db; outline-offset:2px; }
+body[data-trino-role="agent"] #ttAttendanceHeroSlot #coachingActionRow {
+  margin:0 !important; min-width:0; height:100%;
+}
+body[data-trino-role="agent"] #ttAttendanceHeroSlot #coachingActionHint { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+body[data-trino-role="agent"] #ttAttendanceHeroSlot #btnCoaching { background:#e9f2ff; color:#19508b; border:1px solid #b6d1f5; }
+body.dark-mode[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-panel {background:#1d2a3b; color:#f2f6ff; border-color:#45546c; box-shadow:none;}
+body.dark-mode[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-head strong {color:#f5f7fc;}
+body.dark-mode[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-head span {color:#b7c7db;}
+body.dark-mode[data-trino-role="agent"] #ttAttendanceHeroSlot #ttNextActionHint {background:#2b394e; color:#e0ebf7;}
+body.dark-mode[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn:disabled:not(.done){background:#303b4c!important;color:#b5c0d2!important;}
+body.dark-mode[data-trino-role="agent"] #ttAttendanceHeroSlot #btnCoaching {background:#1c3b57;color:#d3e8ff;border-color:#3b688d;}
+@media(max-width:720px) {
+ body[data-trino-role="agent"] .band .clock-box {padding:12px 11px;}
+ body[data-trino-role="agent"] #ttAttendanceHeroSlot {margin-top:9px;}
+ body[data-trino-role="agent"] #ttAttendanceHeroSlot .tt-attendance-actions-panel {padding:9px;}
+ body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-grid,
+ body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-grid:has(> #coachingActionRow:not([hidden])) {grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+ body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn,
+ body[data-trino-role="agent"] #ttAttendanceHeroSlot #btnCoaching {min-height:72px!important;padding:7px 4px!important;}
+ body[data-trino-role="agent"] .band .clock-time {font-size:clamp(29px,7.5vw,39px);}
+}
+@media(prefers-reduced-motion:reduce){body[data-trino-role="agent"] #ttAttendanceHeroSlot .punch-btn{transition:none!important;}}

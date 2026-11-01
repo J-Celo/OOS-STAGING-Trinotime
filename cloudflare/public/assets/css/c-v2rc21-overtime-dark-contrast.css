@@ -1,0 +1,47 @@
+/* TrinoTime V2.0.0 RC21 — Overtime dark-mode light-surface contrast closure
+ * Presentation-only. Retained light/pastel Overtime surfaces must carry their own
+ * dark foregrounds instead of inheriting the modal's dark-theme light text tokens.
+ */
+body.dark-mode #otTabOverlay .ot-payroll-lock-actions {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+body.dark-mode #otTabOverlay .ot-payroll-lock-actions > span {
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+body.dark-mode #otTabOverlay .ot-empty-state {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+body.dark-mode #otTabOverlay .ot-empty-state strong {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+body.dark-mode #otTabOverlay .ot-empty-state span {
+  color: #475569 !important;
+  -webkit-text-fill-color: #475569 !important;
+}
+body.dark-mode #otTabOverlay .ot-pending-count {
+  color: #78350f !important;
+  -webkit-text-fill-color: #78350f !important;
+  background: #fffbeb !important;
+  border-color: #fcd34d !important;
+}
+body.dark-mode #otTabOverlay .ot-lock-status {
+  color: #065f46 !important;
+  -webkit-text-fill-color: #065f46 !important;
+  background: #ecfdf5 !important;
+  border-color: #86efac !important;
+}
+body.dark-mode #otTabOverlay .ot-lock-status[data-status="locked"] {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+}
+
+/* Pearl/light modes intentionally keep their existing palette. */

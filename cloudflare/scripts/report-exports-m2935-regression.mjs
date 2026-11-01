@@ -1,0 +1,55 @@
+import os from 'node:os';
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const read = p => fs.readFileSync(path.join(root,p),'utf8');
+const source=read('public/assets/js/j-report-exports-m2935.js'),index=read('public/index.html'),styles=read('public/assets/css/c-report-exports-m2935.css');
+const events={};
+const window={};
+const document={addEventListener:(name,fn)=>events[name]=fn};
+const sandbox={window,document,TextEncoder,Uint8Array,Uint32Array,DataView,Date,Intl,console,Set,Map,Math,Number,Error,Array,Blob};
+vm.runInNewContext(source,sandbox,{filename:'j-report-exports-m2935.js'});
+const exports=window.TrinoTimeReportExports;
+assert.ok(exports,'public exporter available');
+for(const api of ['buildXlsx','buildCsv','buildPdf','reportSheets','capture'])assert.equal(typeof exports[api],'function',api);
+assert.ok(index.includes('j-report-exports-m2935.js?v=5'),'export engine loaded');
+assert.ok(index.includes('c-report-exports-m2935.css?v=2'),'export styling loaded');
+assert.ok(styles.includes('body.dark-mode .tt-export-actions'),'dark mode export actions');
+assert.ok(source.includes("window.TrinoTimeMessagingSessionContext?.getActor?.()"),'current actor confirmation before export');
+assert.ok(source.includes("date is still loading") || source.includes('selected date is still loading'),'date binding validated');
+assert.ok(source.includes("[data-coverage-filter].is-active"),'Coverage status filter captured');
+assert.ok(source.includes("selected('ttConfirmationPod')"),'Confirmation POD selector captured');
+assert.ok(source.includes("selected('ttMetricsAgent')"),'Metrics agent selector captured');
+assert.ok(source.includes('No store-specific grade')===false,'no invented store-grade inference');
+const report={workflow:'Coverage',date:'2026-10-08',period:'Selected Philippine date',scope:'own-pod',viewer:'A Supervisor',role:'team_leader',filter:'Active',generated:'Oct 8, 2026 6:00 PM PHT',kpis:[['Submitted','23'],['Active','24m']],tables:{activity:{headers:['Agent','Store','Submitted','Status','POD','Active','Idle','Away','Job ID','Last sync'],rows:Array.from({length:30},(_,i)=>['Agent '+i,'Chemist Warehouse - Preston',String(i),'ACTIVE','POD 2','1m','0m','0m',`JOB_${2600+i}`,'Oct 8, 2026'])},stores:{headers:['Store','Workflow','Jobs','Confirmed','Active','Agents'],rows:[['Chemist Warehouse - Preston','Coverage','3','23','24m','1']]},storeJobs:{headers:['Store','Job ID','Agent','Workflow','Task position','Submitted','Active','Status'],rows:[['Chemist Warehouse - Preston','JOB_266468058','Agent 0','Coverage','1 / 2','2','2m','exited']]},storeTrends:{headers:['Date','Store','Workflow','Jobs','Confirmed','Active'],rows:[['2026-10-07','Chemist Warehouse - Preston','Coverage','1','8','6m']]},mappingReview:{headers:['Date','Job ID','Mapping'],rows:[['2026-10-08','JOB_266467987','Needs review']]},storeStatus:'3 linked jobs · 0 unlinked'},notes:['Only visible rows are included.','No fake store grade.']};
+const sheets=exports.reportSheets(report);
+assert.deepEqual(Array.from(sheets.map(s=>s.name)),['Overview','Agent Activity','Store Activity','Store Jobs','Store Trends','Mapping Review','Report Notes']);
+const csv=exports.buildCsv({...report,tables:{...report.tables,activity:{headers:['Text'],rows:[['=HYPERLINK("bad")'],['+SUM(1,2)'],['-5']]}}});
+assert.ok(csv.startsWith('\uFEFF'),'CSV BOM');
+assert.ok(csv.includes("'=HYPERLINK"),'spreadsheet formula injection escaped');
+assert.ok(csv.includes("'+SUM"),'formula plus escaped');
+const xlsx=exports.buildXlsx(report),pdf=exports.buildPdf(report);
+const zipText=Buffer.from(xlsx).toString('utf8');
+assert.ok(zipText.includes('drawing1.xml'),'overview drawing packaged');
+assert.ok(zipText.includes('xl/charts/chart1.xml'),'native Excel chart packaged');
+assert.ok(zipText.includes('Chart Data'),'editable chart data worksheet packaged');
+assert.ok(!zipText.includes('image1.svg'),'static SVG graphs retired');
+const formattedSheets=exports.reportSheets({
+  ...report,
+  tables:{...report.tables, activity:{headers:['Agent','Seconds / Task'],rows:[['Agent 1','106.9s'],['Agent 2','180s']]}}
+});
+assert.equal(formattedSheets[1].rows[0][1],'1m 46.9s','seconds formatted to minute-second display');
+assert.equal(formattedSheets[1].rows[1][1],'3m 0s','whole-minute seconds formatted readably');
+assert.ok(xlsx instanceof Uint8Array && xlsx.length>10000,'real workbook bytes');
+assert.equal(Buffer.from(xlsx).subarray(0,2).toString(),'PK','XLSX ZIP magic');
+assert.ok(pdf instanceof Uint8Array && pdf.length>10000,'real PDF bytes');
+assert.ok(Buffer.from(pdf).toString('ascii',0,8).startsWith('%PDF-1.4'),'PDF magic');
+const dest=process.env.TT_REPORT_EXPORT_TEST_DIR||os.tmpdir();
+fs.writeFileSync(path.join(dest,'trinotime-export-smoke.xlsx'),xlsx);
+fs.writeFileSync(path.join(dest,'trinotime-export-smoke.pdf'),pdf);
+fs.writeFileSync(path.join(dest,'trinotime-export-smoke.csv'),csv);
+console.log('PASS M2.9.35 Report Exports: XLSX/CSV/PDF generated, explicit visible-scope filters, CSV injection safety, wide PDF banding, styling and download controls.');

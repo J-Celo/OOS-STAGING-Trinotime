@@ -1,0 +1,60 @@
+/* TrinoTime v1.1.14 — rendering/event performance layer.
+   UI-only. Keeps security, authentication, sync, and attendance logic untouched. */
+
+/* Faster activation on touch devices and less paint work for generic controls. */
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"],summary) {
+  touch-action: manipulation;
+}
+
+/* Box-shadow interpolation is paint-heavy and adds no functional value while
+   controls are being used. Keep the visual shadows, but do not animate them. */
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]) {
+  transition-property: transform, opacity, background-color, border-color, color !important;
+}
+
+/* During active scrolling/input, pause decorative work and temporarily replace
+   live glass blur with the already-present translucent fills. */
+html.tt-is-scrolling :is(
+  .band-cloud,.band-wisp,.band-star,.band-nebula,.band-horizon,.band-shooting-star,
+  .gate-cloud-layer,.gate-cloud,.clock-glow,.sync-dot,.stamp
+) {
+  animation-play-state: paused !important;
+}
+
+html.tt-is-scrolling :is(
+  .glass-card,.clock-box,.punch-card,.action-rail,.status-card,
+  .attendance-summary-card,.attendance-sticky-controls,
+  .gate-liquid-panel,.gate-card,.tt-v116-card,
+  .settings-modal,.notification-center,.ai-chat-panel,
+  .leave-panel,.speedtest-card,.network-summary-card,
+  .profile-directory-fab-drawer,.profile-directory-search-fab,
+  .leave-request-floater,.ai-chat-floater
+) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html.tt-is-scrolling :is(
+  button,[role="button"],.attendance-summary-card,.network-summary-card,
+  .tt-v116-card,.status-card,.worksite-shortcut
+),
+html.tt-input-active :is(button,[role="button"],input,select,textarea) {
+  transition-duration: 0ms !important;
+}
+
+/* Do not keep smooth-scroll animation alive while the user is already moving
+   a scroll container. Explicit JS smooth-scroll requests still work normally. */
+html.tt-is-scrolling :is(
+  #desktopTableContainer,#rosterListWrap,#totalsListWrap,.network-table-wrap,
+  .settings-tab-panel,.announce-list,.leave-modal-scroll,.leave-v3-table-wrap,
+  #aiChatMessages
+) {
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(button,[role="button"],.band-cloud,.band-wisp,.band-star,.clock-glow) {
+    animation: none !important;
+    transition-duration: 0ms !important;
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "unchanged": 463,
+  "modified": [
+    "cloudflare\\package.json",
+    "cloudflare\\public\\assets\\js\\j-b52f8ff97ca5.js",
+    "cloudflare\\public\\index.html",
+    "cloudflare\\public\\manifest.json",
+    "cloudflare\\public\\sw.js",
+    "cloudflare\\public\\version.json",
+    "cloudflare\\scripts\\current-release-v202-production-regression.mjs",
+    "cloudflare\\scripts\\executive-reporting-m2939-regression.mjs",
+    "cloudflare\\scripts\\kv-phase2-regression-m2956.mjs",
+    "cloudflare\\scripts\\kv-phase2b-scoped-receipts-m2957-regression.mjs",
+    "cloudflare\\scripts\\report-exports-m2935-regression.mjs",
+    "cloudflare\\scripts\\roster-security-surface-m2965-regression.mjs",
+    "cloudflare\\scripts\\scoped-roster-m2962-regression.mjs",
+    "cloudflare\\scripts\\staging-config-preflight.mjs",
+    "cloudflare\\scripts\\staging-config-security-regression.mjs",
+    "cloudflare\\scripts\\unified-premium-workspace-m2958-regression.mjs",
+    "cloudflare\\src\\scoped-roster-m2962.js",
+    "cloudflare\\src\\worker.js",
+    "cloudflare\\START-LOCAL-STAGING.ps1",
+    "README.md",
+    "RELEASE-MANIFEST.json",
+    "RELEASE-NOTES.md",
+    "SHA256SUMS",
+    "STAGING-DEPLOY.ps1",
+    "STAGING-ONLY.txt",
+    "STAGING-REGRESSION-RESULTS.txt",
+    "VALIDATION.txt"
+  ],
+  "missing": [
+    "qa\\current\\M2965-APPLICATION-REGRESSION-LOG.txt",
+    "qa\\current\\M2965-QA-RESULTS.txt",
+    "qa\\current\\M2965-SYNC-REGRESSION-LOG.txt"
+  ],
+  "cssUnchanged": true,
+  "trackerUnchanged": true,
+  "originalFirebaseReferencesUnchanged": true
+}

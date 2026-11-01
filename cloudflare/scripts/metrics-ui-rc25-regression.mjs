@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const metrics=read('../public/assets/js/j-agent-metrics-rc22.js');
+const css=read('../public/assets/css/c-coverage-dashboard-v1.css');
+const index=read('../public/index.html');
+assert(/window\.__ttMetricsDashboardBuild='RC(?:25|27|28)'/.test(metrics));
+assert(/window\.__ttAgentMetricsBuild='RC(?:25|27|28)'/.test(metrics));
+for(const marker of ['Efficiency index','Measured performance, not quality scoring','Job intelligence','Coverage vs Confirmation','Performance roster','measurementCoverage','paceStatus'])assert(metrics.includes(marker),`missing RC25 metrics marker: ${marker}`);
+assert(metrics.includes("rows.filter(r=>filter==='all'||r.job===filter)"),'job filter must remain local and role-safe');
+assert(metrics.includes('signature===lastRenderSignature'),'unchanged polling must stay render-stable');
+assert(metrics.includes('scrollLeft=oldScroll?.scrollLeft||0')&&metrics.includes('next.scrollLeft=scrollLeft'),'horizontal scroll must remain stable during real data updates');
+for(const marker of ['/* RC25 — Workforce Intelligence metrics experience. */','.tt-mx-scorecard','.tt-mx-ring','.tt-mx-stat-grid','.tt-mx-job-grid','body.dark-mode .tt-mx-scorecard'])assert(css.includes(marker),`missing RC25 CSS marker: ${marker}`);
+assert(index.includes('metrics-ui-rc25=1'));
+assert(/j-agent-metrics-rc22\.js\?[^"']*v=3\.0\.4-metrics-rc25/.test(index)); // RC27 appends its own cache-bust while preserving the RC25 lineage marker
+assert(metrics.includes('useScopeAggregate'),'M2 must use server scope aggregate instead of the visible roster page for headline intelligence');
+assert(metrics.includes('All authorized Agents · independent of roster page'),'M2 POD comparison must clearly represent full authorized scope');
+assert(metrics.includes('lastData.aggregate'),'M2 aggregate changes must participate in render signatures');
+assert(!metrics.includes('Precision'),'RC25 must not fabricate a Precision/quality metric');
+console.log('PASS RC25 Agent Metrics UI: premium efficiency scorecard, truthful measured KPIs, Coverage/Confirmation intelligence cards, responsive dark mode, stable refresh/scroll, and no fabricated quality metric');

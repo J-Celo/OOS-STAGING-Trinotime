@@ -1,0 +1,32 @@
+/* UX17.2 Staging — official TrinoTime emblem in compact workspace badges.
+   Only presentation; no account, Tracker or permission logic is changed. */
+.tt-premium-badge .tt-workspace-brand-mark,
+.tt-profile-workspace-chip .tt-workspace-brand-mark {
+  display: block !important;
+  flex: 0 0 auto;
+  object-fit: contain;
+  vertical-align: middle;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  opacity: 1;
+  filter: none;
+}
+.tt-premium-badge .tt-workspace-brand-mark {
+  width: 12px !important;
+  height: 12px !important;
+}
+body.tt-premium-sidebar-collapsed .tt-premium-badge .tt-workspace-brand-mark {
+  width: 14px !important;
+  height: 14px !important;
+}
+.tt-profile-workspace-chip .tt-workspace-brand-mark {
+  width: 8px !important;
+  height: 8px !important;
+}
+/* Logo has its own contrast-safe colors: never invert or colorize in dark mode. */
+body.dark-mode .tt-premium-badge .tt-workspace-brand-mark,
+body.dark-mode .tt-profile-workspace-chip .tt-workspace-brand-mark {
+  filter: none !important;
+  opacity: 1 !important;
+}

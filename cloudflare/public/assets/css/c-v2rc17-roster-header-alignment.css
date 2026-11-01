@@ -1,0 +1,49 @@
+/* TrinoTime V2.0.0 RC17 — roster header alignment closure
+   Presentation-only: collapse the RC14/RC16 two-row roster header back into one clean row. */
+
+/* Desktop/tablet: title and controls share one vertically centered header line.
+   This removes the dedicated title row / empty band introduced by RC14 while
+   preserving RC16's requested left alignment. */
+#rosterOverlay .history-head.tt-tab-modal-head{
+  display:flex !important;
+  grid-template-columns:none !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:16px !important;
+  min-height:0 !important;
+}
+#rosterOverlay #rosterTitle{
+  position:static !important;
+  flex:1 1 auto !important;
+  width:auto !important;
+  margin:0 !important;
+  align-self:center !important;
+  text-align:left !important;
+  white-space:nowrap;
+}
+#rosterOverlay .tt-tab-modal-actions{
+  position:relative;
+  z-index:1;
+  flex:0 0 auto !important;
+  width:auto !important;
+  margin-left:auto !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  flex-wrap:wrap;
+}
+
+/* Narrow screens may wrap the controls below the title rather than squeezing or
+   clipping them.  Wide desktop/modal layouts remain a single compact row. */
+@media (max-width:720px){
+  #rosterOverlay .history-head.tt-tab-modal-head{
+    flex-wrap:wrap !important;
+  }
+  #rosterOverlay #rosterTitle{
+    flex:1 0 100% !important;
+  }
+  #rosterOverlay .tt-tab-modal-actions{
+    width:100% !important;
+    margin-left:0 !important;
+    justify-content:flex-start !important;
+  }
+}

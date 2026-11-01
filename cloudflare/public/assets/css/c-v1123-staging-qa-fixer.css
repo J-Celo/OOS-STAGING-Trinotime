@@ -1,0 +1,103 @@
+/* TrinoTime v1.1.123 — Staging QA Consolidated Fixer RC1
+   Focused presentation fixes only: modal stacking, dark-mode readability,
+   action discoverability, and safe suppression of background floaters while dialogs are open. */
+
+/* Ordinary application dialogs must sit above the 2.147B floating utility rail.
+   Workspace Messaging owns a deliberately higher dedicated overlay (2147482500). */
+.modal-overlay.open,
+.settings-overlay.open,
+.announce-overlay.open,
+.agent-login-overlay.open {
+  z-index: 2147481800 !important;
+}
+#assignOverlay.open,
+#editNameOverlay.open,
+#noteEditorOverlay.open {
+  z-index: 2147481900 !important;
+}
+
+/* Do not let background workspace controls cut across an active dialog. */
+body:has(.modal-overlay.open, .settings-overlay.open, .announce-overlay.open) #agentSecurityPanel,
+body:has(.modal-overlay.open, .settings-overlay.open, .announce-overlay.open) #profileDirectorySearchFab,
+body:has(.modal-overlay.open, .settings-overlay.open, .announce-overlay.open) #workspaceChatBtn,
+body:has(.modal-overlay.open, .settings-overlay.open, .announce-overlay.open) #aiChatFloater,
+body:has(.modal-overlay.open, .settings-overlay.open, .announce-overlay.open) #leaveRequestFloater {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Keep Account Security actions discoverable without forcing users to hunt at
+   the far edge of a wide table. */
+.agent-security-table th:last-child,
+.agent-security-table td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: var(--tt-surface-card-solid, var(--card, #fff));
+  box-shadow: -8px 0 12px -12px rgba(15,23,42,.5);
+}
+.agent-security-table thead th:last-child { z-index: 3; }
+body.dark-mode .agent-security-table th:last-child,
+body.dark-mode .agent-security-table td:last-child {
+  background: #171d26 !important;
+}
+
+/* Dark-mode QA fixes: preserve existing layout, only correct surfaces/text. */
+body.dark-mode .pod-team-management-security-note {
+  background: #153047 !important;
+  border-color: #315a76 !important;
+  color: #e7f1fb !important;
+}
+body.dark-mode .pod-team-management-security-note * { color: inherit !important; }
+body.dark-mode .firebase-identity-migration,
+body.dark-mode .production-diagnostics-details,
+body.dark-mode .production-diagnostics-results,
+body.dark-mode .ot-management-section,
+body.dark-mode .ot-request-row,
+body.dark-mode .ot-payroll-period-summary {
+  background: #182638 !important;
+  color: #edf2fa !important;
+  border-color: #42536b !important;
+}
+body.dark-mode :is(.firebase-identity-migration,.production-diagnostics-details,.production-diagnostics-results,.ot-management-section,.ot-request-row,.ot-payroll-period-summary)
+:is(h2,h3,h4,h5,p,span,strong,b,small,label,summary,td,th) {
+  color: #edf2fa !important;
+}
+body.dark-mode :is(.production-diagnostics-results,.firebase-identity-migration) :is(code,pre) {
+  color: #d8e8ff !important;
+  background: #111c2a !important;
+  border-color: #34475f !important;
+}
+
+
+/* v1.1.125 — Staging QA Closure Hotfix RC1
+   Nested confirmations/review dialogs must be above an already-open modal.
+   v1.1.123 raised ordinary modal overlays above the legacy confirmation layer,
+   which could make Move Agent confirmations invisible and could leave nested
+   Leave review fields without a reliable interactive top layer. */
+#confirmOverlay.open {
+  z-index: 2147482350 !important;
+}
+#secureCredentialOverlay.open,
+#leaveV2DecisionOverlay.open {
+  z-index: 2147482360 !important;
+}
+#leaveV2DecisionOverlay.open .leave-v2-decision-box,
+#leaveV2DecisionOverlay.open .leave-v2-decision-note {
+  pointer-events: auto !important;
+}
+#leaveV2DecisionOverlay.open .leave-v2-decision-note {
+  position: relative;
+  z-index: 2;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text !important;
+}
+
+/* Search-result-first Account Security layout. The security summary and identity
+   migration remain available immediately below the filtered Agent result table. */
+#agentSecurityPanel.is-searching #agentSecurityTableWrap {
+  margin-top: 0 !important;
+  margin-bottom: 16px;
+  scroll-margin-top: 16px;
+}

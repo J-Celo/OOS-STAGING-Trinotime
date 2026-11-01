@@ -1,0 +1,2319 @@
+        :root {
+            --lux-display: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
+            --lux-focus: #607089;
+            --lux-focus-soft: rgba(96, 112, 137, .13);
+            --lux-neutral-line: #D7DCE4;
+        }
+        .action-rail {
+            border-color: rgba(255,255,255,.10);
+        }
+        .session-indicator {
+            border-color: rgba(255,255,255,.12);
+        }
+        .band-side .dayoff-btn:hover {
+            background: rgba(255,255,255,.075);
+            color: #FFFFFF;
+        }
+        .gate-pod-btn:hover {
+            border-color: #BFC8D5;
+            background: #FFFFFF;
+            box-shadow: 0 10px 26px rgba(15,23,42,.075), 0 0 0 3px rgba(96,112,137,.065);
+        }
+        .punch-card .punch-btn:not(:disabled):hover {
+            border-color: #C7CFD9;
+            background: #FFFFFF;
+            box-shadow: 0 14px 30px rgba(15,23,42,.08), 0 0 0 3px rgba(96,112,137,.055);
+        }
+        select:hover,
+        input:hover,
+        textarea:hover { border-color: #C7CFD9; }
+        select:focus,
+        input:focus,
+        textarea:focus,
+        button:focus-visible {
+            border-color: var(--lux-focus);
+            box-shadow: 0 0 0 3px var(--lux-focus-soft);
+        }
+        .attendance-review-btn:hover,
+        .attendance-density-btn:hover,
+        .attendance-integrity-btn:hover,
+        .attendance-reset-view:hover,
+        .network-export-view:hover,
+        .network-clear-filters:hover,
+        .add-emp:hover,
+        .csv-btn:hover {
+            border-color: #C4CCD7;
+            background: #FFFFFF;
+            color: #283548;
+        }
+        .modal-btn.save:hover,
+        .profile-save-btn:hover {
+            box-shadow: 0 15px 32px rgba(10,16,27,.25), 0 0 0 3px rgba(96,112,137,.07);
+        }
+        .export-menu button:hover {
+            background: #F4F6F8;
+            color: #293649;
+        }
+        .break-countdown-panel:not(.is-overdue) {
+            background: linear-gradient(135deg, #F7F8FA, #EEF1F5);
+            border-color: #D5DBE4;
+            color: #46556C;
+        }
+        .break-countdown-panel:not(.is-overdue) .break-countdown-icon {
+            background: rgba(71,85,105,.09);
+        }
+        .break-countdown-panel:not(.is-overdue) .break-countdown-eyebrow,
+        .break-countdown-panel:not(.is-overdue) .break-countdown-clock strong,
+        .break-countdown-panel:not(.is-overdue) .break-countdown-clock span {
+            color: #53647E;
+        }
+        .attendance-badge.flag-info {
+            background: #F4F6F8;
+            border-color: #D7DDE5;
+            color: #536174;
+        }
+        .executive-status-strip {
+            position: relative;
+            z-index: 14;
+            background: linear-gradient(180deg, #111927 0%, #0C131F 100%);
+            border-top: 1px solid rgba(255,255,255,.045);
+            border-bottom: 1px solid rgba(10,16,27,.70);
+            box-shadow: 0 8px 24px rgba(8,12,20,.08);
+            color: #F7F8FA;
+        }
+        .executive-status-inner {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .executive-status-inner::-webkit-scrollbar { display: none; }
+        .executive-status-role,
+        .executive-status-item {
+            flex: 0 0 auto;
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 17px;
+            border-right: 1px solid rgba(255,255,255,.075);
+            white-space: nowrap;
+        }
+        .executive-status-role { padding-left: 2px; }
+        .executive-status-role strong,
+        .executive-status-item strong {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 650;
+            letter-spacing: .025em;
+            color: #F8FAFC;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+        .executive-status-kicker,
+        .executive-status-item > span {
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .10em;
+            text-transform: uppercase;
+            color: #8793A5;
+        }
+        .executive-status-kicker {
+            color: #D9C28F;
+        }
+        .executive-status-role strong {
+            font-family: var(--lux-display);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: .015em;
+        }
+        .executive-status-divider { display: none; }
+        .executive-status-scope { min-width: 130px; }
+        .executive-status-time { margin-left: auto; border-right: 0; padding-right: 2px; }
+        #executiveStatusSync[data-state="synced"] { color: #A7F3D0; }
+        #executiveStatusSync[data-state="reconnecting"] { color: #FDE68A; }
+        #executiveStatusSync[data-state="offline"] { color: #FCA5A5; }
+        #executiveStatusSync[data-state="checking"] { color: #CBD5E1; }
+        .gate-title,
+        .agent-login-title,
+        .log-title,
+        .modal-title,
+        .settings-modal-header h3,
+        .agent-security-head h2,
+        .agent-profile-modal-title,
+        .profile-public-name {
+            font-family: var(--lux-display);
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: .012em;
+        }
+        .gate-title { font-size: clamp(30px, 4vw, 40px); line-height: 1.02; }
+        .agent-login-title { font-size: clamp(26px, 3vw, 34px); line-height: 1.05; }
+        .log-title { font-size: clamp(26px, 3vw, 32px); line-height: 1; letter-spacing: .018em; }
+        .modal-title,
+        .settings-modal-header h3,
+        .agent-security-head h2,
+        .agent-profile-modal-title { line-height: 1.08; }
+
+        body.dark-mode .executive-status-strip {
+            background: linear-gradient(180deg, #0A1018 0%, #070C12 100%);
+            border-color: #202936;
+            box-shadow: 0 8px 28px rgba(0,0,0,.18);
+        }
+        body.dark-mode .action-rail,
+        body.dark-mode .session-indicator { border-color: rgba(255,255,255,.10); }
+        body.dark-mode .gate-pod-btn:hover,
+        body.dark-mode .punch-card .punch-btn:not(:disabled):hover {
+            border-color: #4A5667;
+            background: #1A222E;
+            box-shadow: 0 10px 28px rgba(0,0,0,.20), 0 0 0 3px rgba(148,163,184,.055);
+        }
+        body.dark-mode select:focus,
+        body.dark-mode input:focus,
+        body.dark-mode textarea:focus,
+        body.dark-mode button:focus-visible {
+            border-color: #8491A4;
+            box-shadow: 0 0 0 3px rgba(132,145,164,.14);
+        }
+        body.dark-mode .break-countdown-panel:not(.is-overdue) {
+            background: linear-gradient(135deg, #171F2B, #121923);
+            border-color: #354052;
+            color: #CBD5E1;
+        }
+        body.dark-mode .break-countdown-panel:not(.is-overdue) .break-countdown-eyebrow,
+        body.dark-mode .break-countdown-panel:not(.is-overdue) .break-countdown-clock strong,
+        body.dark-mode .break-countdown-panel:not(.is-overdue) .break-countdown-clock span { color: #AAB7C9; }
+
+        @media (max-width: 760px) {
+            .executive-status-inner { min-height: 42px; }
+            .executive-status-role,
+            .executive-status-item { min-height: 42px; padding: 0 12px; gap: 6px; }
+            .executive-status-role { padding-left: 0; }
+            .executive-status-time { margin-left: 0; padding-right: 12px; }
+            .executive-status-role strong { font-size: 15px; }
+            .executive-status-item strong { font-size: 10px; }
+        }
+    .punch-card .punch-btn { overflow: hidden; }
+    .punch-card .punch-btn .stamp {
+        z-index: 6;
+        inset: -1px;
+        border-radius: inherit;
+        background:
+            linear-gradient(110deg, transparent 0 30%, rgba(255,255,255,.24) 43%, transparent 56%) -180% 0 / 220% 100% no-repeat,
+            linear-gradient(145deg, rgba(13,20,32,.985), rgba(24,34,54,.985));
+        color: #FFFDF7;
+        border: 1px solid rgba(215,190,135,.46);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: .035em;
+        transform: none;
+        opacity: 0;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 0 0 0 rgba(185,151,91,0);
+        animation: premiumPunchConfirm .82s cubic-bezier(.22,.8,.2,1) forwards;
+    }
+    @keyframes premiumPunchConfirm {
+        0%   { opacity: 0; transform: scale(.985); background-position: -180% 0, 0 0; box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 0 0 0 rgba(185,151,91,0); }
+        14%  { opacity: 1; transform: scale(1); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 0 0 3px rgba(185,151,91,.08); }
+        58%  { opacity: 1; background-position: 180% 0, 0 0; }
+        82%  { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(.995); background-position: 180% 0, 0 0; box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 0 rgba(185,151,91,0); }
+    }
+    #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
+        min-width: 0;
+        line-height: 1.15;
+    }
+    #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-value {
+        display: block;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13.5px;
+        font-weight: 800;
+        letter-spacing: -.015em;
+        color: #173B92;
+    }
+    #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-badges {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+        width: 100%;
+        min-width: 0;
+    }
+    #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-badges > .time-flag {
+        flex: 0 0 auto;
+        margin: 0 !important;
+        padding: 2px 5px;
+        font-size: 8.5px;
+        line-height: 1.25;
+        white-space: nowrap;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    #desktopTableContainer > .desktop-table td.hours-cell:not(.pending) {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .session-indicator {
+        max-width: min(36vw, 420px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        letter-spacing: .035em;
+    }
+    .session-indicator[data-role="admin"] {
+        color: #F7E9C9;
+        border-color: rgba(215,190,135,.26);
+        background: rgba(185,151,91,.075);
+    }
+    .session-indicator[data-role="teamleader"] {
+        color: #E7EDF6;
+        border-color: rgba(148,163,184,.22);
+        background: rgba(255,255,255,.055);
+    }
+    .session-indicator[data-role="agent"] {
+        color: #E3E9F2;
+        border-color: rgba(148,163,184,.18);
+        background: rgba(255,255,255,.04);
+    }
+    .executive-status-role strong {
+        max-width: 330px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .premium-product-signature {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 18px -4px -4px;
+        padding: 13px 4px 0;
+        border-top: 1px solid #E9E2D7;
+        color: #7C756A;
+        font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+        font-size: 9.5px;
+        line-height: 1.4;
+        letter-spacing: .025em;
+    }
+    .premium-product-signature strong {
+        flex: 0 0 auto;
+        color: #75613D;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 8.5px;
+        font-weight: 750;
+        letter-spacing: .07em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .premium-product-signature-agent { margin-top: 17px; }
+
+    body.dark-mode #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-value { color: #B9D0FF; }
+    body.dark-mode .session-indicator[data-role="admin"] {
+        color: #E5D0A3;
+        border-color: rgba(225,200,145,.24);
+        background: rgba(199,169,106,.075);
+    }
+    body.dark-mode .premium-product-signature {
+        border-top-color: #303743;
+        color: #8792A2;
+    }
+    body.dark-mode .premium-product-signature strong { color: #C6AD77; }
+
+    @media (max-width: 900px) {
+        .session-indicator { max-width: 280px; }
+        .executive-status-role strong { max-width: 240px; }
+    }
+    @media (max-width: 680px) {
+        .session-indicator { max-width: 190px; font-size: 8.5px; }
+        .premium-product-signature {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 4px;
+        }
+        #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-value { font-size: 12.5px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .punch-card .punch-btn .stamp { animation: premiumPunchConfirmReduced .65s ease forwards; }
+        @keyframes premiumPunchConfirmReduced {
+            0%,100% { opacity: 0; }
+            18%,78% { opacity: 1; }
+        }
+    }
+        :root {
+            --premium-font-sans: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --premium-font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+            --lux-display: var(--premium-font-sans);
+        }
+
+        html,
+        body {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 400;
+            letter-spacing: .02em;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        p,
+        li,
+        td,
+        .modal-sub,
+        .field-hint,
+        .settings-hint,
+        .gate-sub,
+        .agent-login-sub,
+        .att-card-note,
+        .profile-info-value,
+        .website-info-policy-item span,
+        .tutorial-step-body p {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 400;
+            letter-spacing: .02em;
+        }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .gate-title,
+        .agent-login-title,
+        .log-title,
+        .modal-title,
+        .settings-modal-header h3,
+        .agent-security-head h2,
+        .agent-profile-modal-title,
+        .profile-public-name,
+        .executive-status-role strong,
+        .worksite-shortcut-title,
+        .status-card h4,
+        .website-info-card h4,
+        .tutorial-step-body h4 {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 600 !important;
+            letter-spacing: .01em !important;
+        }
+        h1 { font-size: clamp(28px, 4vw, 38px); line-height: 1.06; }
+        h2 { font-size: clamp(23px, 3vw, 30px); line-height: 1.12; }
+        h3 { font-size: clamp(18px, 2.2vw, 23px); line-height: 1.18; }
+        h4 { font-size: 14px; line-height: 1.3; }
+        .gate-title { font-size: clamp(28px, 4vw, 38px) !important; line-height: 1.06 !important; }
+        .agent-login-title { font-size: clamp(24px, 3vw, 32px) !important; line-height: 1.08 !important; }
+        .log-title { font-size: clamp(23px, 2.8vw, 29px) !important; line-height: 1.08 !important; }
+        .modal-title,
+        .settings-modal-header h3,
+        .agent-security-head h2,
+        .agent-profile-modal-title { line-height: 1.15 !important; }
+        table thead th,
+        #desktopTableContainer > .desktop-table thead th,
+        .dayoff-table thead th,
+        .audit-table thead th {
+            font-family: var(--premium-font-sans) !important;
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            line-height: 1.25;
+            letter-spacing: .05em !important;
+            text-transform: uppercase;
+        }
+        table tbody td,
+        #desktopTableContainer > .desktop-table tbody td {
+            font-family: var(--premium-font-sans);
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: .01em;
+        }
+        #desktopTableContainer > .desktop-table td.name-cell,
+        .att-card-name {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 500;
+            letter-spacing: .01em;
+        }
+        button,
+        .punch-btn,
+        .modal-btn,
+        .settings-tab-btn,
+        .log-tab,
+        .gate-pod-btn,
+        .dayoff-btn,
+        .csv-btn,
+        .row-edit-btn,
+        .attendance-review-btn,
+        .attendance-density-btn,
+        .attendance-integrity-btn,
+        .attendance-reset-view,
+        .network-export-view,
+        .network-clear-filters,
+        .profile-save-btn,
+        .profile-edit-btn {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 600 !important;
+            letter-spacing: .025em;
+        }
+        .punch-btn,
+        .modal-btn,
+        .settings-tab-btn,
+        .gate-pod-btn,
+        .brand-eyebrow,
+        .gate-eyebrow,
+        .worksite-shortcut-eyebrow,
+        .executive-status-kicker,
+        .executive-status-item > span,
+        .session-indicator,
+        .time-flag,
+        .attendance-badge,
+        label {
+            letter-spacing: .05em !important;
+        }
+        .punch-btn { font-size: 13.5px !important; }
+        .punch-btn .sub {
+            font-family: var(--premium-font-sans) !important;
+            font-size: 9.5px;
+            font-weight: 500 !important;
+            letter-spacing: .025em !important;
+        }
+        label,
+        .brand-eyebrow,
+        .gate-eyebrow,
+        .worksite-shortcut-eyebrow,
+        .executive-status-kicker,
+        .executive-status-item > span,
+        .attendance-quickbar-label,
+        .attendance-attention-label,
+        .premium-product-signature strong,
+        .time-flag,
+        .attendance-badge,
+        .session-indicator {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 600 !important;
+            letter-spacing: .05em !important;
+        }
+        label { font-size: 10px; }
+        .time-flag,
+        .attendance-badge { font-weight: 600 !important; }
+        input,
+        select,
+        textarea,
+        option,
+        .emp-search-input,
+        .attendance-search-input {
+            font-family: var(--premium-font-sans) !important;
+            font-weight: 400;
+            letter-spacing: .015em;
+        }
+        input::placeholder,
+        textarea::placeholder { font-weight: 400; letter-spacing: .015em; }
+        #liveClock,
+        .break-countdown-clock,
+        .attendance-time-value,
+        .break-summary-cell,
+        .hours-cell-value,
+        .live-hours,
+        .live-hours-big,
+        .duration-input-grid input,
+        .executive-status-time strong,
+        .executive-status-item strong,
+        .totals-value,
+        .speedtest-metric-value {
+            font-family: var(--premium-font-mono) !important;
+            font-variant-numeric: tabular-nums lining-nums;
+            letter-spacing: 0 !important;
+        }
+        #desktopTableContainer > .desktop-table td.hours-cell .hours-cell-value {
+            font-weight: 600 !important;
+            font-size: 13px !important;
+        }
+        .break-countdown-clock strong { font-weight: 600 !important; }
+        .executive-status-role strong {
+            font-family: var(--premium-font-sans) !important;
+            letter-spacing: .01em !important;
+        }
+        strong,
+        b { font-weight: 600; }
+
+        @media (max-width: 680px) {
+            body { letter-spacing: .015em; }
+            table tbody td,
+            #desktopTableContainer > .desktop-table tbody td { font-size: 11px; }
+            .punch-btn { font-size: 13px !important; }
+            .log-title { font-size: 23px !important; }
+        }
+        :root {
+            --glass-primary-bg-a: rgba(255,255,255,.34);
+            --glass-primary-bg-b: rgba(255,255,255,.18);
+            --glass-primary-reflect: rgba(255,255,255,.54);
+            --glass-primary-reflect-soft: rgba(255,255,255,.18);
+            --glass-primary-glow: rgba(255,255,255,.22);
+            --glass-primary-border: rgba(255,255,255,.72);
+            --glass-primary-shadow: 0 28px 72px rgba(15,23,42,.13), 0 6px 22px rgba(15,23,42,.055);
+            --glass-primary-filter: blur(32px) saturate(205%);
+            --glass-primary-sticky-filter: blur(34px) saturate(210%);
+            --glass-secondary-bg-a: rgba(255,255,255,.27);
+            --glass-secondary-bg-b: rgba(255,255,255,.14);
+            --glass-secondary-reflect: rgba(255,255,255,.38);
+            --glass-secondary-reflect-soft: rgba(255,255,255,.11);
+            --glass-secondary-border: rgba(255,255,255,.56);
+            --glass-secondary-shadow: 0 16px 44px rgba(15,23,42,.085), 0 3px 12px rgba(15,23,42,.035);
+            --glass-secondary-filter: blur(24px) saturate(185%);
+            --glass-control-bg-a: rgba(255,255,255,.19);
+            --glass-control-bg-b: rgba(255,255,255,.10);
+            --glass-control-reflect: rgba(255,255,255,.28);
+            --glass-control-reflect-soft: rgba(255,255,255,.06);
+            --glass-control-border: rgba(255,255,255,.46);
+            --glass-control-shadow: 0 7px 22px rgba(15,23,42,.045), inset 0 1px 0 rgba(255,255,255,.58);
+            --glass-control-filter: blur(14px) saturate(165%);
+            --glass-table-head-filter: blur(10px) saturate(135%);
+            --glass-warning-filter: blur(12px) saturate(150%);
+        }
+        body {
+            background-color: #F3F6FA !important;
+            background-image: linear-gradient(135deg, #F8FAFD 0%, #F1F5FA 52%, #F8F5EF 100%) !important;
+            background-attachment: fixed !important;
+        }
+        .wrap {
+            position: relative;
+            isolation: isolate;
+        }
+        .wrap::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            pointer-events: none;
+            top: 70px;
+            left: -7%;
+            right: -7%;
+            height: 980px;
+            border-radius: 44%;
+            background:
+                radial-gradient(ellipse at 16% 28%, rgba(59,130,246,.18) 0%, rgba(59,130,246,.09) 24%, transparent 52%),
+                radial-gradient(ellipse at 84% 22%, rgba(139,92,246,.14) 0%, rgba(139,92,246,.065) 26%, transparent 54%),
+                radial-gradient(ellipse at 58% 78%, rgba(196,153,76,.11) 0%, rgba(196,153,76,.045) 28%, transparent 56%) !important;
+            filter: blur(72px) !important;
+            opacity: .82 !important;
+            transform: translateZ(0);
+        }
+        .punch-card {
+            background:
+                linear-gradient(120deg, var(--glass-primary-reflect) 0%, var(--glass-primary-reflect-soft) 11%, transparent 29%),
+                radial-gradient(circle at 12% 0%, var(--glass-primary-glow), transparent 34%),
+                linear-gradient(145deg, var(--glass-primary-bg-a), var(--glass-primary-bg-b)) !important;
+            border: 1px solid var(--glass-primary-border) !important;
+            box-shadow:
+                var(--glass-primary-shadow),
+                inset 0 1px 0 rgba(255,255,255,.86),
+                inset 0 -1px 0 rgba(255,255,255,.10) !important;
+            backdrop-filter: var(--glass-primary-filter) !important;
+            -webkit-backdrop-filter: var(--glass-primary-filter) !important;
+            background-clip: padding-box !important;
+        }
+        .punch-card.privileged-sticky-enabled.sticky {
+            background:
+                linear-gradient(120deg, rgba(255,255,255,.50) 0%, rgba(255,255,255,.15) 12%, transparent 30%),
+                linear-gradient(145deg, rgba(255,255,255,.40), rgba(255,255,255,.20)) !important;
+            border-color: rgba(255,255,255,.76) !important;
+            box-shadow: 0 24px 64px rgba(15,23,42,.16), inset 0 1px 0 rgba(255,255,255,.88) !important;
+            backdrop-filter: var(--glass-primary-sticky-filter) !important;
+            -webkit-backdrop-filter: var(--glass-primary-sticky-filter) !important;
+        }
+        .table-card,
+        .attendance-today-summary,
+        .status-card,
+        .att-card,
+        .worksite-shortcut,
+        .speedtest-card,
+        .attendance-summary-card,
+        .totals-pod-group,
+        .network-summary-card {
+            background:
+                linear-gradient(120deg, var(--glass-secondary-reflect) 0%, var(--glass-secondary-reflect-soft) 10%, transparent 27%),
+                linear-gradient(145deg, var(--glass-secondary-bg-a), var(--glass-secondary-bg-b)) !important;
+            border: 1px solid var(--glass-secondary-border) !important;
+            box-shadow:
+                var(--glass-secondary-shadow),
+                inset 0 1px 0 rgba(255,255,255,.66),
+                inset 0 -1px 0 rgba(255,255,255,.07) !important;
+            backdrop-filter: var(--glass-secondary-filter) !important;
+            -webkit-backdrop-filter: var(--glass-secondary-filter) !important;
+            background-clip: padding-box !important;
+        }
+        .attendance-summary-card.is-working { background: linear-gradient(120deg, rgba(255,255,255,.34), transparent 28%), rgba(219,234,254,.26) !important; }
+        .attendance-summary-card.is-break { background: linear-gradient(120deg, rgba(255,255,255,.34), transparent 28%), rgba(237,233,254,.27) !important; }
+        .attendance-summary-card.is-complete { background: linear-gradient(120deg, rgba(255,255,255,.34), transparent 28%), rgba(209,250,229,.25) !important; }
+        .attendance-summary-card.is-not-in { background: linear-gradient(120deg, rgba(255,255,255,.34), transparent 28%), rgba(241,245,249,.23) !important; }
+        .attendance-summary-card.is-issues { background: linear-gradient(120deg, rgba(255,255,255,.34), transparent 28%), rgba(254,226,226,.27) !important; }
+        .punch-stepper,
+        .attendance-quickbar,
+        .log-tabs,
+        .totals-toolbar,
+        .totals-overall-summary,
+        .network-segmented,
+        .row-select,
+        .status-line,
+        .agent-quick-status,
+        select,
+        input[type="date"],
+        input[type="search"],
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        .emp-search-input,
+        .punch-btn,
+        .attendance-review-btn,
+        .attendance-density-btn,
+        .attendance-integrity-btn,
+        .attendance-reset-view,
+        .network-export-view,
+        .network-clear-filters,
+        .csv-btn,
+        .row-edit-btn,
+        .gate-pod-btn,
+        .modal-btn,
+        .profile-save-btn,
+        .profile-edit-btn,
+        .dayoff-btn {
+            background:
+                linear-gradient(120deg, var(--glass-control-reflect) 0%, var(--glass-control-reflect-soft) 24%, transparent 43%),
+                linear-gradient(145deg, var(--glass-control-bg-a), var(--glass-control-bg-b)) !important;
+            border-color: var(--glass-control-border) !important;
+            box-shadow: var(--glass-control-shadow) !important;
+            backdrop-filter: var(--glass-control-filter) !important;
+            -webkit-backdrop-filter: var(--glass-control-filter) !important;
+        }
+        .punch-stepper {
+            border: 1px solid rgba(255,255,255,.62) !important;
+            border-radius: 22px !important;
+            padding: 8px !important;
+        }
+        .step { background: transparent !important; border-color: transparent !important; }
+        .step.active {
+            background: rgba(255,248,230,.40) !important;
+            border-color: rgba(201,165,95,.56) !important;
+            box-shadow: 0 7px 22px rgba(130,94,33,.08), inset 0 1px 0 rgba(255,255,255,.80) !important;
+        }
+        .punch-card .punch-btn.primary:not(:disabled) {
+            background: linear-gradient(155deg, #182236 0%, #0B1322 58%, #070D18 100%) !important;
+            border-color: rgba(255,255,255,.14) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 18px 40px rgba(7,13,24,.26), inset 0 1px 0 rgba(255,255,255,.14), inset 0 -1px 0 rgba(185,151,91,.18) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        .punch-card .punch-btn.primary:not(:disabled) .sub { color: rgba(246,234,208,.86) !important; }
+        .punch-card .punch-btn.done,
+        .punch-btn:disabled { background: rgba(255,255,255,.15) !important; }
+        .conn-banner,
+        .speedtest-reminder,
+        .network-preflight-warning,
+        .break-alert {
+            background: linear-gradient(120deg, rgba(255,255,255,.38), rgba(255,255,255,.10) 24%, transparent 46%), rgba(255,255,255,.24) !important;
+            border: 1px solid rgba(217,119,6,.42) !important;
+            color: #7A4612 !important;
+            box-shadow: 0 10px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.72) !important;
+            backdrop-filter: var(--glass-warning-filter) !important;
+            -webkit-backdrop-filter: var(--glass-warning-filter) !important;
+        }
+        .conn-banner-dot { background: #D97706 !important; box-shadow: 0 0 0 4px rgba(217,119,6,.09) !important; }
+        .conn-banner-message,
+        .speedtest-reminder-copy,
+        .speedtest-reminder-copy span,
+        .speedtest-reminder-copy strong,
+        .network-preflight-warning,
+        .break-alert { color: #7A4612 !important; }
+        .conn-reconnect-btn,
+        .speedtest-reminder-btn,
+        .pending-sync-counter,
+        .pending-sync-counter.is-warning {
+            background: rgba(255,255,255,.24) !important;
+            color: #9A4E08 !important;
+            border-color: rgba(217,119,6,.46) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.64), 0 6px 18px rgba(15,23,42,.045) !important;
+            backdrop-filter: var(--glass-warning-filter) !important;
+            -webkit-backdrop-filter: var(--glass-warning-filter) !important;
+        }
+        .conn-banner.has-pending-punch.is-pending-critical,
+        .pending-sync-counter.is-critical {
+            background: rgba(255,255,255,.24) !important;
+            color: #B4233D !important;
+            border-color: rgba(225,29,72,.48) !important;
+        }
+        .conn-banner.has-pending-punch.is-pending-critical .conn-banner-dot {
+            background: #E11D48 !important;
+            box-shadow: 0 0 0 4px rgba(225,29,72,.10) !important;
+        }
+        .table-card {
+            background: linear-gradient(120deg, rgba(255,255,255,.30), rgba(255,255,255,.06) 18%, transparent 36%), linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.14)) !important;
+        }
+        #desktopTableContainer,
+        .attendance-table-shell { background: rgba(255,255,255,.10) !important; }
+        #desktopTableContainer > .desktop-table thead th {
+            background: rgba(248,250,252,.90) !important;
+            border-bottom-color: rgba(148,163,184,.24) !important;
+            backdrop-filter: var(--glass-table-head-filter) !important;
+            -webkit-backdrop-filter: var(--glass-table-head-filter) !important;
+        }
+        #desktopTableContainer > .desktop-table tbody td { background: rgba(255,255,255,.82) !important; }
+        #desktopTableContainer > .desktop-table tbody tr:nth-child(even):not(.attendance-date-divider) td { background: rgba(248,250,252,.84) !important; }
+        #desktopTableContainer > .desktop-table tbody tr:hover:not(.attendance-date-divider) td { background: rgba(255,255,255,.93) !important; }
+        tbody tr.attendance-date-divider,
+        tbody tr.attendance-date-divider:hover,
+        tbody tr.attendance-date-divider td { background: rgba(241,245,249,.88) !important; }
+        .att-card {
+            background: linear-gradient(120deg, rgba(255,255,255,.28), transparent 30%), rgba(255,255,255,.80) !important;
+            backdrop-filter: var(--glass-warning-filter) !important;
+            -webkit-backdrop-filter: var(--glass-warning-filter) !important;
+        }
+        @media (hover:hover) and (pointer:fine) {
+            .status-card:hover,
+            .attendance-summary-card:hover,
+            .worksite-shortcut:hover,
+            .speedtest-card:hover,
+            .speedtest-metric:hover {
+                transform: translate3d(0,-3px,0) scale(1.008) !important;
+                border-color: rgba(255,255,255,.82) !important;
+                box-shadow: 0 22px 52px rgba(15,23,42,.13), 0 0 28px rgba(96,165,250,.10), inset 0 1px 0 rgba(255,255,255,.98) !important;
+            }
+            .punch-card .punch-btn:not(:disabled):hover,
+            .attendance-review-btn:not(:disabled):hover,
+            .attendance-density-btn:not(:disabled):hover,
+            .attendance-integrity-btn:not(:disabled):hover,
+            .attendance-reset-view:not(:disabled):hover,
+            .network-export-view:not(:disabled):hover,
+            .network-clear-filters:not(:disabled):hover,
+            .csv-btn:not(:disabled):hover,
+            .row-edit-btn:not(:disabled):hover,
+            .gate-pod-btn:not(:disabled):hover,
+            .modal-btn:not(:disabled):hover,
+            .profile-save-btn:not(:disabled):hover,
+            .profile-edit-btn:not(:disabled):hover,
+            .dayoff-btn:not(:disabled):hover {
+                transform: translate3d(0,-2px,0) scale(1.012) !important;
+                border-color: rgba(255,255,255,.86) !important;
+                box-shadow: 0 16px 36px rgba(15,23,42,.13), 0 0 28px rgba(96,165,250,.11), inset 0 1px 0 rgba(255,255,255,.96) !important;
+            }
+            .punch-card .punch-btn.primary:not(:disabled):hover {
+                background: linear-gradient(155deg, #202C43 0%, #101A2C 58%, #09111F 100%) !important;
+                border-color: rgba(255,255,255,.20) !important;
+                box-shadow: 0 22px 48px rgba(7,13,24,.31), 0 0 0 3px rgba(255,255,255,.045), inset 0 1px 0 rgba(255,255,255,.16) !important;
+            }
+        }
+        body.dark-mode {
+            --glass-primary-bg-a: rgba(15,23,42,.46);
+            --glass-primary-bg-b: rgba(7,12,23,.24);
+            --glass-primary-reflect: rgba(255,255,255,.11);
+            --glass-primary-reflect-soft: rgba(255,255,255,.025);
+            --glass-primary-glow: rgba(255,255,255,.055);
+            --glass-primary-border: rgba(255,255,255,.20);
+            --glass-primary-shadow: 0 30px 76px rgba(0,0,0,.31), 0 6px 20px rgba(0,0,0,.16);
+
+            --glass-secondary-bg-a: rgba(15,23,42,.34);
+            --glass-secondary-bg-b: rgba(7,12,23,.18);
+            --glass-secondary-reflect: rgba(255,255,255,.075);
+            --glass-secondary-reflect-soft: rgba(255,255,255,.018);
+            --glass-secondary-border: rgba(255,255,255,.145);
+            --glass-secondary-shadow: 0 18px 48px rgba(0,0,0,.23);
+
+            --glass-control-bg-a: rgba(30,41,59,.34);
+            --glass-control-bg-b: rgba(15,23,42,.18);
+            --glass-control-reflect: rgba(255,255,255,.055);
+            --glass-control-reflect-soft: rgba(255,255,255,.012);
+            --glass-control-border: rgba(255,255,255,.13);
+            --glass-control-shadow: 0 8px 24px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.055);
+
+            background-color: #08111E !important;
+            background-image: linear-gradient(135deg, #07101C 0%, #0B1320 52%, #11151D 100%) !important;
+        }
+        body.dark-mode .wrap::before {
+            background:
+                radial-gradient(ellipse at 16% 28%, rgba(59,130,246,.15) 0%, rgba(59,130,246,.07) 25%, transparent 53%),
+                radial-gradient(ellipse at 84% 22%, rgba(139,92,246,.12) 0%, rgba(139,92,246,.055) 27%, transparent 55%),
+                radial-gradient(ellipse at 58% 78%, rgba(196,153,76,.075) 0%, rgba(196,153,76,.025) 29%, transparent 57%) !important;
+            opacity: .72 !important;
+        }
+        body.dark-mode .punch-card,
+        body.dark-mode .table-card,
+        body.dark-mode .attendance-today-summary,
+        body.dark-mode .status-card,
+        body.dark-mode .att-card,
+        body.dark-mode .worksite-shortcut,
+        body.dark-mode .speedtest-card,
+        body.dark-mode .attendance-summary-card,
+        body.dark-mode .totals-pod-group,
+        body.dark-mode .network-summary-card {
+            color: var(--ink);
+        }
+        body.dark-mode .punch-card.privileged-sticky-enabled.sticky {
+            background: linear-gradient(120deg, rgba(255,255,255,.09), transparent 30%), linear-gradient(145deg, rgba(15,23,42,.48), rgba(7,12,23,.25)) !important;
+            border-color: rgba(255,255,255,.20) !important;
+            box-shadow: 0 28px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.12) !important;
+        }
+        body.dark-mode .attendance-summary-card.is-working { background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 28%), rgba(30,64,175,.22) !important; }
+        body.dark-mode .attendance-summary-card.is-break { background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 28%), rgba(91,33,182,.20) !important; }
+        body.dark-mode .attendance-summary-card.is-complete { background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 28%), rgba(6,78,59,.22) !important; }
+        body.dark-mode .attendance-summary-card.is-not-in { background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 28%), rgba(51,65,85,.28) !important; }
+        body.dark-mode .attendance-summary-card.is-issues { background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 28%), rgba(127,29,29,.24) !important; }
+        body.dark-mode .punch-card .punch-btn.primary:not(:disabled) {
+            background: linear-gradient(155deg, #28364E 0%, #111B2D 58%, #070D18 100%) !important;
+            border-color: rgba(255,255,255,.17) !important;
+        }
+        body.dark-mode .punch-card .punch-btn.done,
+        body.dark-mode .punch-btn:disabled { background: rgba(15,23,42,.18) !important; }
+        body.dark-mode .step.active {
+            background: rgba(141,104,39,.19) !important;
+            border-color: rgba(199,169,106,.36) !important;
+        }
+        body.dark-mode .conn-banner,
+        body.dark-mode .speedtest-reminder,
+        body.dark-mode .network-preflight-warning,
+        body.dark-mode .break-alert {
+            background: linear-gradient(120deg, rgba(255,255,255,.055), transparent 38%), rgba(15,23,42,.36) !important;
+            border-color: rgba(245,158,11,.34) !important;
+            color: #F4C57D !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06) !important;
+        }
+        body.dark-mode .conn-banner-message,
+        body.dark-mode .speedtest-reminder-copy,
+        body.dark-mode .speedtest-reminder-copy span,
+        body.dark-mode .speedtest-reminder-copy strong,
+        body.dark-mode .network-preflight-warning,
+        body.dark-mode .break-alert { color: #F4C57D !important; }
+        body.dark-mode .conn-reconnect-btn,
+        body.dark-mode .speedtest-reminder-btn,
+        body.dark-mode .pending-sync-counter,
+        body.dark-mode .pending-sync-counter.is-warning {
+            background: rgba(15,23,42,.34) !important;
+            color: #F4C57D !important;
+            border-color: rgba(245,158,11,.36) !important;
+        }
+        body.dark-mode .conn-banner.has-pending-punch.is-pending-critical,
+        body.dark-mode .pending-sync-counter.is-critical {
+            background: rgba(15,23,42,.34) !important;
+            color: #FDA4AF !important;
+            border-color: rgba(244,63,94,.44) !important;
+        }
+        body.dark-mode #desktopTableContainer > .desktop-table thead th {
+            background: rgba(15,23,42,.90) !important;
+            border-bottom-color: rgba(255,255,255,.10) !important;
+        }
+        body.dark-mode #desktopTableContainer > .desktop-table tbody td { background: rgba(15,23,42,.82) !important; }
+        body.dark-mode #desktopTableContainer > .desktop-table tbody tr:nth-child(even):not(.attendance-date-divider) td { background: rgba(17,24,39,.85) !important; }
+        body.dark-mode #desktopTableContainer > .desktop-table tbody tr:hover:not(.attendance-date-divider) td { background: rgba(30,41,59,.94) !important; }
+        body.dark-mode tbody tr.attendance-date-divider,
+        body.dark-mode tbody tr.attendance-date-divider:hover,
+        body.dark-mode tbody tr.attendance-date-divider td { background: rgba(17,24,39,.90) !important; }
+        body.dark-mode .att-card { background: linear-gradient(120deg, rgba(255,255,255,.045), transparent 30%), rgba(15,23,42,.80) !important; }
+        @media (max-width: 780px) {
+            body {
+                --glass-primary-filter: blur(14px) saturate(155%);
+                --glass-primary-sticky-filter: blur(14px) saturate(160%);
+                --glass-secondary-filter: blur(14px) saturate(155%);
+                --glass-control-filter: blur(9px) saturate(145%);
+                --glass-table-head-filter: blur(7px) saturate(125%);
+                --glass-warning-filter: blur(9px) saturate(145%);
+                background-attachment: scroll !important;
+            }
+            .wrap::before { top: 90px; height: 700px; filter: blur(42px) !important; opacity: .68 !important; }
+            .status-card:hover,
+            .attendance-summary-card:hover,
+            .worksite-shortcut:hover,
+            .speedtest-card:hover,
+            .speedtest-metric:hover { transform: none !important; }
+        }
+        html[data-glass-performance="reduced"] body {
+            --glass-primary-filter: blur(16px) saturate(155%);
+            --glass-primary-sticky-filter: blur(16px) saturate(160%);
+            --glass-secondary-filter: blur(12px) saturate(145%);
+            --glass-control-filter: blur(8px) saturate(135%);
+            --glass-table-head-filter: blur(6px) saturate(120%);
+            --glass-warning-filter: blur(8px) saturate(135%);
+            background-attachment: scroll !important;
+        }
+        html[data-glass-performance="reduced"] .wrap::before {
+            filter: blur(38px) !important;
+            opacity: .56 !important;
+            transform: none !important;
+        }
+        html[data-glass-performance="reduced"] .band-wisp--2,
+        html[data-glass-performance="reduced"] .band-wisp--3,
+        html[data-glass-performance="reduced"] .band-cloud.sky-mobile-optional,
+        html[data-glass-performance="reduced"] .band-shooting-star { display: none !important; }
+        html[data-glass-performance="reduced"] .band-sky .band-cloud,
+        html[data-glass-performance="reduced"] .band-sky .band-star,
+        html[data-glass-performance="reduced"] .band-nebula,
+        html[data-glass-performance="reduced"] .band-wisp,
+        html[data-glass-performance="reduced"] .band-horizon,
+        html[data-glass-performance="reduced"] .band-shooting-star {
+            animation: none !important;
+            will-change: auto !important;
+        }
+        html[data-glass-performance="reduced"] .modal-overlay,
+        html[data-glass-performance="reduced"] .settings-overlay,
+        html[data-glass-performance="reduced"] .announce-overlay,
+        html[data-glass-performance="reduced"] .agent-login-overlay {
+            backdrop-filter: blur(6px) saturate(120%) !important;
+            -webkit-backdrop-filter: blur(6px) saturate(120%) !important;
+        }
+        html[data-glass-performance="reduced"] .modal-box,
+        html[data-glass-performance="reduced"] .settings-modal,
+        html[data-glass-performance="reduced"] .announce-modal,
+        html[data-glass-performance="reduced"] #agentProfileOverlay .agent-profile-modal,
+        html[data-glass-performance="reduced"] .agent-login-card {
+            backdrop-filter: blur(10px) saturate(135%) !important;
+            -webkit-backdrop-filter: blur(10px) saturate(135%) !important;
+        }
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .punch-card,
+            .table-card,
+            .attendance-today-summary,
+            .status-card,
+            .att-card,
+            .worksite-shortcut,
+            .speedtest-card,
+            .attendance-summary-card,
+            .totals-pod-group,
+            .network-summary-card { background: rgba(255,255,255,.90) !important; }
+            body.dark-mode .punch-card,
+            body.dark-mode .table-card,
+            body.dark-mode .attendance-today-summary,
+            body.dark-mode .status-card,
+            body.dark-mode .att-card,
+            body.dark-mode .worksite-shortcut,
+            body.dark-mode .speedtest-card,
+            body.dark-mode .attendance-summary-card,
+            body.dark-mode .totals-pod-group,
+            body.dark-mode .network-summary-card { background: rgba(15,23,42,.90) !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .wrap::before { transform: none !important; }
+            .status-card,
+            .attendance-summary-card,
+            .worksite-shortcut,
+            .speedtest-card,
+            .speedtest-metric,
+            .punch-btn { transform: none !important; }
+        }
+        :root {
+            --motion-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --motion-fast: 160ms;
+            --motion-medium: 210ms;
+            --motion-modal: 230ms;
+        }
+        .punch-card,
+        .table-card,
+        .attendance-today-summary,
+        .status-card,
+        .att-card,
+        .worksite-shortcut,
+        .speedtest-card,
+        .speedtest-metric,
+        .attendance-summary-card,
+        .totals-pod-group,
+        .network-summary-card,
+        .website-info-card,
+        .profile-info-card,
+        .agent-security-panel,
+        .gate-card,
+        .agent-login-card,
+        .modal-box,
+        .settings-modal,
+        .announce-modal,
+        #agentProfileOverlay .agent-profile-modal {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        .punch-card,
+        .table-card,
+        .attendance-today-summary,
+        .status-card,
+        .att-card,
+        .worksite-shortcut,
+        .speedtest-card,
+        .speedtest-metric,
+        .attendance-summary-card,
+        .totals-pod-group,
+        .network-summary-card,
+        .website-info-card,
+        .profile-info-card,
+        .agent-security-panel,
+        .gate-card,
+        .agent-login-card {
+            transition:
+                transform var(--motion-medium) var(--motion-spring),
+                opacity var(--motion-fast) var(--motion-spring),
+                box-shadow var(--motion-medium) var(--motion-spring),
+                border-color var(--motion-fast) ease,
+                background-color var(--motion-fast) ease,
+                filter var(--motion-fast) ease !important;
+        }
+        .punch-btn,
+        .attendance-review-btn,
+        .attendance-density-btn,
+        .attendance-integrity-btn,
+        .attendance-reset-view,
+        .network-export-view,
+        .network-clear-filters,
+        .csv-btn,
+        .row-edit-btn,
+        .gate-pod-btn,
+        .modal-btn,
+        .profile-save-btn,
+        .profile-edit-btn,
+        .dayoff-btn,
+        .conn-reconnect-btn,
+        .speedtest-reminder-btn,
+        .pending-sync-counter,
+        .log-tab,
+        .settings-tab-btn,
+        .agent-profile-header-btn,
+        .agent-security-toggle,
+        .announce-close-btn,
+        .settings-close-btn {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            transition:
+                transform var(--motion-fast) var(--motion-spring),
+                opacity var(--motion-fast) var(--motion-spring),
+                box-shadow var(--motion-fast) var(--motion-spring),
+                border-color var(--motion-fast) ease,
+                background-color var(--motion-fast) ease,
+                color var(--motion-fast) ease,
+                filter var(--motion-fast) ease !important;
+        }
+
+        @media (hover:hover) and (pointer:fine) {
+            .status-card:hover,
+            .attendance-summary-card:hover,
+            .worksite-shortcut:hover,
+            .speedtest-card:hover,
+            .speedtest-metric:hover,
+            .totals-pod-group:hover,
+            .network-summary-card:hover,
+            .website-info-card:hover,
+            .profile-info-card:hover {
+                transform: translate3d(0, -2px, 0) scale(1.006) !important;
+            }
+
+            .punch-card .punch-btn:not(:disabled):hover,
+            .attendance-review-btn:not(:disabled):hover,
+            .attendance-density-btn:not(:disabled):hover,
+            .attendance-integrity-btn:not(:disabled):hover,
+            .attendance-reset-view:not(:disabled):hover,
+            .network-export-view:not(:disabled):hover,
+            .network-clear-filters:not(:disabled):hover,
+            .csv-btn:not(:disabled):hover,
+            .row-edit-btn:not(:disabled):hover,
+            .gate-pod-btn:not(:disabled):hover,
+            .modal-btn:not(:disabled):hover,
+            .profile-save-btn:not(:disabled):hover,
+            .profile-edit-btn:not(:disabled):hover,
+            .dayoff-btn:not(:disabled):hover,
+            .conn-reconnect-btn:not(:disabled):hover,
+            .speedtest-reminder-btn:not(:disabled):hover,
+            .log-tab:hover,
+            .settings-tab-btn:hover,
+            .agent-profile-header-btn:hover,
+            .agent-security-toggle:hover {
+                transform: translate3d(0, -1px, 0) scale(1.01) !important;
+            }
+
+            .punch-card .punch-btn:not(:disabled):active,
+            .modal-btn:not(:disabled):active,
+            .gate-pod-btn:not(:disabled):active,
+            .row-edit-btn:not(:disabled):active,
+            .log-tab:active,
+            .settings-tab-btn:active {
+                transform: translate3d(0, 0, 0) scale(.985) !important;
+                transition-duration: 90ms !important;
+            }
+        }
+        @keyframes premiumOverlayInV9 {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes premiumModalInV9 {
+            from { opacity: 0; transform: translate3d(0, 10px, 0) scale(.985); }
+            to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+        }
+        .modal-overlay.open,
+        .settings-overlay.open,
+        .announce-overlay.open,
+        .agent-login-overlay.open {
+            animation: premiumOverlayInV9 var(--motion-fast) var(--motion-spring) both;
+        }
+        .modal-overlay.open > .modal-box,
+        .settings-overlay.open > .settings-modal,
+        .announce-overlay.open > .announce-modal,
+        .agent-login-overlay.open > .agent-login-card,
+        #agentProfileOverlay.open > .agent-profile-modal,
+        #agentProfileOverlay.open > .modal-box {
+            animation: premiumModalInV9 var(--motion-modal) var(--motion-spring) both;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+        .punch-card {
+            transition:
+                transform var(--motion-medium) var(--motion-spring),
+                opacity var(--motion-fast) var(--motion-spring),
+                box-shadow var(--motion-medium) var(--motion-spring),
+                border-color var(--motion-fast) ease,
+                background-color var(--motion-fast) ease !important;
+        }
+        .punch-card.privileged-sticky-enabled .row-select,
+        .punch-card.privileged-sticky-enabled .status-line,
+        .punch-card.privileged-sticky-enabled .punch-stepper {
+            transition: opacity var(--motion-fast) var(--motion-spring), transform var(--motion-medium) var(--motion-spring) !important;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+        }
+        .punch-card.privileged-sticky-enabled.sticky .punch-grid .punch-btn {
+            transition:
+                transform var(--motion-fast) var(--motion-spring),
+                opacity var(--motion-fast) var(--motion-spring),
+                box-shadow var(--motion-fast) var(--motion-spring),
+                border-color var(--motion-fast) ease,
+                background-color var(--motion-fast) ease,
+                color var(--motion-fast) ease !important;
+        }
+        .break-countdown-panel {
+            transition:
+                transform var(--motion-medium) var(--motion-spring),
+                opacity var(--motion-fast) var(--motion-spring),
+                border-color var(--motion-fast) ease,
+                background-color var(--motion-fast) ease,
+                color var(--motion-fast) ease,
+                box-shadow var(--motion-fast) var(--motion-spring) !important;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+        }
+        .attendance-search .attendance-search-input {
+            transition: opacity var(--motion-fast) var(--motion-spring), transform var(--motion-medium) var(--motion-spring) !important;
+            transform: translateZ(0) scaleX(.97);
+            transform-origin: right center;
+            will-change: transform, opacity;
+        }
+        .attendance-search.open .attendance-search-input {
+            transform: translateZ(0) scaleX(1);
+        }
+        .clock-box::before {
+            left: 4% !important;
+            right: 4% !important;
+            transform: translateZ(0) scaleX(.86);
+            transform-origin: center;
+            will-change: transform, opacity;
+            transition: transform var(--motion-medium) var(--motion-spring), opacity var(--motion-fast) ease !important;
+        }
+        .clock-box:hover::before {
+            transform: translateZ(0) scaleX(1);
+            opacity: .85;
+        }
+        .action-rail::before {
+            left: 5% !important;
+            right: 5% !important;
+            transform: translateZ(0) scaleX(.84);
+            transform-origin: center;
+            will-change: transform, opacity;
+            transition: transform var(--motion-medium) var(--motion-spring), opacity var(--motion-fast) ease !important;
+        }
+        .action-rail:hover::before {
+            transform: translateZ(0) scaleX(1);
+            opacity: .8;
+        }
+        .speedtest-progress-fill {
+            width: 100% !important;
+            transform-origin: left center;
+            transform: translateZ(0) scaleX(var(--speedtest-progress-scale, 0));
+            will-change: transform;
+            transition: transform 200ms var(--motion-spring) !important;
+        }
+        .band-sky .band-orb {
+            transition: opacity 240ms var(--motion-spring), background-color 240ms ease, box-shadow 240ms ease !important;
+            will-change: opacity;
+        }
+        @media (max-width: 780px) {
+            :root {
+                --motion-fast: 140ms;
+                --motion-medium: 180ms;
+                --motion-modal: 200ms;
+            }
+            .status-card:hover,
+            .attendance-summary-card:hover,
+            .worksite-shortcut:hover,
+            .speedtest-card:hover,
+            .speedtest-metric:hover {
+                transform: translateZ(0) !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .punch-card,
+            .table-card,
+            .attendance-today-summary,
+            .status-card,
+            .att-card,
+            .worksite-shortcut,
+            .speedtest-card,
+            .speedtest-metric,
+            .attendance-summary-card,
+            .totals-pod-group,
+            .network-summary-card,
+            .website-info-card,
+            .profile-info-card,
+            .agent-security-panel,
+            .gate-card,
+            .agent-login-card,
+            .modal-box,
+            .settings-modal,
+            .announce-modal,
+            #agentProfileOverlay .agent-profile-modal,
+            .punch-btn,
+            .modal-btn,
+            .gate-pod-btn,
+            .row-edit-btn,
+            .log-tab,
+            .settings-tab-btn,
+            .attendance-search-input,
+            .break-countdown-panel,
+            .speedtest-progress-fill {
+                transition: none !important;
+                animation: none !important;
+                transform: none !important;
+                will-change: auto !important;
+            }
+            .modal-overlay.open,
+            .settings-overlay.open,
+            .announce-overlay.open,
+            .agent-login-overlay.open { animation: none !important; }
+        }
+        .punch-card,
+        .table-card,
+        .attendance-today-summary,
+        .status-card,
+        .att-card,
+        .worksite-shortcut,
+        .speedtest-card,
+        .speedtest-metric,
+        .attendance-summary-card,
+        .totals-pod-group,
+        .network-summary-card,
+        .website-info-card,
+        .profile-info-card,
+        .agent-security-panel,
+        .gate-card,
+        .agent-login-card,
+        .modal-box,
+        .settings-modal,
+        .announce-modal,
+        #agentProfileOverlay .agent-profile-modal,
+        .punch-btn,
+        .attendance-review-btn,
+        .attendance-density-btn,
+        .attendance-integrity-btn,
+        .attendance-reset-view,
+        .network-export-view,
+        .network-clear-filters,
+        .csv-btn,
+        .row-edit-btn,
+        .gate-pod-btn,
+        .modal-btn,
+        .profile-save-btn,
+        .profile-edit-btn,
+        .profile-cancel-btn,
+        .profile-discard-draft-btn,
+        .dayoff-btn,
+        .conn-reconnect-btn,
+        .speedtest-reminder-btn,
+        .pending-sync-counter,
+        .log-tab,
+        .settings-tab-btn,
+        .agent-profile-header-btn,
+        .agent-security-toggle,
+        .announce-close-btn,
+        .settings-close-btn,
+        .break-countdown-panel,
+        .attendance-search .attendance-search-input,
+        .clock-box::before,
+        .action-rail::before {
+            will-change: auto !important;
+            backface-visibility: hidden;
+        }
+        .punch-card,
+        .table-card,
+        .attendance-today-summary,
+        .status-card,
+        .att-card,
+        .worksite-shortcut,
+        .speedtest-card,
+        .speedtest-metric,
+        .attendance-summary-card,
+        .totals-pod-group,
+        .network-summary-card,
+        .website-info-card,
+        .profile-info-card,
+        .agent-security-panel,
+        .gate-card,
+        .agent-login-card,
+        .modal-box,
+        .settings-modal,
+        .announce-modal,
+        #agentProfileOverlay .agent-profile-modal,
+        .punch-btn,
+        .attendance-review-btn,
+        .attendance-density-btn,
+        .attendance-integrity-btn,
+        .attendance-reset-view,
+        .network-export-view,
+        .network-clear-filters,
+        .csv-btn,
+        .row-edit-btn,
+        .gate-pod-btn,
+        .modal-btn,
+        .profile-save-btn,
+        .profile-edit-btn,
+        .profile-cancel-btn,
+        .dayoff-btn,
+        .conn-reconnect-btn,
+        .speedtest-reminder-btn,
+        .pending-sync-counter,
+        .log-tab,
+        .settings-tab-btn,
+        .agent-profile-header-btn,
+        .agent-security-toggle,
+        .announce-close-btn,
+        .settings-close-btn,
+        .break-countdown-panel {
+            transform: none;
+        }
+        .modal-overlay.open > .modal-box,
+        .settings-overlay.open > .settings-modal,
+        .announce-overlay.open > .announce-modal,
+        .agent-login-overlay.open > .agent-login-card,
+        #agentProfileOverlay.open > .agent-profile-modal,
+        #agentProfileOverlay.open > .modal-box {
+            will-change: transform, opacity !important;
+        }
+        .punch-card.privileged-sticky-enabled.sticky,
+        .punch-card.privileged-sticky-enabled.sticky .punch-grid .punch-btn,
+        .break-countdown-panel.show,
+        .attendance-search.open .attendance-search-input,
+        .attendance-search:focus-within .attendance-search-input {
+            will-change: transform, opacity !important;
+        }
+
+        @media (hover:hover) and (pointer:fine) {
+            .status-card:hover,
+            .attendance-summary-card:hover,
+            .worksite-shortcut:hover,
+            .speedtest-card:hover,
+            .speedtest-metric:hover,
+            .totals-pod-group:hover,
+            .network-summary-card:hover,
+            .website-info-card:hover,
+            .profile-info-card:hover,
+            .punch-card .punch-btn:not(:disabled):hover,
+            .attendance-review-btn:not(:disabled):hover,
+            .attendance-density-btn:not(:disabled):hover,
+            .attendance-integrity-btn:not(:disabled):hover,
+            .attendance-reset-view:not(:disabled):hover,
+            .network-export-view:not(:disabled):hover,
+            .network-clear-filters:not(:disabled):hover,
+            .csv-btn:not(:disabled):hover,
+            .row-edit-btn:not(:disabled):hover,
+            .gate-pod-btn:not(:disabled):hover,
+            .modal-btn:not(:disabled):hover,
+            .profile-save-btn:not(:disabled):hover,
+            .profile-edit-btn:not(:disabled):hover,
+            .profile-cancel-btn:not(:disabled):hover,
+            .profile-discard-draft-btn:not(:disabled):hover,
+            .dayoff-btn:not(:disabled):hover,
+            .conn-reconnect-btn:not(:disabled):hover,
+            .speedtest-reminder-btn:not(:disabled):hover,
+            .log-tab:hover,
+            .settings-tab-btn:hover,
+            .agent-profile-header-btn:hover,
+            .agent-security-toggle:hover,
+            .clock-box:hover::before,
+            .action-rail:hover::before {
+                will-change: transform, opacity !important;
+            }
+        }
+        .edit-break-reset-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: -2px 0 16px;
+            padding: 12px 13px;
+            border: 1px solid rgba(217, 119, 6, .26);
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255,255,255,.58), rgba(255,247,237,.46));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 10px 28px rgba(15,23,42,.055);
+            backdrop-filter: blur(14px) saturate(155%);
+            -webkit-backdrop-filter: blur(14px) saturate(155%);
+        }
+        .edit-break-reset-copy {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .edit-break-reset-copy strong {
+            font-size: 12px;
+            font-weight: 600;
+            color: #92400E;
+            letter-spacing: .02em;
+        }
+        .edit-break-reset-copy span {
+            font-size: 10.5px;
+            line-height: 1.45;
+            color: #7C4A17;
+        }
+        .edit-break-reset-copy span.pending {
+            color: #B45309;
+            font-weight: 600;
+        }
+        .edit-break-reset-btn {
+            flex: 0 0 auto;
+            min-height: 36px;
+            white-space: nowrap;
+            border-color: rgba(217,119,6,.30) !important;
+            background: rgba(255,255,255,.62) !important;
+            color: #92400E !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.68);
+        }
+        .edit-break-reset-btn:not(:disabled):hover {
+            border-color: rgba(180,83,9,.46) !important;
+            background: rgba(255,251,235,.82) !important;
+            box-shadow: 0 8px 20px rgba(180,83,9,.09), inset 0 1px 0 rgba(255,255,255,.76) !important;
+        }
+        .edit-break-reset-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        body.dark-mode .edit-break-reset-panel {
+            border-color: rgba(245,158,11,.24);
+            background: linear-gradient(135deg, rgba(30,41,59,.58), rgba(69,39,16,.30));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 12px 30px rgba(0,0,0,.18);
+        }
+        body.dark-mode .edit-break-reset-copy strong { color: #FBBF24; }
+        body.dark-mode .edit-break-reset-copy span { color: #FCD9A5; }
+        body.dark-mode .edit-break-reset-copy span.pending { color: #F59E0B; }
+        body.dark-mode .edit-break-reset-btn {
+            border-color: rgba(245,158,11,.26) !important;
+            background: rgba(30,41,59,.52) !important;
+            color: #FCD9A5 !important;
+        }
+        .profile-draft-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 9px 10px;
+            border: 1px solid rgba(148,163,184,.26);
+            border-radius: 10px;
+            background: rgba(255,255,255,.38);
+        }
+        .profile-draft-status {
+            min-width: 0;
+            color: var(--muted);
+            font-size: 10.5px;
+            font-weight: 500;
+            line-height: 1.4;
+            letter-spacing: .02em;
+        }
+        .profile-draft-status.has-draft { color: #52657E; }
+        .profile-discard-draft-btn {
+            flex: 0 0 auto;
+            min-height: 32px;
+            padding: 6px 10px;
+            border: 1px solid rgba(148,163,184,.34);
+            border-radius: 9px;
+            background: rgba(255,255,255,.48);
+            color: #526173;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+            font-size: 10.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform var(--motion-fast) var(--motion-spring), border-color var(--motion-fast) ease, background-color var(--motion-fast) ease, color var(--motion-fast) ease;
+        }
+        .profile-discard-draft-btn:disabled { opacity: .45; cursor: not-allowed; }
+        .profile-discard-draft-btn:not(:disabled):hover {
+            border-color: rgba(100,116,139,.52);
+            background: rgba(248,250,252,.78);
+            color: #334155;
+        }
+        body.dark-mode .profile-draft-row {
+            border-color: rgba(148,163,184,.18);
+            background: rgba(15,23,42,.34);
+        }
+        body.dark-mode .profile-draft-status.has-draft { color: #A9B7CA; }
+        body.dark-mode .profile-discard-draft-btn {
+            border-color: rgba(148,163,184,.22);
+            background: rgba(30,41,59,.40);
+            color: #CBD5E1;
+        }
+
+        @media (max-width: 680px) {
+            .edit-break-reset-panel,
+            .profile-draft-row { align-items: stretch; flex-direction: column; }
+            .edit-break-reset-btn,
+            .profile-discard-draft-btn { width: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .profile-discard-draft-btn,
+            .edit-break-reset-btn { transition: none !important; will-change: auto !important; transform: none !important; }
+        }
+
+        .performance-mode-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-top: 18px;
+            padding: 16px 17px;
+            border: 1px solid rgba(148,163,184,.24);
+            border-radius: 14px;
+            background: rgba(255,255,255,.48);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 8px 24px rgba(15,23,42,.045);
+        }
+        .performance-mode-copy { min-width: 0; }
+        .performance-mode-heading {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .performance-mode-heading strong {
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        .performance-mode-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 20px;
+            padding: 2px 7px;
+            border: 1px solid rgba(100,116,139,.24);
+            border-radius: 999px;
+            background: rgba(248,250,252,.72);
+            color: #64748B;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .performance-mode-badge.is-low {
+            border-color: rgba(245,158,11,.30);
+            background: rgba(255,251,235,.78);
+            color: #9A6700;
+        }
+        .performance-mode-badge.is-full {
+            border-color: rgba(34,197,94,.22);
+            background: rgba(240,253,244,.72);
+            color: #287A48;
+        }
+        .performance-mode-copy p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 11.5px;
+            line-height: 1.5;
+        }
+        .performance-mode-status {
+            margin-top: 7px;
+            color: #536174;
+            font-size: 10.5px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .performance-mode-toggle {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .performance-mode-toggle input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .performance-mode-track {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            border: 1px solid rgba(100,116,139,.30);
+            border-radius: 999px;
+            background: #E2E8F0;
+            transition: background-color 160ms ease, border-color 160ms ease;
+        }
+        .performance-mode-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            box-shadow: 0 2px 6px rgba(15,23,42,.20);
+            transform: translateX(0);
+            transition: transform 180ms cubic-bezier(.16,1,.3,1);
+        }
+        .performance-mode-toggle input:checked + .performance-mode-track {
+            border-color: #334155;
+            background: #334155;
+        }
+        .performance-mode-toggle input:checked + .performance-mode-track .performance-mode-thumb {
+            transform: translateX(20px);
+        }
+        .performance-mode-toggle input:focus-visible + .performance-mode-track {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 3px;
+        }
+        .performance-mode-toggle-label {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .performance-mode-hint { margin-top: 8px !important; }
+
+        body.dark-mode .performance-mode-card {
+            border-color: rgba(148,163,184,.17);
+            background: rgba(15,23,42,.34);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.045), 0 8px 24px rgba(0,0,0,.10);
+        }
+        body.dark-mode .performance-mode-badge {
+            border-color: rgba(148,163,184,.20);
+            background: rgba(30,41,59,.70);
+            color: #AAB6C6;
+        }
+        body.dark-mode .performance-mode-badge.is-low {
+            border-color: rgba(245,158,11,.30);
+            background: rgba(120,53,15,.24);
+            color: #F4C57D;
+        }
+        body.dark-mode .performance-mode-badge.is-full {
+            border-color: rgba(34,197,94,.22);
+            background: rgba(20,83,45,.22);
+            color: #9AE6B4;
+        }
+        body.dark-mode .performance-mode-status { color: #9AA8BA; }
+        body.dark-mode .performance-mode-track { border-color: #3D4A5C; background: #263244; }
+        body.dark-mode .performance-mode-toggle input:checked + .performance-mode-track { border-color: #D4B36F; background: #8B6B2F; }
+        html[data-glass-performance="low"] body {
+            --glass-primary-filter: none;
+            --glass-primary-sticky-filter: none;
+            --glass-secondary-filter: none;
+            --glass-control-filter: none;
+            --glass-table-head-filter: none;
+            --glass-warning-filter: none;
+            background-attachment: scroll !important;
+        }
+        html[data-glass-performance="low"] *,
+        html[data-glass-performance="low"] *::before,
+        html[data-glass-performance="low"] *::after {
+            will-change: auto !important;
+        }
+        html[data-glass-performance="low"] .wrap::before {
+            display: none !important;
+            content: none !important;
+            filter: none !important;
+        }
+        html[data-glass-performance="low"] .band-wisp,
+        html[data-glass-performance="low"] .band-nebula,
+        html[data-glass-performance="low"] .band-horizon,
+        html[data-glass-performance="low"] .band-shooting-star,
+        html[data-glass-performance="low"] .band-cloud.sky-mobile-optional {
+            display: none !important;
+            animation: none !important;
+        }
+        html[data-glass-performance="low"] .band-sky .band-cloud,
+        html[data-glass-performance="low"] .band-sky .band-star,
+        html[data-glass-performance="low"] .band-orb,
+        html[data-glass-performance="low"] .band-moonlight,
+        html[data-glass-performance="low"] .band-center-veil {
+            animation: none !important;
+            transition: none !important;
+            filter: none !important;
+        }
+
+        html[data-glass-performance="low"] .punch-card,
+        html[data-glass-performance="low"] .table-card,
+        html[data-glass-performance="low"] .attendance-today-summary,
+        html[data-glass-performance="low"] .status-card,
+        html[data-glass-performance="low"] .att-card,
+        html[data-glass-performance="low"] .worksite-shortcut,
+        html[data-glass-performance="low"] .speedtest-card,
+        html[data-glass-performance="low"] .speedtest-metric,
+        html[data-glass-performance="low"] .attendance-summary-card,
+        html[data-glass-performance="low"] .totals-pod-group,
+        html[data-glass-performance="low"] .network-summary-card,
+        html[data-glass-performance="low"] .website-info-card,
+        html[data-glass-performance="low"] .profile-info-card,
+        html[data-glass-performance="low"] .gate-card,
+        html[data-glass-performance="low"] .agent-security-panel,
+        html[data-glass-performance="low"] .modal-box,
+        html[data-glass-performance="low"] .settings-modal,
+        html[data-glass-performance="low"] .announce-modal,
+        html[data-glass-performance="low"] #agentProfileOverlay .agent-profile-modal,
+        html[data-glass-performance="low"] .agent-login-card,
+        html[data-glass-performance="low"] .punch-card.privileged-sticky-enabled.sticky {
+            background-image: none !important;
+            background-color: rgba(248,250,252,.97) !important;
+            border-color: rgba(148,163,184,.28) !important;
+            box-shadow: 0 6px 18px rgba(15,23,42,.07) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            filter: none !important;
+        }
+        html[data-glass-performance="low"] body.dark-mode .punch-card,
+        html[data-glass-performance="low"] body.dark-mode .table-card,
+        html[data-glass-performance="low"] body.dark-mode .attendance-today-summary,
+        html[data-glass-performance="low"] body.dark-mode .status-card,
+        html[data-glass-performance="low"] body.dark-mode .att-card,
+        html[data-glass-performance="low"] body.dark-mode .worksite-shortcut,
+        html[data-glass-performance="low"] body.dark-mode .speedtest-card,
+        html[data-glass-performance="low"] body.dark-mode .speedtest-metric,
+        html[data-glass-performance="low"] body.dark-mode .attendance-summary-card,
+        html[data-glass-performance="low"] body.dark-mode .totals-pod-group,
+        html[data-glass-performance="low"] body.dark-mode .network-summary-card,
+        html[data-glass-performance="low"] body.dark-mode .website-info-card,
+        html[data-glass-performance="low"] body.dark-mode .profile-info-card,
+        html[data-glass-performance="low"] body.dark-mode .gate-card,
+        html[data-glass-performance="low"] body.dark-mode .agent-security-panel,
+        html[data-glass-performance="low"] body.dark-mode .modal-box,
+        html[data-glass-performance="low"] body.dark-mode .settings-modal,
+        html[data-glass-performance="low"] body.dark-mode .announce-modal,
+        html[data-glass-performance="low"] body.dark-mode #agentProfileOverlay .agent-profile-modal,
+        html[data-glass-performance="low"] body.dark-mode .agent-login-card,
+        html[data-glass-performance="low"] body.dark-mode .punch-card.privileged-sticky-enabled.sticky {
+            background-color: rgba(15,23,42,.95) !important;
+            border-color: rgba(148,163,184,.18) !important;
+            box-shadow: 0 6px 18px rgba(0,0,0,.20) !important;
+        }
+
+        html[data-glass-performance="low"] .clock-box,
+        html[data-glass-performance="low"] .action-rail,
+        html[data-glass-performance="low"] .punch-stepper,
+        html[data-glass-performance="low"] .attendance-quickbar,
+        html[data-glass-performance="low"] .log-tabs,
+        html[data-glass-performance="low"] .attendance-sticky-controls,
+        html[data-glass-performance="low"] .export-menu,
+        html[data-glass-performance="low"] select,
+        html[data-glass-performance="low"] input,
+        html[data-glass-performance="low"] textarea,
+        html[data-glass-performance="low"] .theme-choice-btn,
+        html[data-glass-performance="low"] .profile-cancel-btn,
+        html[data-glass-performance="low"] .profile-photo-btn,
+        html[data-glass-performance="low"] .profile-discard-draft-btn {
+            background-image: none !important;
+            background-color: rgba(255,255,255,.96) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            filter: none !important;
+        }
+        html[data-glass-performance="low"] body.dark-mode .clock-box,
+        html[data-glass-performance="low"] body.dark-mode .action-rail,
+        html[data-glass-performance="low"] body.dark-mode .punch-stepper,
+        html[data-glass-performance="low"] body.dark-mode .attendance-quickbar,
+        html[data-glass-performance="low"] body.dark-mode .log-tabs,
+        html[data-glass-performance="low"] body.dark-mode .attendance-sticky-controls,
+        html[data-glass-performance="low"] body.dark-mode .export-menu,
+        html[data-glass-performance="low"] body.dark-mode select,
+        html[data-glass-performance="low"] body.dark-mode input,
+        html[data-glass-performance="low"] body.dark-mode textarea,
+        html[data-glass-performance="low"] body.dark-mode .theme-choice-btn,
+        html[data-glass-performance="low"] body.dark-mode .profile-cancel-btn,
+        html[data-glass-performance="low"] body.dark-mode .profile-photo-btn,
+        html[data-glass-performance="low"] body.dark-mode .profile-discard-draft-btn {
+            background-color: rgba(15,23,42,.97) !important;
+        }
+
+        html[data-glass-performance="low"] .modal-overlay,
+        html[data-glass-performance="low"] .settings-overlay,
+        html[data-glass-performance="low"] .announce-overlay,
+        html[data-glass-performance="low"] .agent-login-overlay,
+        html[data-glass-performance="low"] .agent-password-overlay,
+        html[data-glass-performance="low"] #agentProfileOverlay {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            filter: none !important;
+            background: rgba(7,12,22,.72) !important;
+        }
+        html[data-glass-performance="low"] #desktopTableContainer > .desktop-table thead th {
+            background: rgba(241,245,249,.99) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+        html[data-glass-performance="low"] #desktopTableContainer > .desktop-table tbody td {
+            background: rgba(255,255,255,.99) !important;
+        }
+        html[data-glass-performance="low"] #desktopTableContainer > .desktop-table tbody tr:nth-child(even):not(.attendance-date-divider) td {
+            background: rgba(248,250,252,.99) !important;
+        }
+        html[data-glass-performance="low"] body.dark-mode #desktopTableContainer > .desktop-table thead th {
+            background: rgba(15,23,42,.99) !important;
+        }
+        html[data-glass-performance="low"] body.dark-mode #desktopTableContainer > .desktop-table tbody td {
+            background: rgba(15,23,42,.98) !important;
+        }
+        html[data-glass-performance="low"] body.dark-mode #desktopTableContainer > .desktop-table tbody tr:nth-child(even):not(.attendance-date-divider) td {
+            background: rgba(17,24,39,.99) !important;
+        }
+        html[data-glass-performance="low"] .conn-banner,
+        html[data-glass-performance="low"] .speedtest-reminder,
+        html[data-glass-performance="low"] .network-preflight-warning,
+        html[data-glass-performance="low"] .break-alert {
+            background-image: none !important;
+            background-color: rgba(255,251,235,.98) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: none !important;
+        }
+        html[data-glass-performance="low"] body.dark-mode .conn-banner,
+        html[data-glass-performance="low"] body.dark-mode .speedtest-reminder,
+        html[data-glass-performance="low"] body.dark-mode .network-preflight-warning,
+        html[data-glass-performance="low"] body.dark-mode .break-alert {
+            background-color: rgba(15,23,42,.98) !important;
+        }
+        html[data-glass-performance="low"] .status-card,
+        html[data-glass-performance="low"] .attendance-summary-card,
+        html[data-glass-performance="low"] .worksite-shortcut,
+        html[data-glass-performance="low"] .speedtest-card,
+        html[data-glass-performance="low"] .speedtest-metric,
+        html[data-glass-performance="low"] .punch-btn,
+        html[data-glass-performance="low"] .gate-pod-btn,
+        html[data-glass-performance="low"] .attendance-review-btn,
+        html[data-glass-performance="low"] .attendance-density-btn,
+        html[data-glass-performance="low"] .attendance-integrity-btn,
+        html[data-glass-performance="low"] .attendance-reset-view,
+        html[data-glass-performance="low"] .network-export-view,
+        html[data-glass-performance="low"] .network-clear-filters,
+        html[data-glass-performance="low"] .csv-btn,
+        html[data-glass-performance="low"] .settings-tab-btn,
+        html[data-glass-performance="low"] .theme-choice-btn,
+        html[data-glass-performance="low"] .profile-edit-btn,
+        html[data-glass-performance="low"] .profile-save-btn,
+        html[data-glass-performance="low"] .profile-cancel-btn,
+        html[data-glass-performance="low"] .profile-discard-draft-btn {
+            transition: background-color 110ms ease, color 110ms ease, border-color 110ms ease !important;
+        }
+        html[data-glass-performance="low"] .status-card:hover,
+        html[data-glass-performance="low"] .attendance-summary-card:hover,
+        html[data-glass-performance="low"] .worksite-shortcut:hover,
+        html[data-glass-performance="low"] .speedtest-card:hover,
+        html[data-glass-performance="low"] .speedtest-metric:hover,
+        html[data-glass-performance="low"] .punch-btn:hover,
+        html[data-glass-performance="low"] .gate-pod-btn:hover,
+        html[data-glass-performance="low"] .attendance-review-btn:hover,
+        html[data-glass-performance="low"] .attendance-density-btn:hover,
+        html[data-glass-performance="low"] .attendance-integrity-btn:hover,
+        html[data-glass-performance="low"] .attendance-reset-view:hover,
+        html[data-glass-performance="low"] .network-export-view:hover,
+        html[data-glass-performance="low"] .network-clear-filters:hover,
+        html[data-glass-performance="low"] .csv-btn:hover,
+        html[data-glass-performance="low"] .theme-choice-btn:hover {
+            transform: none !important;
+            filter: none !important;
+        }
+        html[data-glass-performance="low"] .modal-overlay.open > .modal-box,
+        html[data-glass-performance="low"] .settings-overlay.open > .settings-modal,
+        html[data-glass-performance="low"] .announce-overlay.open > .announce-modal,
+        html[data-glass-performance="low"] .agent-login-overlay.open > .agent-login-card,
+        html[data-glass-performance="low"] #agentProfileOverlay.open > .agent-profile-modal {
+            animation: none !important;
+            transform: none !important;
+        }
+
+        @media (max-width: 680px) {
+            .performance-mode-card { align-items: stretch; flex-direction: column; }
+            .performance-mode-toggle { justify-content: flex-end; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .performance-mode-track,
+            .performance-mode-thumb { transition: none !important; }
+        }
+
+        .performance-mode-card-v14 {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: start;
+            gap: 14px 18px;
+        }
+        .performance-mode-card-v14 .performance-mode-copy { align-self: center; }
+        .performance-mode-controls {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .performance-mode-segmented {
+            display: inline-grid;
+            grid-template-columns: repeat(3, minmax(62px, 1fr));
+            padding: 3px;
+            border: 1px solid rgba(100,116,139,.24);
+            border-radius: 11px;
+            background: rgba(241,245,249,.78);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.72);
+        }
+        .performance-mode-choice {
+            min-height: 32px;
+            padding: 6px 11px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #64748B;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: .035em;
+            cursor: pointer;
+            transition: transform 160ms cubic-bezier(.16,1,.3,1), background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+        }
+        .performance-mode-choice:hover { color: #263548; }
+        .performance-mode-choice[aria-pressed="true"] {
+            background: rgba(255,255,255,.98);
+            color: #172033;
+            box-shadow: 0 3px 10px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.9);
+        }
+        .performance-mode-choice[data-performance-choice="low"][aria-pressed="true"] { color: #8A5A00; }
+        .performance-mode-choice:focus-visible,
+        .performance-retest-btn:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+        .performance-retest-btn {
+            min-height: 38px;
+            padding: 8px 12px;
+            border: 1px solid rgba(100,116,139,.26);
+            border-radius: 10px;
+            background: rgba(255,255,255,.72);
+            color: #42516A;
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: .025em;
+            cursor: pointer;
+            transition: transform 170ms cubic-bezier(.16,1,.3,1), border-color 160ms ease, background-color 160ms ease, box-shadow 170ms ease;
+        }
+        .performance-retest-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            border-color: #A8B4C4;
+            background: rgba(255,255,255,.94);
+            box-shadow: 0 6px 15px rgba(15,23,42,.08);
+        }
+        .performance-retest-btn:disabled { opacity: .55; cursor: wait; transform: none; }
+        .performance-mode-diagnostics {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 7px;
+            padding-top: 2px;
+        }
+        .performance-mode-diagnostics > div {
+            min-width: 0;
+            padding: 8px 10px;
+            border: 1px solid rgba(148,163,184,.18);
+            border-radius: 10px;
+            background: rgba(248,250,252,.58);
+        }
+        .performance-mode-diagnostics span,
+        .performance-mode-diagnostics strong { display: block; min-width: 0; }
+        .performance-mode-diagnostics span {
+            margin-bottom: 3px;
+            color: #8290A4;
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: .055em;
+            text-transform: uppercase;
+        }
+        .performance-mode-diagnostics strong {
+            overflow: hidden;
+            color: #344258;
+            font-size: 10.5px;
+            font-weight: 600;
+            line-height: 1.3;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .performance-mode-status { grid-column: 1 / -1; margin-top: 0; }
+        .performance-mode-badge.is-reduced {
+            border-color: rgba(59,130,246,.22);
+            background: rgba(239,246,255,.76);
+            color: #356AA6;
+        }
+
+        body.dark-mode .performance-mode-segmented {
+            border-color: rgba(148,163,184,.18);
+            background: rgba(15,23,42,.64);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+        }
+        body.dark-mode .performance-mode-choice { color: #9EABBC; }
+        body.dark-mode .performance-mode-choice:hover { color: #E2E8F0; }
+        body.dark-mode .performance-mode-choice[aria-pressed="true"] {
+            background: #263244;
+            color: #F4F7FB;
+            box-shadow: 0 3px 10px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.055);
+        }
+        body.dark-mode .performance-mode-choice[data-performance-choice="low"][aria-pressed="true"] { color: #F2CC84; }
+        body.dark-mode .performance-retest-btn {
+            border-color: #39475A;
+            background: rgba(15,23,42,.82);
+            color: #C0CAD7;
+        }
+        body.dark-mode .performance-retest-btn:hover:not(:disabled) { border-color: #526175; background: #1B2738; }
+        body.dark-mode .performance-mode-diagnostics > div {
+            border-color: rgba(148,163,184,.14);
+            background: rgba(15,23,42,.48);
+        }
+        body.dark-mode .performance-mode-diagnostics span { color: #758398; }
+        body.dark-mode .performance-mode-diagnostics strong { color: #C7D1DE; }
+        body.dark-mode .performance-mode-badge.is-reduced {
+            border-color: rgba(96,165,250,.20);
+            background: rgba(30,64,175,.18);
+            color: #A9CAFF;
+        }
+        @supports (content-visibility: auto) {
+            html[data-glass-performance="reduced"] .table-card,
+            html[data-glass-performance="low"] .table-card,
+            html[data-glass-performance="reduced"] .attendance-today-summary,
+            html[data-glass-performance="low"] .attendance-today-summary,
+            html[data-glass-performance="reduced"] .status-card,
+            html[data-glass-performance="low"] .status-card,
+            html[data-glass-performance="reduced"] .totals-pod-group,
+            html[data-glass-performance="low"] .totals-pod-group,
+            html[data-glass-performance="reduced"] .network-summary-card,
+            html[data-glass-performance="low"] .network-summary-card,
+            html[data-glass-performance="reduced"] .speedtest-card,
+            html[data-glass-performance="low"] .speedtest-card {
+                content-visibility: auto;
+                contain-intrinsic-size: auto 480px;
+            }
+            html[data-glass-performance="reduced"] .att-card,
+            html[data-glass-performance="low"] .att-card {
+                content-visibility: auto;
+                contain-intrinsic-size: auto 250px;
+            }
+            html[data-glass-performance="reduced"] #desktopTableContainer > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty),
+            html[data-glass-performance="low"] #desktopTableContainer > .desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty) {
+                content-visibility: auto;
+                contain-intrinsic-size: auto 52px;
+            }
+        }
+        html[data-page-visibility="hidden"] .band::before,
+        html[data-page-visibility="hidden"] .band-sky .band-cloud,
+        html[data-page-visibility="hidden"] .band-sky .band-star,
+        html[data-page-visibility="hidden"] .band-nebula,
+        html[data-page-visibility="hidden"] .band-wisp,
+        html[data-page-visibility="hidden"] .band-horizon,
+        html[data-page-visibility="hidden"] .band-shooting-star,
+        html[data-page-visibility="hidden"] .band-orb,
+        html[data-page-visibility="hidden"] .band-moonlight,
+        html[data-page-visibility="hidden"] .sync-dot,
+        html[data-page-visibility="hidden"] .stamp {
+            animation-play-state: paused !important;
+        }
+
+        html[data-glass-performance="low"] .performance-mode-choice,
+        html[data-glass-performance="low"] .performance-retest-btn { transition: background-color 110ms ease, color 110ms ease, border-color 110ms ease !important; }
+        html[data-glass-performance="low"] .performance-retest-btn:hover:not(:disabled) { transform: none !important; box-shadow: none !important; }
+
+        @media (max-width: 860px) {
+            .performance-mode-card-v14 { grid-template-columns: 1fr; }
+            .performance-mode-controls { justify-content: flex-start; }
+            .performance-mode-diagnostics { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        }
+        @media (max-width: 560px) {
+            .performance-mode-segmented { width: 100%; }
+            .performance-mode-controls { align-items: stretch; flex-direction: column; }
+            .performance-retest-btn { width: 100%; }
+            .performance-mode-diagnostics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .performance-mode-diagnostics > div:first-child { grid-column: 1 / -1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .performance-mode-choice,
+            .performance-retest-btn { transition: none !important; transform: none !important; }
+        }
+        .profile-health-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .profile-sync-card,
+        .profile-completeness-card {
+            min-width: 0;
+            padding: 12px 13px;
+            border: 1px solid rgba(148,163,184,.24);
+            border-radius: 12px;
+            background: rgba(255,255,255,.46);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.58);
+        }
+        .profile-health-kicker {
+            color: var(--muted);
+            font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+        }
+        .profile-sync-line,
+        .profile-completeness-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 6px;
+            color: var(--ink);
+            font-size: 12px;
+        }
+        .profile-completeness-head { justify-content: space-between; }
+        .profile-completeness-head .profile-health-kicker { margin: 0; }
+        .profile-sync-dot {
+            width: 8px;
+            height: 8px;
+            flex: 0 0 8px;
+            border-radius: 999px;
+            background: #94A3B8;
+            box-shadow: 0 0 0 3px rgba(148,163,184,.13);
+        }
+        .profile-sync-dot.is-synced { background: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,.13); }
+        .profile-sync-dot.is-pending { background: #F59E0B; box-shadow: 0 0 0 3px rgba(245,158,11,.14); }
+        .profile-sync-dot.is-device { background: #60A5FA; box-shadow: 0 0 0 3px rgba(96,165,250,.13); }
+        .profile-sync-dot.is-new { background: #94A3B8; }
+        .profile-health-detail {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.45;
+        }
+        .profile-completeness-track {
+            position: relative;
+            height: 6px;
+            margin-top: 9px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(148,163,184,.18);
+        }
+        .profile-completeness-track > span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #1D4ED8, #60A5FA);
+            transition: width 180ms cubic-bezier(.16,1,.3,1);
+        }
+        body.dark-mode .profile-sync-card,
+        body.dark-mode .profile-completeness-card {
+            border-color: rgba(148,163,184,.18);
+            background: rgba(15,23,42,.42);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+        }
+        body.dark-mode .profile-completeness-track { background: rgba(148,163,184,.15); }
+        html[data-glass-performance="low"] .profile-sync-card,
+        html[data-glass-performance="low"] .profile-completeness-card {
+            background: rgba(248,250,252,.96);
+            box-shadow: none;
+        }
+        html[data-glass-performance="low"] body.dark-mode .profile-sync-card,
+        html[data-glass-performance="low"] body.dark-mode .profile-completeness-card {
+            background: rgba(15,23,42,.95);
+        }
+        html[data-glass-performance="low"] .profile-completeness-track > span { transition: none !important; }
+        @media (prefers-reduced-motion: reduce) {
+            .profile-completeness-track > span { transition: none !important; }
+        }
+        @media (max-width: 560px) {
+            .profile-health-grid { grid-template-columns: 1fr; }
+        }
+        .profile-field select {
+            width: 100%; min-height: 42px; padding: 9px 11px;
+            border: 1px solid var(--line); border-radius: 10px;
+            background: var(--card); color: var(--ink);
+            font: 500 13px/1.3 'Plus Jakarta Sans', Inter, sans-serif;
+            outline: none;
+        }
+        .profile-field select:focus {
+            border-color: #93C5FD;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.10);
+        }
+        .profile-label-optional { color: var(--muted); font-weight: 600; letter-spacing: 0; text-transform: none; }
+        .profile-gender-custom { margin-top: 8px; }
+        .profile-gender-custom[hidden] { display: none !important; }
+        .profile-field-note { display: block; margin-top: 6px; color: var(--muted); font-size: 10.5px; line-height: 1.45; }
+
+        .profile-photo-crop-overlay {
+            position: fixed; inset: 0; z-index: 6200; display: none;
+            align-items: center; justify-content: center; padding: 18px;
+            background: rgba(3, 7, 18, .78);
+        }
+        .profile-photo-crop-overlay.open { display: flex; }
+        .profile-photo-crop-card {
+            width: min(100%, 520px); max-height: min(92dvh, 760px); overflow: auto;
+            border: 1px solid rgba(255,255,255,.16); border-radius: 22px;
+            background: rgba(15,23,42,.98); color: #F8FAFC;
+            box-shadow: 0 28px 80px rgba(0,0,0,.42); padding: 20px;
+        }
+        .profile-photo-crop-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+        .profile-photo-crop-head h3 { margin: 3px 0 0; font-size: 22px; letter-spacing: -.02em; }
+        .profile-photo-crop-close {
+            width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14);
+            background: rgba(255,255,255,.06); color: #F8FAFC; font-size: 24px; line-height: 1; cursor: pointer;
+        }
+        .profile-photo-crop-help { margin: 12px 0 16px; color: #CBD5E1; font-size: 12px; line-height: 1.55; }
+        .profile-photo-crop-stage {
+            position: relative; width: min(100%, 360px); aspect-ratio: 1; margin: 0 auto;
+            overflow: hidden; border-radius: 22px; background: #020617;
+            border: 1px solid rgba(255,255,255,.16); touch-action: none; user-select: none;
+        }
+        .profile-photo-crop-stage canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+        .profile-photo-crop-stage canvas.is-dragging { cursor: grabbing; }
+        .profile-photo-crop-ring {
+            position: absolute; inset: 8%; border: 2px solid rgba(255,255,255,.72); border-radius: 50%;
+            box-shadow: 0 0 0 999px rgba(2,6,23,.16); pointer-events: none;
+        }
+        .profile-photo-crop-zoom { display: flex; justify-content: space-between; gap: 12px; margin: 17px 2px 7px; color: #CBD5E1; font-size: 11px; }
+        .profile-photo-crop-zoom strong { color: #F8FAFC; font-family: 'IBM Plex Mono', monospace; }
+        .profile-photo-crop-range { width: 100%; accent-color: #D6B36A; }
+        .profile-photo-crop-actions { display: flex; align-items: center; gap: 9px; margin-top: 18px; }
+        .profile-photo-crop-spacer { flex: 1; }
+        .profile-photo-crop-card .profile-cancel-btn { background: rgba(255,255,255,.07); color: #E2E8F0; border-color: rgba(255,255,255,.15); }
+        .profile-photo-crop-card .profile-save-btn { background: #E3C27D; color: #111827; border-color: #E3C27D; }
+
+        body.dark-mode .profile-field select { background: var(--card); color: var(--ink); }
+        html[data-glass-performance="low"] .profile-photo-crop-overlay { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        html[data-glass-performance="low"] .profile-photo-crop-card { box-shadow: 0 16px 42px rgba(0,0,0,.34); }
+        html[data-glass-performance="low"] .profile-photo-crop-close,
+        html[data-glass-performance="low"] .profile-photo-crop-card button { transition: none !important; will-change: auto !important; transform: none !important; }
+        @media (max-width: 560px) {
+            .profile-photo-crop-overlay { padding: 8px; }
+            .profile-photo-crop-card { padding: 16px; border-radius: 16px; }
+            .profile-photo-crop-stage { width: min(100%, 320px); }
+            .profile-photo-crop-actions { flex-wrap: wrap; }
+            .profile-photo-crop-spacer { display: none; }
+            .profile-photo-crop-actions button { flex: 1 1 30%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .profile-photo-crop-card, .profile-photo-crop-card * { transition: none !important; animation: none !important; }
+        }
+    

@@ -1,0 +1,733 @@
+/* TrinoTime v1.1.128 RC13 — Profile Experience Redesign
+   Presentation-only profile modernization. Authoritative profile, privacy,
+   workforce identity, attendance, and session logic remain unchanged. */
+
+#agentProfileOverlay[data-profile-experience="rc13"] > .agent-profile-modal {
+  width: min(1160px, calc(100vw - 32px));
+  max-width: 1160px;
+  max-height: calc(100dvh - 28px);
+  padding: 0;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-modal-head {
+  position: relative;
+  z-index: 40;
+  min-height: 78px;
+  padding: 16px 20px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(15,23,42,.045);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-modal-title {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-modal-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .context-help-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .context-help-btn,
+#agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-close-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-shell {
+  max-height: calc(100dvh - 108px);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-detail {
+  max-height: calc(100dvh - 108px);
+  padding: clamp(16px, 2.1vw, 28px);
+  background: color-mix(in srgb, var(--paper) 62%, var(--card));
+  overscroll-behavior: contain;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-shell {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-identity {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 22px;
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 16%, var(--line));
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--accent-blue) 10%, transparent), transparent 38%),
+    linear-gradient(135deg, color-mix(in srgb, var(--card) 96%, var(--accent-blue-dim)), var(--card));
+  box-shadow: 0 14px 34px rgba(15,23,42,.07);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-avatar-wrap .profile-avatar {
+  width: 96px;
+  height: 96px;
+  border: 4px solid var(--card);
+  box-shadow: 0 8px 24px rgba(15,23,42,.14), 0 0 0 1px color-mix(in srgb, var(--accent-blue) 18%, var(--line));
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-presence {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--card);
+  border-radius: 999px;
+  background: #94A3B8;
+  box-shadow: 0 0 0 1px rgba(15,23,42,.08);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-presence.is-online {
+  background: #22C55E;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-presence.is-unavailable {
+  background: #94A3B8;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  font: 800 11px/1.2 'IBM Plex Mono', monospace;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-public-name {
+  margin: 0;
+  font-size: clamp(25px, 3vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+  color: var(--ink-dark);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 9px;
+  min-width: 0;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-chip,
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-email {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 12.5px;
+  font-weight: 750;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-chip.is-role {
+  color: var(--accent-blue);
+  border-color: color-mix(in srgb, var(--accent-blue) 28%, var(--line));
+  background: var(--accent-blue-dim);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-email.is-muted,
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-official {
+  color: var(--muted);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-official {
+  display: block;
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-hero-status {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-status-pill {
+  min-height: 30px;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-hero-actions {
+  align-self: start;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-edit-btn {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-health-grid {
+  gap: 12px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-sync-card,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-completeness-card {
+  min-height: 118px;
+  padding: 16px 17px;
+  border-radius: 17px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 22px rgba(15,23,42,.045);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-health-kicker {
+  font-size: 11px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-sync-line strong,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-completeness-head strong {
+  font-size: 15px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-health-detail {
+  margin-top: 7px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 24;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: 0 9px 24px rgba(15,23,42,.07);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-tabs .mytrino-tab {
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  min-height: 55px;
+  padding: 8px 11px;
+  border-radius: 11px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-tabs .mytrino-tab small {
+  color: inherit;
+  opacity: .72;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-section {
+  gap: 15px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-card {
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 9px 26px rgba(15,23,42,.045);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-card h4 {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-card-head {
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-card-head p {
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-kicker {
+  margin-bottom: 5px;
+  font-size: 10.5px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-btn {
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 11px;
+  font-size: 12.5px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-about-list {
+  display: grid;
+  gap: 9px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-about-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 65px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-about-row span:first-child,
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-work-profile-grid > div > span,
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-summary > div > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 650;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-about-row strong {
+  display: block;
+  color: var(--ink-dark);
+  font-size: 13.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 29px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge.is-team {
+  color: #166534;
+  background: #F0FDF4;
+  border-color: #BBF7D0;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge.is-private,
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge.is-locked {
+  color: #475569;
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-membership-list .mytrino-definition-row,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-definition-row {
+  min-height: 50px;
+  padding: 11px 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-definition-row dt {
+  font-size: 12px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-definition-row dd {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-stat-grid {
+  gap: 9px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-stat {
+  min-height: 70px;
+  padding: 11px 12px;
+  border-radius: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-stat span {
+  font-size: 11px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-stat strong {
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-week-metric {
+  padding: 12px 8px;
+  border-radius: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-week-metric strong {
+  font-size: 18px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-week-metric span,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-issue-row,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-note {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-work-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-work-profile-grid > div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-work-profile-grid strong {
+  color: var(--ink-dark);
+  font-size: 13.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-tag {
+  min-height: 28px;
+  padding: 5px 9px;
+  font-size: 11.5px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-summary > div {
+  display: grid;
+  align-content: space-between;
+  gap: 8px;
+  min-height: 84px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-completion-nudge {
+  min-height: 64px;
+  padding: 11px 13px;
+  border-radius: 14px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-completion-copy strong {
+  font-size: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-completion-copy span {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-field {
+  gap: 6px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-field label,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-switch-copy strong,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-row strong {
+  font-size: 12.5px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-field small,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-switch-copy small,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-row small {
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-field input,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-field select,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-field textarea,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-row select {
+  min-height: 46px;
+  padding: 9px 11px;
+  border-radius: 11px;
+  font-size: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-switch-row,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-check,
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-row {
+  min-height: 58px;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-lock {
+  font-size: 11px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-subhead {
+  margin: 3px 0 8px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-privacy-note {
+  display: grid;
+  gap: 4px;
+  padding: 12px 13px;
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 22%, var(--line));
+  border-radius: 13px;
+  background: var(--accent-blue-dim);
+  color: var(--ink);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-privacy-note strong {
+  font-size: 12.5px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-privacy-note span {
+  color: var(--muted);
+  font-size: 11.8px;
+  line-height: 1.5;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .rc13-security-actions {
+  margin-top: 13px;
+}
+
+/* Existing authoritative edit form: presentation upgrades only. */
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-edit-panel {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 9px 26px rgba(15,23,42,.045);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-edit-photo-row {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-photo-hint,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-field-note,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-char-count,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-draft-status,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-privacy-warning {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-field label {
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-field input,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-field select,
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-field textarea {
+  min-height: 46px;
+  border-radius: 11px;
+  font-size: 13px;
+}
+
+#agentProfileOverlay[data-profile-experience="rc13"] .profile-field textarea {
+  min-height: 96px;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-detail {
+  background: #0E1420;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-identity,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .profile-sync-card,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .profile-completeness-card,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-card,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-tabs,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .profile-edit-panel {
+  background: #151B26;
+  border-color: #334155;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-about-row,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-work-profile-grid > div,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-summary > div,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .profile-edit-photo-row {
+  background: #111827;
+  border-color: #334155;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-chip,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-email {
+  background: #111827;
+  border-color: #334155;
+  color: #E5E7EB;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-chip.is-role {
+  color: #93C5FD;
+  background: #172A46;
+  border-color: #1E40AF;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge.is-team {
+  color: #86EFAC;
+  background: #12301F;
+  border-color: #166534;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge.is-private,
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge.is-locked {
+  color: #CBD5E1;
+  background: #1E293B;
+  border-color: #475569;
+}
+
+body.dark-mode #agentProfileOverlay[data-profile-experience="rc13"] .rc13-privacy-note {
+  background: #172A46;
+  border-color: #1E40AF;
+}
+
+@media (max-width: 900px) {
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-identity {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-hero-actions {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-hero-actions .profile-edit-btn {
+    width: 100%;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  #agentProfileOverlay[data-profile-experience="rc13"] {
+    padding: 8px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] > .agent-profile-modal {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    border-radius: 18px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-modal-head {
+    min-height: 70px;
+    padding: 13px 14px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-modal-sub {
+    display: none;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-shell,
+  #agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-detail {
+    max-height: calc(100dvh - 86px);
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .agent-profile-detail {
+    padding: 12px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-identity {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 17px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-avatar-wrap .profile-avatar {
+    width: 84px;
+    height: 84px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    top: 0;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-tabs .mytrino-tab {
+    min-height: 50px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-card {
+    padding: 14px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-about-row {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-badge {
+    justify-self: start;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-work-profile-grid,
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-visibility-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  #agentProfileOverlay[data-profile-experience="rc13"] .profile-public-name {
+    font-size: 26px;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-meta {
+    align-items: stretch;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-chip,
+  #agentProfileOverlay[data-profile-experience="rc13"] .rc13-profile-email {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-week-metrics,
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-form-grid,
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-columns,
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-row {
+    grid-template-columns: 1fr;
+  }
+  #agentProfileOverlay[data-profile-experience="rc13"] .mytrino-privacy-lock {
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #agentProfileOverlay[data-profile-experience="rc13"] *,
+  #agentProfileOverlay[data-profile-experience="rc13"] *::before,
+  #agentProfileOverlay[data-profile-experience="rc13"] *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}

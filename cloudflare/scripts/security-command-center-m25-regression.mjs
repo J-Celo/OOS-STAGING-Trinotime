@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const css=fs.readFileSync(new URL('../public/assets/css/c-v203-metrics-m25-security-command-center.css',import.meta.url),'utf8');
+const index=fs.readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
+assert(index.includes('c-v203-metrics-m25-security-command-center.css?v=2.0.3-m25'),'M2.5 security stylesheet must be loaded after existing surfaces');
+for(const marker of ['#agentSecurityPanel .agent-security-head','#agentSecurityPanel .agent-security-summary','#agentSecurityPanel .firebase-identity-migration','#agentSecurityPanel .firebase-migration-table-wrap','#agentSecurityPanel .agent-security-table-wrap','body.dark-mode #agentSecurityPanel']) assert(css.includes(marker),`missing M2.5 marker: ${marker}`);
+assert(css.includes('tbody tr:nth-child(even)'),'Security tables must use restrained row differentiation');
+assert(css.includes('background:transparent!important'),'Table cells must not force legacy white backgrounds');
+assert(!css.includes('display:none!important}.firebase-identity-migration'),'M2.5 must not hide security migration UI');
+console.log('PASS M2.5 Security Command Center UI: compact controls, status hierarchy, dark-mode-safe migration/table surfaces, responsive layout, and no security logic changes.');

@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const worker=read('../src/worker.js');
+const client=read('../public/assets/js/j-coverage-dashboard-rc20.js');
+const css=read('../public/assets/css/c-coverage-dashboard-v1.css');
+const html=read('../public/index.html');
+const must=(ok,msg)=>{if(!ok){console.error('FAIL — '+msg);process.exitCode=1}else console.log('PASS — '+msg)};
+must(worker.includes('coverageSafeSignedCountServer')&&worker.includes('coverageSubmittedBreakdownServer'),'server has bounded signed manual-submission sanitizer');
+must(worker.includes('submittedManualAdjustment: submitted.manual')&&worker.includes('submittedDisplayTotal: submitted.total'),'server derives and persists manual adjustment plus display total from confirmed count');
+must(worker.includes("coverageSafeSignedCountServer(row.submittedManualAdjustment,-coverageSafeCountServer(row.submitted),100000)"),'dashboard rows clamp negative manual corrections so displayed Submitted cannot drop below zero');
+must(worker.includes('sum.submitted += Number(row.submittedDisplayTotal)')&&worker.includes('sum.submittedConfirmed += Number(row.submitted)'),'organization totals use adjusted display total while preserving confirmed submissions separately');
+must(worker.includes('group.totals.submittedManualAdjustment+=Number(row.submittedManualAdjustment)'),'POD totals retain auditable manual-adjustment totals');
+must(client.includes('submittedTotal = row')&&client.includes('submittedBreakdown = row'),'Coverage client has explicit confirmed/manual/total presentation helpers');
+must(client.includes('tt-coverage-submitted-cell')&&client.includes('Manual adjustment'),'Agent table/detail surfaces expose manual corrections instead of disguising them as confirmed tasks');
+must(client.includes('submittedConfirmed')&&client.includes('submittedManualAdjustment'),'summary cards distinguish confirmed and manual submission components');
+must(css.includes('RC9 — auditable manual Submitted corrections'),'RC9 manual-correction styling is present');
+must(html.includes('coverage-rc23'),'RC23 Coverage assets are cache-busted');
+if(process.exitCode)process.exit(process.exitCode);

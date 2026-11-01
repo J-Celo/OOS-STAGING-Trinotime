@@ -1,0 +1,44 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {webcrypto} from 'node:crypto';
+const source=fs.readFileSync(new URL('../src/worker.js',import.meta.url),'utf8');
+let now=Date.now();class Clock extends Date{constructor(...a){super(...(a.length?a:[now]));}static now(){return now;}}
+const members=[{role:'agent',name:'Recovery Agent',pod:'pod1'},{role:'agent',name:'Other Agent',pod:'pod2'},{role:'team_leader',name:'Leader',pod:'pod1'}];
+const store=new Map(),versions=new Map();let failWrite=false,writeCount=0;
+const put=(p,v)=>{store.set(p,structuredClone(v));versions.set(p,(versions.get(p)||0)+1);writeCount++;};
+const get=p=>{if(p==='secureCredentials'){const root={};for(const [k,v]of store){if(k.startsWith(p+'/')){const [,a,b]=k.split('/');(root[a]||={})[b]=v;}}return structuredClone(root);}return structuredClone(store.get(p)??null);};
+const etag=p=>store.has(p)?String(versions.get(p)):'null_etag';
+const c=vm.createContext({URL,Request,Response,Headers,crypto:webcrypto,TextEncoder,TextDecoder,btoa,atob,console,Date:Clock,createRemoteJWKSet:()=>({}),members,io:{get:async(e,p)=>get(p),getTag:async(e,p)=>({value:get(p),etag:etag(p)}),setTag:async(e,p,v,t)=>{if(failWrite)throw new Error('storage unavailable');if(etag(p)!==t)return {preconditionFailed:true};put(p,v);return {committed:true};}}});
+vm.runInContext(source.replace(/^import .*;\n/gm,'').replace('export default {','const workerDefault = {').replace('export class ChatRealtimeHub','class ChatRealtimeHub')+`
+firebaseAdminGet=io.get;firebaseAdminGetWithEtag=io.getTag;firebaseAdminSetIfMatch=io.setTag;
+readDirectory=async()=>members;
+requireActiveAdminUser=async req=>{if(req.headers.get('authorization')!=='Bearer fixture-admin')fail(403,'DENIED','Denied');return {user:{uid:'admin'}};};
+verifyCompactToken=async(env,token)=>{if(token==='fixture-tl')return members[2];if(token==='fixture-agent')return members[0];fail(403,'DENIED','Denied');};
+requireCurrentSecurityActor=async(env,actor)=>({member:actor});
+globalThis.test={handleSecurityCredentialRequestReset,handleSecurityCredentialList,handleSecurityCredentialIssueTemp,credentialVaultPath,credentialPendingResetRequest};`,c);
+const t=c.test;const req=(body={},headers={})=>new Request('https://fixture.test/',{method:'POST',headers:{'content-type':'application/json','cf-connecting-ip':'192.0.2.1',...headers},body:JSON.stringify(body)});
+const target={name:members[0].name,pod:'pod1'},vp=t.credentialVaultPath('agent',target.name);
+const credential={hash:'fixture-existing-hash',salt:'fixture-existing-salt',active:true,isDefault:false,passwordChangedAt:new Date(now-86400000).toISOString()};put(vp,credential);
+const result=await t.handleSecurityCredentialRequestReset(req(target),{});assert.equal(result.ok,true);assert(!('temporaryPassword' in result));assert.deepEqual(get(vp),credential);
+let before=writeCount;await t.handleSecurityCredentialRequestReset(req(target),{});assert.equal(writeCount,before,'Repeated request is idempotent during durable cooldown');
+const invalid=await t.handleSecurityCredentialRequestReset(req({name:'Not a member',pod:'pod1'}),{});assert.equal(invalid.message,result.message);assert.equal(writeCount,before);
+const wrongPod=await t.handleSecurityCredentialRequestReset(req({...target,pod:'pod2'}),{});assert.equal(wrongPod.message,result.message);assert.equal(writeCount,before);
+let list=await t.handleSecurityCredentialList(req({}, {authorization:'Bearer fixture-admin'}),{});assert(list.credentials.find(x=>x.name===target.name).passwordResetRequestedAt);
+list=await t.handleSecurityCredentialList(req({}, {'x-tt-security-session':'fixture-tl'}),{});assert.equal(list.credentials.length,1);assert.equal(list.credentials[0].name,target.name);assert(list.credentials[0].passwordResetRequestedAt);
+assert(!('hash' in list.credentials[0].credential));assert(!('salt' in list.credentials[0].credential));
+await assert.rejects(()=>t.handleSecurityCredentialList(req(),{}));await assert.rejects(()=>t.handleSecurityCredentialList(req({}, {'x-tt-security-session':'fixture-agent'}),{}));
+await assert.rejects(()=>t.handleSecurityCredentialIssueTemp(req({role:'agent',...target}),{}));
+await t.handleSecurityCredentialRequestReset(req(target),{});await assert.rejects(()=>t.handleSecurityCredentialRequestReset(req(target),{}),e=>e.status===429);
+console.log('PASS recovery: request preserves password, returns no secret, deduplicates, rejects unknown/wrong POD silently, scopes TL/Admin visibility, blocks unauthorized reset, rate limits');
+now+=1000;put(vp,{...credential,resetAt:new Date(now).toISOString(),isDefault:true});list=await t.handleSecurityCredentialList(req({}, {authorization:'Bearer fixture-admin'}),{});assert.equal(list.credentials.find(x=>x.name===target.name).passwordResetRequestedAt,null);
+now+=16*60*1000;failWrite=true;await assert.rejects(()=>t.handleSecurityCredentialRequestReset(req(target),{}));failWrite=false;
+assert.equal(t.credentialPendingResetRequest({}, {requestedAt:now-8*86400000}),null);
+console.log('PASS recovery synchronization: completed resets clear request badge; failed storage never reports success; old requests expire');
+// Exercise actual login recovery controller with a minimal UI and asynchronous API.
+const uiSource=fs.readFileSync(new URL('../public/assets/js/j-b52f8ff97ca5.js',import.meta.url),'utf8');
+const functions=uiSource.slice(uiSource.indexOf('        function setAgentLoginRecoveryMode('),uiSource.indexOf('        function openAgentLoginOverlay('));
+const els=Object.fromEntries(['agentRecoveryPanel','agentForgotPasswordBtn','agentLoginPassword','agentLoginPasswordLabel','agentLoginSubmitBtn','agentRecoveryStatus','agentLoginError','agentRecoveryRequestBtn','agentLoginName'].map(id=>[id,{value:'',textContent:'',attrs:{},setAttribute(k,v){this.attrs[k]=v;},classList:{remove(){}},focus(){this.focused=true;}}]));els.agentLoginName.value=target.name;
+let calls=0,resolve;const ui=vm.createContext({$:id=>els[id],securityApiRequest:async()=>{calls++;return await new Promise(r=>resolve=r);},getErrorMessage:e=>e.message,pendingAgentLoginPod:'pod1',lockedPod:null,activePod:'pod1'});
+vm.runInContext('let agentLoginRecoveryMode=false,agentRecoveryRequestBusy=false,agentRecoveryViewRevision=0;'+functions+'globalThis.test={setAgentLoginRecoveryMode,requestAgentPasswordReset};',ui);
+ui.test.setAgentLoginRecoveryMode(true);assert.equal(els.agentRecoveryPanel.hidden,false);assert.equal(els.agentLoginSubmitBtn.textContent,'Continue to new password');
+let pending=ui.test.requestAgentPasswordReset();await ui.test.requestAgentPasswordReset();assert.equal(calls,1);resolve({message:'Request saved'});await pending;assert.equal(els.agentRecoveryStatus.textContent,'Request saved');
+pending=ui.test.requestAgentPasswordReset();ui.test.setAgentLoginRecoveryMode(false);resolve({message:'Stale reply'});await pending;assert.equal(els.agentRecoveryStatus.textContent,'');assert.equal(els.agentLoginPassword.value,'');assert.equal(els.agentForgotPasswordBtn.textContent,'Forgot password?');
+console.log('PASS recovery UI: mode toggle, temporary-password continuation, duplicate submission guard, stale response isolation, password clearing');

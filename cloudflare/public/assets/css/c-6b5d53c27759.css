@@ -1,0 +1,630 @@
+/* TrinoTime v1.0.59 — Premium Welcome refinement.
+   Presentation-only. Keeps portal selection, authentication, App Check, presence,
+   attendance, trusted time, notifications, and all runtime handlers unchanged. */
+
+:root{
+  --tt-welcome-ink:#171A1F;
+  --tt-welcome-muted:#69727E;
+  --tt-welcome-gold:#B88424;
+  --tt-welcome-gold-deep:#8E5F12;
+  --tt-welcome-champagne:#E6C26A;
+  --tt-welcome-obsidian:#11151C;
+  --tt-welcome-obsidian-soft:#171C24;
+  --tt-welcome-pearl:#FCFBF8;
+}
+
+/* Atmosphere: preserve the cloud imagery, but give it a more cinematic pearl / steel grade. */
+.gate-overlay[data-gate-step='welcome']{
+  background:#D8E3EC!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-cloudscape{
+  background:#BFCFDD!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-cloud-layer{
+  filter:saturate(.82) contrast(1.04) brightness(.98)!important;
+}
+.gate-overlay[data-gate-step='welcome']::before{
+  background:
+    linear-gradient(108deg,rgba(239,243,245,.42) 0%,rgba(242,244,245,.18) 35%,rgba(218,227,235,.04) 62%,rgba(195,209,221,.17) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.10),rgba(31,47,65,.10))!important;
+}
+.gate-overlay[data-gate-step='welcome']::after{
+  background:
+    radial-gradient(circle at 18% 23%,rgba(255,247,226,.42),transparent 30%),
+    radial-gradient(circle at 78% 35%,rgba(225,233,240,.16),transparent 32%),
+    linear-gradient(180deg,transparent 54%,rgba(42,58,75,.10))!important;
+}
+
+/* Main pearl frame: crisper edge, deeper shadow, restrained champagne light. */
+.gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+  isolation:isolate!important;
+  border:1px solid rgba(255,255,255,.84)!important;
+  background:
+    linear-gradient(118deg,rgba(255,255,255,.955) 0%,rgba(252,252,250,.925) 43%,rgba(246,248,249,.875) 72%,rgba(249,244,232,.82) 100%)!important;
+  box-shadow:
+    0 36px 90px rgba(44,59,73,.15),
+    0 9px 24px rgba(44,59,73,.07),
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 0 0 1px rgba(180,132,36,.045)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-glass::before{
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  border-radius:inherit!important;
+  padding:1px!important;
+  background:linear-gradient(125deg,rgba(255,255,255,.98) 0%,rgba(202,155,61,.22) 26%,rgba(255,255,255,.36) 54%,rgba(172,192,209,.22) 78%,rgba(255,255,255,.82) 100%)!important;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;
+  -webkit-mask-composite:xor!important;
+  mask-composite:exclude!important;
+  pointer-events:none!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-glass::after{
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(circle at 83% 41%,rgba(201,154,58,.125) 0%,rgba(201,154,58,.055) 20%,transparent 42%),
+    radial-gradient(circle at 8% 98%,rgba(126,154,177,.09),transparent 29%),
+    linear-gradient(90deg,rgba(255,255,255,.14),transparent 46%,rgba(255,255,255,.08))!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-glass>*{position:relative!important;z-index:1!important}
+
+/* Brand treatment: metallic Trino with a clean onyx Time wordmark. */
+.gate-overlay[data-gate-step='welcome'] .trino-brand{gap:12px!important}
+.gate-overlay[data-gate-step='welcome'] .gate-brand-mark{
+  width:38px!important;
+  height:38px!important;
+  border:1px solid rgba(171,119,24,.18)!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,#FFF8E5 0%,#F4D991 48%,#DDAE48 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 8px 22px rgba(125,82,11,.16)!important;
+  color:#8A5810!important;
+  font-weight:700!important;
+}
+.gate-overlay[data-gate-step='welcome'] .trino-brand-text{
+  font-size:clamp(23px,1.85vw,29px)!important;
+  font-weight:700!important;
+  letter-spacing:-.06em!important;
+  background:linear-gradient(108deg,#86530A 0%,#C48C26 24%,#F0D58D 43%,#A96E12 63%,#D8A746 82%,#87520A 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  color:transparent!important;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.74))!important;
+}
+.gate-overlay[data-gate-step='welcome'] .trino-brand-text .accent{
+  background:none!important;
+  color:#1E2228!important;
+  -webkit-text-fill-color:#1E2228!important;
+}
+
+/* Navigation is quieter and more editorial. */
+.gate-overlay[data-gate-step='welcome'] .gate-hero-nav-meta{gap:16px!important}
+.gate-overlay[data-gate-step='welcome'] .gate-step-indicator{
+  color:#8B949F!important;
+  font-size:9px!important;
+  letter-spacing:.018em!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-step-indicator>span b{
+  color:#A7771C!important;
+  font-weight:700!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-step-indicator>i{
+  width:27px!important;
+  background:linear-gradient(90deg,rgba(184,132,36,.42),rgba(154,166,178,.18))!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-version-pill{
+  min-height:34px!important;
+  padding:0 13px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  border:1px solid rgba(150,160,171,.18)!important;
+  background:rgba(255,255,255,.68)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 8px 20px rgba(44,59,73,.045)!important;
+  color:#707986!important;
+  font-weight:500!important;
+}
+
+/* Hero hierarchy: more confident scale and luxury editorial spacing. */
+.gate-overlay[data-gate-step='welcome'] .gate-hero-copy{
+  width:min(100%,730px)!important;
+  padding-left:2px!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-mark-shell{
+  position:relative!important;
+  width:60px!important;
+  height:60px!important;
+  border:1px solid rgba(177,130,36,.18)!important;
+  border-radius:19px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(250,244,229,.76))!important;
+  box-shadow:0 16px 38px rgba(49,62,76,.10),inset 0 1px 0 rgba(255,255,255,1)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-mark-shell::after{
+  content:'';
+  position:absolute;
+  inset:-6px;
+  border:1px solid rgba(184,132,36,.10);
+  border-radius:24px;
+  pointer-events:none;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-kicker{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin-top:20px!important;
+  color:#906016!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.12em!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-kicker::before{
+  content:'';
+  width:24px;
+  height:1px;
+  background:linear-gradient(90deg,#B88424,rgba(184,132,36,.18));
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-title{
+  max-width:720px!important;
+  margin-top:15px!important;
+  color:var(--tt-welcome-ink)!important;
+  font-size:clamp(43px,4.15vw,66px)!important;
+  font-weight:600!important;
+  line-height:.92!important;
+  letter-spacing:-.055em!important;
+  text-wrap:balance;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-title span{display:block!important}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-title em{
+  display:block!important;
+  margin-top:4px!important;
+  color:#626975!important;
+  font-family:'Source Serif 4',Georgia,serif!important;
+  font-weight:500!important;
+  letter-spacing:-.045em!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.84)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-lede{
+  max-width:650px!important;
+  color:#66717E!important;
+  font-size:clamp(12px,.98vw,14px)!important;
+  line-height:1.68!important;
+  letter-spacing:-.008em!important;
+}
+
+/* Premium primary action: obsidian body, champagne edge, gold jewel icon. */
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta{
+  min-width:220px!important;
+  min-height:58px!important;
+  padding:9px 9px 9px 20px!important;
+  border:1px solid rgba(201,157,67,.44)!important;
+  background:linear-gradient(135deg,#22262D 0%,#15191F 58%,#0E1217 100%)!important;
+  box-shadow:0 18px 38px rgba(26,30,36,.22),inset 0 1px 0 rgba(255,255,255,.11),inset 0 0 0 1px rgba(0,0,0,.18)!important;
+  color:#FFFDF7!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta::before{
+  background:linear-gradient(115deg,rgba(239,211,140,.44),rgba(255,255,255,.12) 26%,transparent 48%,rgba(201,153,55,.12) 82%,rgba(239,211,140,.28))!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-cta:hover{
+  transform:translateY(-2px)!important;
+  border-color:rgba(220,180,95,.66)!important;
+  background:linear-gradient(135deg,#272B32 0%,#171B21 58%,#101419 100%)!important;
+  box-shadow:0 22px 44px rgba(26,30,36,.27),0 0 0 4px rgba(184,132,36,.055),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-copy strong{
+  color:#FFFDF7!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  letter-spacing:-.015em!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-copy small{
+  margin-top:3px!important;
+  color:rgba(238,235,226,.64)!important;
+  font-size:8.5px!important;
+  letter-spacing:.01em!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-enter-icon{
+  width:40px!important;
+  height:40px!important;
+  border:1px solid rgba(255,246,218,.44)!important;
+  background:linear-gradient(145deg,#F2D47F,#C58A24)!important;
+  color:#1D1B16!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 5px 14px rgba(0,0,0,.19)!important;
+}
+
+.gate-overlay[data-gate-step='welcome'] .gate-hero-pills{gap:8px!important}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-pills span{
+  padding:8px 12px!important;
+  border-color:rgba(139,151,163,.17)!important;
+  background:rgba(255,255,255,.54)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96)!important;
+  color:#6A7480!important;
+  font-size:8.3px!important;
+  font-weight:500!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-hero-pills span::before{
+  background:linear-gradient(180deg,rgba(255,255,255,.82),transparent 48%,rgba(187,139,43,.06))!important;
+}
+
+/* The live card becomes the focal luxury object: obsidian + subtle champagne glow. */
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+  overflow:hidden!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  isolation:isolate!important;
+  border:1px solid rgba(220,181,97,.24)!important;
+  background:
+    radial-gradient(circle at 87% 9%,rgba(207,163,72,.18),transparent 31%),
+    linear-gradient(145deg,#1A1F27 0%,#12171E 52%,#0C1015 100%)!important;
+  box-shadow:
+    0 28px 60px rgba(30,38,47,.25),
+    0 8px 18px rgba(30,38,47,.12),
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 0 0 1px rgba(0,0,0,.18)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry::before{
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  width:auto!important;
+  height:auto!important;
+  border-radius:inherit!important;
+  filter:none!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  background:
+    linear-gradient(115deg,rgba(244,216,148,.10),transparent 28%),
+    radial-gradient(circle at 12% 90%,rgba(98,126,151,.10),transparent 28%)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry::after{
+  content:''!important;
+  position:absolute!important;
+  top:0!important;
+  left:22px!important;
+  right:22px!important;
+  bottom:auto!important;
+  width:auto!important;
+  height:1px!important;
+  z-index:1!important;
+  background:linear-gradient(90deg,transparent,rgba(232,197,118,.72),transparent)!important;
+  opacity:.72!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-telemetry>*{position:relative!important;z-index:2!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-label{
+  color:#E3BB64!important;
+  letter-spacing:.14em!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-label::before{
+  background:#E1AF42!important;
+  box-shadow:0 0 0 4px rgba(225,175,66,.10),0 0 14px rgba(225,175,66,.24)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-sync{
+  border:1px solid rgba(89,202,139,.22)!important;
+  background:rgba(57,151,101,.10)!important;
+  color:#78D4A4!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-sync[data-state='verified']{
+  border-color:rgba(89,202,139,.24)!important;
+  background:rgba(57,151,101,.11)!important;
+  color:#7AD8A7!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock strong{
+  color:#F5F3EE!important;
+  font-weight:500!important;
+  text-shadow:0 1px 18px rgba(0,0,0,.18)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock span{color:#D9A741!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-date{color:#99A4B0!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-divider{
+  background:linear-gradient(90deg,rgba(226,187,103,.33),rgba(255,255,255,.07),transparent)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-stat{
+  border:1px solid rgba(255,255,255,.075)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.025))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-stat small{color:#8E99A6!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-stat strong{color:#F1EFE9!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-stat span{color:#8F99A5!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-foot{color:#858F9B!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-foot::before{
+  background:rgba(205,163,76,.13)!important;
+  color:#DFB75F!important;
+  box-shadow:inset 0 0 0 1px rgba(222,181,93,.12)!important;
+}
+
+/* Footer remains understated and jewelry-like when viewport height allows it. */
+.gate-overlay[data-gate-step='welcome'] .gate-vision-block>span{color:#9A8B6A!important}
+.gate-overlay[data-gate-step='welcome'] .gate-vision-block p{color:#3A4048!important}
+.gate-overlay[data-gate-step='welcome'] .gate-vision-block em{color:#956316!important}
+.gate-overlay[data-gate-step='welcome'] .gate-author-line{color:#9AA2AC!important}
+.gate-overlay[data-gate-step='welcome'] .gate-author-line i{background:linear-gradient(90deg,transparent,rgba(184,132,36,.34),transparent)!important}
+.gate-overlay[data-gate-step='welcome'] .gate-author-line strong{color:#8D6018!important;letter-spacing:.17em!important}
+
+/* Dark appearance stays cohesive rather than reverting the landing page to a mixed palette. */
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+  border-color:rgba(222,183,98,.14)!important;
+  background:linear-gradient(125deg,rgba(17,22,29,.965),rgba(20,26,34,.94) 58%,rgba(27,29,29,.93))!important;
+  box-shadow:0 36px 90px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-hero-title{color:#F5F2EA!important}
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-hero-title em{color:#B6BDC6!important;text-shadow:none!important}
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-hero-lede{color:#9CA6B1!important}
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .trino-brand-text .accent{color:#F1EFE8!important;-webkit-text-fill-color:#F1EFE8!important}
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-version-pill,
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-hero-pills span{
+  border-color:rgba(255,255,255,.08)!important;
+  background:rgba(255,255,255,.035)!important;
+  color:#A5AEB8!important;
+}
+body.dark-mode .gate-overlay[data-gate-step='welcome'] .gate-step-indicator [data-gate-step-indicator='welcome']{color:#ECE9E1!important}
+
+/* Fit preservation: luxury without reintroducing the landing-page clipping fixed in v1.0.57. */
+@media (max-height:820px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-title{font-size:clamp(38px,3.7vw,56px)!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-kicker{margin-top:14px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-mark-shell{width:54px!important;height:54px!important;border-radius:17px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta{min-height:54px!important}
+}
+
+@media (min-width:701px) and (max-width:1180px) and (max-height:860px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-title{font-size:clamp(36px,4.25vw,51px)!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{box-shadow:0 22px 48px rgba(30,38,47,.24),inset 0 1px 0 rgba(255,255,255,.075)!important}
+}
+
+@media (max-width:700px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+    background:linear-gradient(145deg,rgba(255,255,255,.965),rgba(248,248,245,.93))!important;
+    box-shadow:0 22px 56px rgba(44,59,73,.16),inset 0 1px 0 rgba(255,255,255,1)!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-brand-mark{width:34px!important;height:34px!important;border-radius:12px!important}
+  .gate-overlay[data-gate-step='welcome'] .trino-brand-text{font-size:22px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-title{font-size:clamp(31px,9.6vw,42px)!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-kicker{margin-top:11px!important;font-size:7.6px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-kicker::before{width:17px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta{width:100%!important;min-width:0!important;min-height:50px!important;padding-left:15px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-icon{width:34px!important;height:34px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{border-radius:17px!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .gate-overlay[data-gate-step='welcome'] .gate-enter-cta{transition:none!important}
+}
+
+/* TrinoTime v1.0.60 - selection typography alignment
+   Keep the compact readiness strip intentional and vertically centered instead
+   of allowing the flex column to squeeze/clamp its text during scrolling. */
+.gate-overlay[data-gate-step='selection'] .gate-readiness{
+  flex:0 0 auto!important;
+  min-height:44px!important;
+  padding:0 20px!important;
+  box-sizing:border-box!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-readiness-head{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  min-height:44px!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-readiness-head>div{
+  display:flex!important;
+  align-items:center!important;
+  min-width:0!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-readiness-kicker{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:24px!important;
+  margin:0!important;
+  font:500 9.5px/1 Poppins,'Plus Jakarta Sans',Inter,sans-serif!important;
+  letter-spacing:.075em!important;
+  white-space:nowrap!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-readiness-state{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 auto!important;
+  min-height:25px!important;
+  margin:0!important;
+  padding:0 11px!important;
+  box-sizing:border-box!important;
+  font:500 8.5px/1 Poppins,'Plus Jakarta Sans',Inter,sans-serif!important;
+  white-space:nowrap!important;
+  vertical-align:middle!important;
+}
+/* The selection view uses the readiness component as a compact status strip.
+   Hide the expanded copy deliberately instead of letting it be clipped by flex. */
+.gate-overlay[data-gate-step='selection'] .gate-readiness h2,
+.gate-overlay[data-gate-step='selection'] .gate-readiness-summary,
+.gate-overlay[data-gate-step='selection'] .gate-readiness-details{
+  display:none!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-access-heading{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-eyebrow{
+  margin:0 0 9px!important;
+  line-height:1.2!important;
+}
+.gate-overlay[data-gate-step='selection'] .gate-title{
+  margin-top:0!important;
+  line-height:1.06!important;
+}
+@media(max-width:560px){
+  .gate-overlay[data-gate-step='selection'] .gate-readiness{
+    min-height:42px!important;
+    padding-inline:14px!important;
+  }
+  .gate-overlay[data-gate-step='selection'] .gate-readiness-head{min-height:42px!important}
+  .gate-overlay[data-gate-step='selection'] .gate-readiness-kicker{font-size:9px!important}
+  .gate-overlay[data-gate-step='selection'] .gate-readiness-state{min-height:24px!important;padding-inline:9px!important;font-size:8px!important}
+}
+
+
+/* TrinoTime v1.0.61 - restore welcome live-telemetry visibility and align last-used CTA
+   Presentation-only follow-up to the v1.0.60 selection typography patch. */
+@media (min-width:1181px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) clamp(300px,26vw,352px)!important;
+    grid-template-rows:auto 1fr auto!important;
+    grid-template-areas:
+      'nav nav'
+      'copy live'
+      'footer footer'!important;
+    column-gap:clamp(30px,3.2vw,48px)!important;
+    row-gap:clamp(16px,2vh,24px)!important;
+    align-items:start!important;
+    justify-content:stretch!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-nav{grid-area:nav!important;align-self:start!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-copy{
+    grid-area:copy!important;
+    width:100%!important;
+    max-width:720px!important;
+    padding:clamp(10px,2.2vh,24px) 0 0!important;
+    align-self:center!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+    grid-area:live!important;
+    position:relative!important;
+    top:auto!important;
+    right:auto!important;
+    width:100%!important;
+    max-width:352px!important;
+    margin:0!important;
+    transform:none!important;
+    align-self:center!important;
+    justify-self:end!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-footer{
+    grid-area:footer!important;
+    margin-top:0!important;
+    align-self:end!important;
+  }
+}
+@media (min-width:1181px) and (max-height:900px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-copy{padding-top:0!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-title{font-size:clamp(40px,3.7vw,58px)!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-lede{margin:12px 0 16px!important}
+}
+.gate-overlay #mostUsedPod.most-used{
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+}
+.gate-overlay #mostUsedPod.most-used .most-used-copy{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:42px!important;
+}
+.gate-overlay #mostUsedPod.most-used .most-used-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  min-height:42px!important;
+  padding:0 16px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  flex:0 0 auto!important;
+}
+@media (max-width:620px){
+  .gate-overlay #mostUsedPod.most-used .most-used-copy{min-height:0!important}
+  .gate-overlay #mostUsedPod.most-used .most-used-link{min-height:38px!important;padding:0 14px!important}
+}
+
+/* TrinoTime v1.0.61 — Welcome clock restore + "Use again" alignment.
+   Presentation-only repair. Runtime authentication, App Check, attendance,
+   trusted time, presence privacy, notifications, and punch logic are unchanged. */
+
+/* v1.0.59's generic child stacking rule unintentionally changed the desktop
+   Live Operations card from absolute to relative positioning. In a fixed-height
+   welcome frame that placed the card below the visible composition and the
+   parent's overflow clipping made it appear to be missing. Restore the intended
+   premium clock card on wide screens, then explicitly keep it in flow on smaller
+   screens where the stacked layout is intentional. */
+@media (min-width:1181px){
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+    display:block!important;
+    position:absolute!important;
+    top:50%!important;
+    right:clamp(28px,3.5vw,54px)!important;
+    width:clamp(300px,27vw,372px)!important;
+    min-height:0!important;
+    margin:0!important;
+    transform:translateY(-43%)!important;
+    visibility:visible!important;
+    opacity:1!important;
+    z-index:4!important;
+  }
+}
+@media (max-width:1180px){
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+    display:block!important;
+    position:relative!important;
+    top:auto!important;
+    right:auto!important;
+    width:100%!important;
+    margin:-20px 0 26px!important;
+    transform:none!important;
+    visibility:visible!important;
+    opacity:1!important;
+    z-index:2!important;
+  }
+}
+
+/* Keep the previous-workspace shortcut as one vertically centered row. The
+   action uses its own line box so the arrow/text cannot ride above the copy. */
+.gate-overlay[data-gate-step='selection'] #mostUsedPod.most-used{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  gap:12px!important;
+  min-height:50px!important;
+  padding:7px 8px 7px 12px!important;
+  box-sizing:border-box!important;
+}
+.gate-overlay[data-gate-step='selection'] #mostUsedPod.most-used .most-used-copy{
+  display:block!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  line-height:1.4!important;
+}
+.gate-overlay[data-gate-step='selection'] #mostUsedPod.most-used .most-used-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:center!important;
+  justify-self:end!important;
+  min-height:36px!important;
+  margin:0!important;
+  padding:0 14px!important;
+  box-sizing:border-box!important;
+  font:600 10px/1 Poppins,'Plus Jakarta Sans',Inter,sans-serif!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  vertical-align:middle!important;
+}
+@media (max-width:620px){
+  .gate-overlay[data-gate-step='selection'] #mostUsedPod.most-used{
+    grid-template-columns:minmax(0,1fr)!important;
+    align-items:start!important;
+    gap:8px!important;
+    padding:10px 11px!important;
+  }
+  .gate-overlay[data-gate-step='selection'] #mostUsedPod.most-used .most-used-link{
+    justify-self:start!important;
+    align-self:start!important;
+  }
+}

@@ -1,0 +1,37 @@
+/* TrinoTime OOS RC2 staging — compact operational workspaces v1.
+   Only active when j-staging-compact-workspaces-v1.js finds a visible root. */
+html.tt-compact-ops-workspace #appRoot > .band,
+html.tt-compact-ops-workspace #appRoot > #executiveStatusStrip,
+html.tt-compact-ops-workspace #appRoot > #teamTabsOuter,
+html.tt-compact-ops-workspace #appRoot > #podTabsOuter,
+html.tt-compact-ops-workspace #appRoot > .app-version-footer {
+  display: none !important;
+}
+/* Keep Premium sidebar and its collapse toggle in place. Suppress the
+   Dashboard-only right rail if a view manager has not hidden it yet. */
+html.tt-compact-ops-workspace #appRoot > #ttPremiumRightRail {
+  display: none !important;
+}
+/* The app's existing responsive sidebar gutters are left authoritative.
+   Removing the tall hero moves the selected workspace into the first viewport. */
+html.tt-compact-ops-workspace #appRoot > :is(
+  #ttCoverageRoot, #ttConfirmationRoot, #ttMetricsRoot, #ttPodDispatchRoot
+):not([hidden]) {
+  scroll-margin-top: 14px;
+  padding-top: 0;
+  margin-top: 14px !important;
+  min-height: min(75dvh, 680px);
+}
+/* More screen space for tables and operational controls without redesigning them. */
+html.tt-compact-ops-workspace :is(.tt-coverage-hero, .tt-ops-hero, .tt-pod-dispatch-hero) {
+  padding-block: clamp(12px, 1.8vw, 19px);
+  margin-bottom: 12px;
+}
+html.tt-compact-ops-workspace #appRoot :is(.tt-coverage-title, .tt-ops-title, .tt-pod-dispatch-hero h2) {
+  line-height: 1.18;
+}
+@media (max-width: 760px) {
+  html.tt-compact-ops-workspace #appRoot > :is(#ttCoverageRoot, #ttConfirmationRoot, #ttMetricsRoot, #ttPodDispatchRoot):not([hidden]) {
+    margin-top: 8px !important;
+  }
+}

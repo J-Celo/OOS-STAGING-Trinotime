@@ -1,0 +1,22 @@
+/* TrinoTime v1.1.128 RC12 — Session / Utility / Privacy stabilization.
+   Minimal closure over RC11: one authenticated utility layer above Agent Inspector. */
+
+/* All four authenticated launchers share the same body-level stack. */
+:is(#profileDirectorySearchFab,#workspaceChatBtn,#aiChatFloater,#leaveRequestFloater) {
+  position: fixed !important;
+  z-index: 2147481200 !important;
+  isolation: isolate;
+}
+
+/* Their lightweight floating surfaces must also clear Agent Inspector. */
+#profileDirectorySearchDrawer,
+#aiChatPanel {
+  z-index: 2147481250 !important;
+}
+
+/* Body-portaled controls no longer inherit #appRoot[inert]. Keep hidden fail-closed. */
+body > :is(#profileDirectorySearchFab,#workspaceChatBtn,#aiChatFloater,#leaveRequestFloater)[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

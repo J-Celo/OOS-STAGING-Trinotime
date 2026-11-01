@@ -1,0 +1,49 @@
+/* TrinoTime v1.1.128 RC62 — Workspace Messaging Profile Open Closure
+   Clickable chat identities + centered/top-layer Profile Directory. */
+
+#profileDirectoryOverlay.open {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147482800 !important; /* above Workspace Messaging (2500), below live call overlay (2900) */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+           max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)) !important;
+}
+#profileDirectoryOverlay.open > .profile-directory-modal {
+  margin: auto !important;
+  max-height: calc(100vh - 24px) !important;
+  max-height: calc(100dvh - 24px) !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+}
+
+#ttWorkspaceChatShell [data-chat-profile-name] {
+  cursor: pointer;
+  border-radius: 999px;
+  outline: none;
+}
+#ttWorkspaceChatShell [data-chat-profile-name]:hover {
+  filter: brightness(1.06);
+}
+#ttWorkspaceChatShell [data-chat-profile-name]:focus-visible {
+  outline: 2px solid #6ea8ff !important;
+  outline-offset: 3px;
+}
+#ttWorkspaceChatShell .tt-wm-sender [data-chat-profile-name],
+#ttWorkspaceChatShell .tt-wm-thread-title [data-chat-profile-name],
+#ttWorkspaceChatShell .tt-wm-thread-root [data-chat-profile-name],
+#ttWorkspaceChatShell .tt-wm-thread-reply strong [data-chat-profile-name] {
+  display: inline-flex;
+  max-width: 100%;
+  vertical-align: middle;
+}
+#ttWorkspaceChatShell .tt-wm-thread-title [data-chat-profile-name] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  #ttWorkspaceChatShell [data-chat-profile-name] { transition: none !important; }
+}

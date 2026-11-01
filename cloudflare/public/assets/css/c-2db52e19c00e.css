@@ -1,0 +1,144 @@
+/* TrinoTime v1.1.30 - Agent Coaching modal layout refinement.
+   UI-only: close control placement, vertical table fill, and denser columns. */
+#coachingReportOverlay.open {
+    overflow: hidden;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+#coachingReportOverlay .coaching-report-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(1200px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px) !important;
+    height: min(860px, calc(100dvh - 32px));
+    max-height: calc(100dvh - 32px) !important;
+    overflow: hidden !important;
+    overscroll-behavior: contain;
+}
+
+#coachingReportOverlay .coaching-report-head {
+    position: relative;
+    flex: 0 0 auto;
+    padding-right: 92px;
+    margin-bottom: 8px !important;
+}
+
+#coachingReportOverlay #coachingReportCloseBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 40;
+    min-width: 76px;
+    min-height: 36px;
+    margin: 0;
+    padding: 7px 12px;
+    white-space: nowrap;
+}
+
+#coachingReportOverlay .coaching-report-summary,
+#coachingReportOverlay .coaching-report-breakdown {
+    flex: 0 0 auto;
+}
+
+#coachingReportOverlay .coaching-report-table-wrap {
+    flex: 1 1 auto;
+    min-height: 180px;
+    max-height: none !important;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable both-edges;
+}
+
+#coachingReportOverlay .coaching-report-table {
+    width: 100%;
+    min-width: 1020px;
+    table-layout: fixed;
+}
+
+#coachingReportOverlay .coaching-report-table th,
+#coachingReportOverlay .coaching-report-table td {
+    padding: 7px 6px;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+#coachingReportOverlay .coaching-report-table th:nth-child(1),
+#coachingReportOverlay .coaching-report-table td:nth-child(1) { width: 13%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(2),
+#coachingReportOverlay .coaching-report-table td:nth-child(2) { width: 6%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(3),
+#coachingReportOverlay .coaching-report-table td:nth-child(3) { width: 11%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(4),
+#coachingReportOverlay .coaching-report-table td:nth-child(4) { width: 13%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(5),
+#coachingReportOverlay .coaching-report-table td:nth-child(5) { width: 13%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(6),
+#coachingReportOverlay .coaching-report-table td:nth-child(6) { width: 9%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(7),
+#coachingReportOverlay .coaching-report-table td:nth-child(7) { width: 7%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(8),
+#coachingReportOverlay .coaching-report-table td:nth-child(8) { width: 11%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(9),
+#coachingReportOverlay .coaching-report-table td:nth-child(9) { width: 11%; }
+#coachingReportOverlay .coaching-report-table th:nth-child(10),
+#coachingReportOverlay .coaching-report-table td:nth-child(10) { width: 6%; }
+
+#coachingReportOverlay .coaching-report-profile-link,
+#coachingReportOverlay .coaching-report-table td:nth-child(1) strong {
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.25;
+}
+
+#coachingReportOverlay .coaching-report-actions {
+    min-width: 0;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+
+#coachingReportOverlay .coaching-mini-btn {
+    padding: 4px 5px;
+    font-size: 9.5px;
+}
+
+#coachingReportOverlay .coaching-topic {
+    max-width: none;
+}
+
+@media (max-height: 720px) {
+    #coachingReportOverlay .coaching-report-box {
+        height: calc(100dvh - 20px);
+        max-height: calc(100dvh - 20px) !important;
+    }
+    #coachingReportOverlay.open { padding: 10px; }
+    #coachingReportOverlay .coaching-report-summary { margin: 6px 0; }
+    #coachingReportOverlay .coaching-report-breakdown { margin-bottom: 6px; }
+    #coachingReportOverlay .coaching-report-table-wrap { min-height: 120px; }
+}
+
+@media (max-width: 1100px) {
+    #coachingReportOverlay .coaching-report-table { min-width: 980px; }
+    #coachingReportOverlay .coaching-report-table th,
+    #coachingReportOverlay .coaching-report-table td { padding-left: 5px; padding-right: 5px; }
+}
+
+@media (max-width: 700px) {
+    #coachingReportOverlay.open { padding: 8px; }
+    #coachingReportOverlay .coaching-report-box {
+        width: calc(100vw - 16px);
+        max-width: calc(100vw - 16px) !important;
+        height: calc(100dvh - 16px);
+        max-height: calc(100dvh - 16px) !important;
+    }
+    #coachingReportOverlay .coaching-report-head {
+        padding-right: 0;
+        padding-top: 44px;
+    }
+    #coachingReportOverlay #coachingReportCloseBtn {
+        top: 0;
+        right: 0;
+    }
+    #coachingReportOverlay .coaching-report-table { min-width: 920px; }
+}

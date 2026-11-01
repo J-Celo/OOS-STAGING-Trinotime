@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const css=fs.readFileSync(path.join(root,'public/assets/css/c-coverage-dashboard-v1.css'),'utf8');
+const index=fs.readFileSync(path.join(root,'public/index.html'),'utf8');
+assert.ok(css.includes('M2.9.20 — Executive Confirmation Command Center'),'M2.9.20 CSS marker');
+assert.ok(css.includes('.tt-confirmation-root .tt-ops-stat:nth-child(-n+4){grid-column:span 3}'),'four desktop interval/EOD cards');
+assert.ok(css.includes('.tt-confirmation-root .tt-ops-stat:nth-child(n+5){grid-column:span 4}'),'three desktop presence cards');
+assert.ok(css.includes('body.dark-mode .tt-confirmation-root .tt-ops-hero'),'dark Confirmation hero');
+assert.ok(css.includes('.tt-confirmation-root .tt-ops-table th:nth-child(8)'),'EOD table emphasis');
+assert.ok(css.includes('.tt-confirmation-root .tt-ops-note::before'),'workflow note precision accent');
+assert.ok(index.includes('confirmation-luxury-m2920=1'),'M2.9.20 CSS cache-bust');
+console.log('PASS M2.9.20 Confirmation luxury UI: balanced 4+3 score deck, executive hero/controls, premium roster/table, dark-mode parity.');

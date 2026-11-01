@@ -1,0 +1,113 @@
+/* TrinoTime V2.0.0 RC11 — Agent Removal + UI Polish Closure
+   Presentation-only fixes except the lifecycle authority change in Worker code.
+   Keep this sheet late in the cascade so it can repair inherited theme overrides
+   without rewriting established components. */
+
+/* Staff Access: keep the single TrinoTime reveal control and suppress Edge's
+   native password reveal affordance for this field only. Autofill/password
+   manager semantics remain intact. */
+#gateAdminPass::-ms-reveal,
+#gateAdminPass::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.gate-overlay .gate-password-wrap #gateAdminPass {
+  padding-right: 54px !important;
+}
+
+/* RC10 meal-action cards use a light cream surface in both themes. Explicitly
+   pin readable foreground colors so generic dark-theme message text cannot wash
+   out the title/helper copy. */
+.tt-wm-meal-card {
+  color: #34280f !important;
+  -webkit-text-fill-color: #34280f !important;
+}
+.tt-wm-meal-card > strong {
+  color: #5a3d00 !important;
+  -webkit-text-fill-color: #5a3d00 !important;
+  font-weight: 800 !important;
+}
+.tt-wm-meal-card > span {
+  color: #34280f !important;
+  -webkit-text-fill-color: #34280f !important;
+}
+.tt-wm-meal-card > small {
+  color: #6b5a36 !important;
+  -webkit-text-fill-color: #6b5a36 !important;
+  opacity: 1 !important;
+}
+
+/* Pearl/light customized workspace: an inherited premium rule forced the large
+   total-hours value to white. Restore high-contrast blue + readable secondary
+   label while preserving dark-mode treatment. */
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .live-hours-big,
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #liveHoursBigValue {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .live-hours-big small,
+html[data-trino-custom-workspace='enabled'] body:not(.dark-mode):is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #liveHoursBigLabel {
+  color: #526175 !important;
+  -webkit-text-fill-color: #526175 !important;
+  opacity: 1 !important;
+}
+
+/* Team Leader Status modal: use the already-loaded Plus Jakarta Sans family for
+   a consistent high-end UI treatment. Keep tabular numerals instead of a mixed
+   monospaced font, avoiding a new font dependency and layout shift. */
+#tlStatusDetailOverlay .tl-status-detail-box,
+#tlStatusDetailOverlay .tl-status-detail-head,
+#tlStatusDetailOverlay .tl-status-detail-head h3,
+#tlStatusDetailOverlay .tl-status-detail-head p,
+#tlStatusDetailOverlay .tl-status-detail-eyebrow,
+#tlStatusDetailOverlay .tl-status-detail-state,
+#tlStatusDetailOverlay .tl-status-detail-state-icon,
+#tlStatusDetailOverlay .tl-status-detail-state div span,
+#tlStatusDetailOverlay .tl-status-detail-state div strong,
+#tlStatusDetailOverlay .tl-status-detail-grid span,
+#tlStatusDetailOverlay .tl-status-detail-grid strong,
+#tlStatusDetailOverlay .tl-status-detail-sync,
+#tlStatusDetailOverlay .tl-status-detail-warning,
+#tlStatusDetailOverlay .tl-status-detail-actions,
+#tlStatusDetailOverlay button {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+}
+#tlStatusDetailOverlay .tl-status-detail-grid strong {
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Attendance hydration remains a real readiness signal, but the transient
+   status should not dominate the workspace. Make it compact and subordinate. */
+#appRoot[data-tt-data-loading='true'] .tt-workspace-loading {
+  width: fit-content !important;
+  max-width: min(560px, calc(100% - 24px)) !important;
+  padding: 9px 12px !important;
+  gap: 9px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 5px 16px rgba(31,41,55,.04) !important;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+}
+#appRoot[data-tt-data-loading='true'] .tt-workspace-loading strong {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+#appRoot[data-tt-data-loading='true'] .tt-loading-bars {
+  gap: 3px !important;
+}
+#appRoot[data-tt-data-loading='true'] .tt-loading-bars i {
+  width: 4px !important;
+  min-width: 4px !important;
+  height: 17px !important;
+  border-radius: 999px !important;
+}
+@media (max-width: 640px) {
+  #appRoot[data-tt-data-loading='true'] .tt-workspace-loading {
+    width: auto !important;
+    max-width: none !important;
+  }
+}

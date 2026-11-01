@@ -1,0 +1,45 @@
+# Static assets are served without running the API Worker.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'
+
+/
+  Cache-Control: no-store
+
+/index.html
+  Cache-Control: no-store
+
+/version.json
+  Cache-Control: no-store
+
+/sw.js
+  Cache-Control: no-cache
+
+
+
+/assets/js/j-coverage-dashboard-rc20.js
+  Cache-Control: no-store, max-age=0
+
+/assets/js/j-coverage-dashboard-rc20-rc2-ui3-3e92d149a5b8.js
+  Cache-Control: no-store, max-age=0
+
+/assets/js/j-confirmation-dashboard-rc21.js
+  Cache-Control: no-store, max-age=0
+
+/assets/js/j-agent-metrics-rc22.js
+  Cache-Control: no-store, max-age=0
+
+/downloads/TrinoTime-QC-Tracker-v2.2.61.zip
+  Content-Type: application/zip
+  Content-Disposition: attachment; filename="TrinoTime-QC-Tracker-v2.2.61.zip"
+  Cache-Control: public, max-age=86400, immutable, no-transform
+  Cross-Origin-Resource-Policy: same-origin
+  X-Robots-Tag: noindex, noarchive
+
+/assets/js/j-wide-table-top-scroll-m297.js
+  Cache-Control: no-store, max-age=0
+
+/assets/css/c-wide-table-top-scroll-m297.css
+  Cache-Control: no-store, max-age=0

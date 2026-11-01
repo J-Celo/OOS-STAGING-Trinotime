@@ -1,0 +1,15 @@
+{
+  "version": "1.1.76",
+  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "ready": false,
+  "update_policy": "network-only-legacy-migration-notice-with-official-site-guidance",
+  "service_worker_cache_policy": "network-only-app-shell",
+  "release_name": "TrinoTime OOS — RC2 STAGING UX18P46 Bio Break Scroll Hotfix",
+  "released_for": "Staging-only Bio Break dialog scroll positioning fix; preserves UX18P46 feature parity, Attendance records, sync and security.",
+  "staging": {
+    "environment": "staging-qa",
+    "sourceParity": "UX18P46",
+    "productionDataShared": false
+  },
+  "bio_break_scroll_fix": "2026-11-01-scroller-centering-preserved"
+}

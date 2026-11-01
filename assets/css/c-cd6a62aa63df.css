@@ -1,0 +1,217 @@
+/* TrinoTime v1.0.30 — role-gated authenticated workspace visual system, Phase 1
+   Enabled only after verified session policy grants Customized Workspace access. */
+:root{--ttw-bg:#07111f;--ttw-surface:#0d1827;--ttw-surface2:#111d2d;--ttw-line:rgba(255,255,255,.095);--ttw-line2:rgba(255,255,255,.16);--ttw-text:#f7f9fc;--ttw-soft:rgba(241,245,249,.76);--ttw-muted:rgba(226,232,240,.54);--ttw-shadow:0 20px 55px rgba(0,0,0,.22);--ttw-radius:18px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){background:radial-gradient(circle at 16% 0%,rgba(123,151,185,.10),transparent 31%),radial-gradient(circle at 90% 18%,rgba(255,255,255,.035),transparent 23%),linear-gradient(180deg,#07111f 0%,#08131f 44%,#091522 100%)!important;color:var(--ttw-text);font-family:Poppins,'Plus Jakarta Sans',Inter,sans-serif}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot{min-height:100vh;background:transparent;color:var(--ttw-text)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .wrap{max-width:1500px}
+/* Portal-inspired header, but static and low-cost. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band{padding:clamp(18px,1.8vw,26px) 0 clamp(20px,2vw,30px);background:linear-gradient(90deg,rgba(3,8,16,.92),rgba(5,13,23,.78) 52%,rgba(3,8,16,.90)),linear-gradient(180deg,rgba(3,8,16,.08),rgba(3,8,16,.46)),url('../img/portal-cloud-1.webp') center 42%/cover no-repeat!important;border-bottom:1px solid var(--ttw-line);box-shadow:0 18px 50px rgba(0,0,0,.16)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band::before{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent)!important;background-size:100% 100%!important;animation:none!important;opacity:.72}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-sky{display:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-inner{grid-template-columns:minmax(210px,.9fr) minmax(350px,590px) minmax(280px,1fr);gap:clamp(16px,2vw,32px)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .brand-eyebrow{margin-bottom:9px;padding:6px 10px;border:0;border-radius:999px;background:rgba(255,255,255,.055);box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.06);color:rgba(255,255,255,.68);font:500 9px/1 Poppins,sans-serif;letter-spacing:.07em;text-transform:none}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .brand-eyebrow::before{width:5px;height:5px;flex-basis:5px;background:#bdeecb;box-shadow:0 0 0 3px rgba(189,238,203,.08)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .brand-title-trigger{font-family:Poppins,sans-serif!important;font-weight:600!important;letter-spacing:-.045em!important;text-transform:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .brand-accent{background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;color:rgba(255,255,255,.68)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.clock-box,.action-rail){-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .clock-box{border:0!important;border-radius:22px!important;background:linear-gradient(145deg,rgba(10,18,30,.78),rgba(10,18,30,.54))!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.11),inset 0 1px 0 rgba(255,255,255,.08),0 16px 42px rgba(0,0,0,.20)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .clock-box::after{opacity:.18}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .clock-time{font-family:Poppins,sans-serif;font-weight:500;letter-spacing:-.04em;text-shadow:none!important;animation:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.clock-date,.clock-zone){color:rgba(255,255,255,.52)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .action-rail{border:0!important;border-radius:18px!important;background:rgba(8,15,26,.70)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.06),0 14px 34px rgba(0,0,0,.16)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-side .dayoff-btn{color:rgba(255,255,255,.76)!important;border-radius:13px!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-side .dayoff-btn:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+/* Live status + navigation. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .executive-status-strip{background:#08131f!important;border-color:var(--ttw-line)!important;box-shadow:0 10px 32px rgba(0,0,0,.12)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.executive-status-kicker,.executive-status-item>span){color:rgba(255,255,255,.43)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.executive-status-role strong,.executive-status-item strong){color:rgba(255,255,255,.88)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.team-tabs-outer,.pod-tabs-outer){background:#08131f!important;border-color:var(--ttw-line)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .team-tabs{padding-top:10px;padding-bottom:7px;gap:7px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.team-tab-btn,.team-tab-label){min-height:34px;border:0!important;border-radius:999px;padding:8px 13px;background:rgba(255,255,255,.045)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);color:rgba(255,255,255,.62)!important;font:500 9.5px/1 Poppins,sans-serif!important;letter-spacing:.02em!important;text-transform:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .team-tab-btn:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .team-tab-btn.active{background:rgba(255,255,255,.13)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.24),inset 0 1px 0 rgba(255,255,255,.10)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .pod-tabs{padding-top:4px;padding-bottom:14px;gap:5px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .pod-tab{border:0!important;border-radius:999px;padding:8px 11px;background:transparent;color:rgba(255,255,255,.52);font:500 9.5px/1 Poppins,sans-serif;letter-spacing:.01em}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .pod-tab:hover{background:rgba(255,255,255,.055);color:#fff}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .pod-tab.active{background:rgba(255,255,255,.11);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+/* Workspace canvas + forms. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent{padding-top:clamp(24px,3vw,40px)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.punch-card,.admin-ops-center,.agent-security-panel,.table-card,.admin-recovery-card){border:0!important;border-radius:var(--ttw-radius)!important;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.022))!important;box-shadow:inset 0 0 0 1px var(--ttw-line),inset 0 1px 0 rgba(255,255,255,.055),var(--ttw-shadow)!important;color:var(--ttw-text);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card{padding:clamp(20px,2.3vw,30px)!important;margin-bottom:36px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(label,.field-hint,.today-shift-hint){color:var(--ttw-muted)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(select,input[type='date'],input[type='search'],input[type='text'],input[type='number'],input[type='time'],input[type='password'],textarea){border:0!important;border-radius:12px!important;background:rgba(255,255,255,.065)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)!important;color:#fff!important;caret-color:#fff}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(input,textarea)::placeholder{color:rgba(255,255,255,.32)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot select option{background:#101a29;color:#fff}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(select,input,textarea):focus{outline:none!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.38),0 0 0 3px rgba(255,255,255,.07)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .add-emp{border:0!important;border-radius:12px!important;background:rgba(255,255,255,.075)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.11)!important;color:rgba(255,255,255,.82)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .add-emp:hover{background:rgba(255,255,255,.12)!important;color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .status-line{border-color:var(--ttw-line)!important;color:var(--ttw-soft)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .pending-sync-counter{border-color:var(--ttw-line2)!important;background:rgba(255,255,255,.06)!important;color:rgba(255,255,255,.72)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-stepper{border:0!important;border-radius:16px!important;background:rgba(255,255,255,.035)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .step{border:0!important;background:transparent!important;color:rgba(255,255,255,.43)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .step .num{border-color:rgba(255,255,255,.13)!important;background:rgba(255,255,255,.055)!important;color:rgba(255,255,255,.58)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .step.done{background:rgba(189,238,203,.07)!important;color:#bdeecb!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .step.done .num{background:#bdeecb!important;border-color:#bdeecb!important;color:#0b1720!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .step.active{background:rgba(255,255,255,.10)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .step.active .num{background:#fff!important;border-color:#fff!important;color:#101722!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-grid{gap:9px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card .punch-btn{border:0!important;border-radius:16px!important;background:rgba(255,255,255,.055)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)!important;color:rgba(255,255,255,.80)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card .punch-btn .sub{color:rgba(255,255,255,.38)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card .punch-btn:not(:disabled):hover{transform:translateY(-1px);background:rgba(255,255,255,.09)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 12px 28px rgba(0,0,0,.16)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card .punch-btn.primary:not(:disabled){background:#f7f9fc!important;color:#101722!important;box-shadow:0 12px 30px rgba(0,0,0,.18)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card .punch-btn.primary:not(:disabled) .sub{color:rgba(16,23,34,.58)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card .punch-btn.done{background:rgba(255,255,255,.028)!important;color:rgba(255,255,255,.34)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.055)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .live-hours-big{color:#fff!important}
+/* Leadership cards. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-ops-head,.admin-recovery-head){border-color:var(--ttw-line)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-ops-eyebrow,.agent-security-eyebrow){color:rgba(255,255,255,.46)!important;font:500 9px/1 Poppins,sans-serif!important;letter-spacing:.07em!important;text-transform:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-ops-head h2,.agent-security-head h2,.admin-recovery-head h3){color:#fff!important;font-family:Poppins,sans-serif!important;font-weight:500!important;letter-spacing:-.035em!important;text-transform:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-ops-head p,.agent-security-sub,.admin-recovery-head p){color:var(--ttw-muted)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-review-card,.system-health-card){border:0!important;border-radius:16px!important;background:rgba(255,255,255,.035)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.075)!important;color:var(--ttw-text)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-review-head h3,.system-health-head h3){color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot .admin-review-summary>div{border-color:var(--ttw-line)!important;background:rgba(255,255,255,.035)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-review-summary strong,.agent-security-summary strong){color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot :is(.admin-review-summary span,.agent-security-summary span,.system-health-overview,.system-health-foot){color:var(--ttw-muted)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot .agent-security-panel{margin-bottom:28px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot .agent-security-summary>div{border-color:var(--ttw-line)!important;background:rgba(255,255,255,.035)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader']) #appRoot .agent-security-table-wrap{border-color:var(--ttw-line)!important;background:#0b1625!important}
+/* Attendance: dense information stays on solid dark surfaces. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-section{margin-top:42px}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-title{color:#fff!important;font:500 clamp(22px,2.2vw,30px)/1.1 Poppins,sans-serif!important;letter-spacing:-.035em!important;text-transform:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-tabs{border:0!important;border-radius:14px!important;background:rgba(255,255,255,.04)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-tab{color:rgba(255,255,255,.46)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-tab:hover{color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-tab.active{background:rgba(255,255,255,.10)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .table-card{overflow:hidden;background:#0b1625!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-today-summary{background:#0d1827!important;border-color:var(--ttw-line)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-title{color:rgba(255,255,255,.78)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-scope{color:var(--ttw-muted)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card,html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card:is(.is-working,.is-break,.is-complete,.is-not-in,.is-issues){border-color:var(--ttw-line)!important;background:rgba(255,255,255,.035)!important;box-shadow:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card strong{color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card span{color:var(--ttw-muted)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card.is-working{box-shadow:inset 3px 0 0 #8eb7ff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card.is-break{box-shadow:inset 3px 0 0 #c7b8ff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card.is-complete{box-shadow:inset 3px 0 0 #9ee6b6!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card.is-not-in{box-shadow:inset 3px 0 0 rgba(255,255,255,.30)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .attendance-summary-card.is-issues{box-shadow:inset 3px 0 0 #ffb4b4!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.attendance-quickbar,.attendance-attention-bar){background:#0d1827!important;border-color:var(--ttw-line)!important;color:var(--ttw-soft)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.attendance-issues-toggle,.attendance-reset-view,.attendance-integrity-btn,#clearFilters,.export-menu-trigger){border-color:var(--ttw-line2)!important;background:rgba(255,255,255,.055)!important;color:rgba(255,255,255,.72)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.attendance-issues-toggle,.attendance-reset-view,.attendance-integrity-btn,#clearFilters,.export-menu-trigger):hover{background:rgba(255,255,255,.10)!important;color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .export-menu{border-color:var(--ttw-line)!important;background:#101b2a!important;box-shadow:0 18px 44px rgba(0,0,0,.30)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .export-menu button{color:rgba(255,255,255,.72)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .export-menu button:hover{background:rgba(255,255,255,.07)!important;color:#fff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table thead th{background:#101c2c!important;color:rgba(255,255,255,.72)!important;border-color:rgba(255,255,255,.08)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty){--attendance-sticky-cell-bg:#0b1625;background:#0b1625!important;color:rgba(255,255,255,.78)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody tr:nth-child(even):not(.attendance-date-divider):not(.attendance-search-empty){--attendance-sticky-cell-bg:#0e1928;background:#0e1928!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty):hover{--attendance-sticky-cell-bg:#142133;background:#142133!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody td{border-color:rgba(255,255,255,.065)!important;color:rgba(255,255,255,.76)}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table td.hours-cell{color:#b8d0ff!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot tbody tr.attendance-date-divider{background:#111d2d!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot tbody tr.attendance-date-divider td{color:rgba(255,255,255,.54)!important;border-color:var(--ttw-line)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .footnote{color:rgba(255,255,255,.36)!important;line-height:1.65}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .app-version-footer{color:rgba(255,255,255,.34)!important}
+/* Modal surfaces — high contrast, no full-screen blur. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay{background:rgba(4,10,18,.82)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-box{border:0!important;border-radius:22px!important;background:#0d1827!important;color:var(--ttw-text)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.06),0 28px 80px rgba(0,0,0,.42)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-title{color:#fff!important;font-family:Poppins,sans-serif!important;font-weight:500!important;letter-spacing:-.03em!important;text-transform:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-sub{color:var(--ttw-muted)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-field label{color:rgba(255,255,255,.54)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.cancel{border-color:var(--ttw-line2)!important;background:rgba(255,255,255,.055)!important;color:rgba(255,255,255,.72)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.save{border-color:#fff!important;background:#fff!important;color:#101722!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-btn.delete{border-color:rgba(255,180,180,.28)!important;background:rgba(127,29,29,.34)!important;color:#ffc0c0!important}
+@media(max-width:1040px){html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-inner{grid-template-columns:1fr minmax(300px,520px)}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-side{grid-column:1/-1;justify-self:stretch}}
+@media(max-width:760px){html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band{padding:16px 0 18px}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .band-inner{grid-template-columns:1fr!important;gap:13px}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .clock-box{min-width:0;max-width:none;border-radius:18px!important}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .clock-time{font-size:clamp(36px,12vw,52px)}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.team-tabs,.pod-tabs){padding-left:14px;padding-right:14px;justify-content:flex-start}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #mainContent{padding-top:18px}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .punch-card{padding:17px!important;border-radius:16px!important}html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot .log-title{font-size:23px!important}}
+@media(prefers-reduced-motion:reduce){html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot *,html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay *{scroll-behavior:auto!important}}
+
+/* TrinoTime v1.0.32 — Premium Dark Theme contrast/accessibility patch.
+   Explicit pairings prevent legacy light Premium surfaces from inheriting dark-workspace white text. */
+:root{
+  --ttw-light-action-bg:#F8FAFC;
+  --ttw-light-action-hover:#FFFFFF;
+  --ttw-light-action-text:#0F172A;
+  --ttw-light-action-muted:#475569;
+  --ttw-field-bg:#0F172A;
+  --ttw-field-bg-focus:#111C2D;
+  --ttw-field-text:#FFFFFF;
+  --ttw-field-placeholder:#A8B4C7;
+  --ttw-table-head:#0F172A;
+  --ttw-table-row:#0B1625;
+  --ttw-table-row-alt:#0E1928;
+  --ttw-table-row-hover:#142133;
+  --ttw-table-text:#E2E8F0;
+}
+/* Light action surfaces always receive dark ink. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.admin-ops-btn,.row-edit-btn,.ot-edit-btn,.tl-attendance-admin-edit,.note-history-view,.note-history-edit,.csv-btn,.premium-manager-auth-btn){
+  background:var(--ttw-light-action-bg)!important;
+  background-image:none!important;
+  color:var(--ttw-light-action-text)!important;
+  border-color:#CBD5E1!important;
+  box-shadow:0 1px 2px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.92)!important;
+  text-shadow:none!important;
+  -webkit-text-fill-color:var(--ttw-light-action-text)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.admin-ops-btn,.row-edit-btn,.ot-edit-btn,.tl-attendance-admin-edit,.note-history-view,.note-history-edit,.csv-btn,.premium-manager-auth-btn):not(:disabled):hover{
+  background:var(--ttw-light-action-hover)!important;
+  color:#020617!important;
+  border-color:#94A3B8!important;
+  -webkit-text-fill-color:#020617!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.admin-ops-btn,.row-edit-btn,.ot-edit-btn,.tl-attendance-admin-edit,.note-history-view,.note-history-edit,.csv-btn,.premium-manager-auth-btn):disabled{
+  background:#E2E8F0!important;
+  color:var(--ttw-light-action-muted)!important;
+  -webkit-text-fill-color:var(--ttw-light-action-muted)!important;
+  opacity:.72;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.admin-ops-btn,.row-edit-btn,.ot-edit-btn,.tl-attendance-admin-edit,.note-history-view,.note-history-edit,.csv-btn,.premium-manager-auth-btn) :is(svg,path){color:inherit!important;stroke:currentColor!important}
+/* Dark form controls use solid dark surfaces and readable foregrounds. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(select,input[type='date'],input[type='search'],input[type='text'],input[type='email'],input[type='number'],input[type='time'],input[type='password'],textarea,.emp-search-input,.attendance-search-input){
+  background:var(--ttw-field-bg)!important;
+  background-image:none!important;
+  color:var(--ttw-field-text)!important;
+  -webkit-text-fill-color:var(--ttw-field-text)!important;
+  caret-color:#FFFFFF!important;
+  border-color:#334155!important;
+  box-shadow:inset 0 0 0 1px #334155!important;
+  color-scheme:dark;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(input,textarea,.emp-search-input,.attendance-search-input)::placeholder{
+  color:var(--ttw-field-placeholder)!important;
+  -webkit-text-fill-color:var(--ttw-field-placeholder)!important;
+  opacity:1!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(select,input,textarea,.emp-search-input,.attendance-search-input):focus{
+  background:var(--ttw-field-bg-focus)!important;
+  color:#FFFFFF!important;
+  -webkit-text-fill-color:#FFFFFF!important;
+  box-shadow:inset 0 0 0 1px #64748B,0 0 0 3px rgba(148,163,184,.14)!important;
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot select option{background:#0F172A!important;color:#FFFFFF!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.attendance-search-toggle,.attendance-search-clear){background:#0F172A!important;color:#F8FAFC!important;border-color:#334155!important;box-shadow:none!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.attendance-search-toggle,.attendance-search-clear):hover{background:#172235!important;color:#FFFFFF!important;border-color:#64748B!important}
+/* Main attendance table: set backgrounds on cells, not only rows, so legacy Premium glass rules cannot paint them light. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table thead th{
+  background:var(--ttw-table-head)!important;color:#F8FAFC!important;border-color:#253449!important;text-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty)>td{
+  background:var(--ttw-table-row)!important;color:var(--ttw-table-text)!important;border-color:#1E293B!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody tr:nth-child(even):not(.attendance-date-divider):not(.attendance-search-empty)>td{background:var(--ttw-table-row-alt)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table tbody tr:not(.attendance-date-divider):not(.attendance-search-empty):hover>td{background:var(--ttw-table-row-hover)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot #desktopTableContainer>.desktop-table :is(td.name-cell,td.attendance-time-cell .attendance-time-value){color:#FFFFFF!important}
+/* Other operational tables follow the same high-contrast pairing. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.agent-security-table,.tl-attendance-table,.audit-table,.coaching-report-table,.network-table,.settings-permissions-table,.dayoff-table,.totals-pay-table,.leave-v3-table,.leave-v3-policy-table) thead th{
+  background:var(--ttw-table-head)!important;color:#F8FAFC!important;border-color:#253449!important;text-shadow:none!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.agent-security-table,.tl-attendance-table,.audit-table,.coaching-report-table,.network-table,.settings-permissions-table,.dayoff-table,.totals-pay-table,.leave-v3-table,.leave-v3-policy-table) tbody td{
+  background:var(--ttw-table-row)!important;color:var(--ttw-table-text)!important;border-color:#1E293B!important
+}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.agent-security-table,.tl-attendance-table,.audit-table,.coaching-report-table,.network-table,.settings-permissions-table,.dayoff-table,.totals-pay-table,.leave-v3-table,.leave-v3-policy-table) tbody tr:nth-child(even)>td{background:var(--ttw-table-row-alt)!important}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot :is(.agent-security-table,.tl-attendance-table,.audit-table,.coaching-report-table,.network-table,.settings-permissions-table,.dayoff-table,.totals-pay-table,.leave-v3-table,.leave-v3-policy-table) tbody tr:hover>td{background:var(--ttw-table-row-hover)!important}
+/* Authenticated modals use the same form contrast even when they live outside #appRoot. */
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-box :is(select,input[type='date'],input[type='search'],input[type='text'],input[type='email'],input[type='number'],input[type='time'],input[type='password'],textarea){background:#0F172A!important;color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important;border-color:#334155!important;box-shadow:inset 0 0 0 1px #334155!important;color-scheme:dark}
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-box :is(input,textarea)::placeholder{color:#A8B4C7!important;-webkit-text-fill-color:#A8B4C7!important;opacity:1!important}
+

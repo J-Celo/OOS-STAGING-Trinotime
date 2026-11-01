@@ -1,0 +1,27 @@
+/* TrinoTime v1.1.23 · Export Center & Report Controls */
+.export-center-overlay{z-index:6200}
+.export-center-box{max-width:860px;width:min(94vw,860px);max-height:min(90vh,840px);overflow:auto}
+.export-center-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
+.export-center-heading-copy{display:flex;flex-direction:column;gap:5px}
+.export-center-heading-copy .modal-title{margin:0}
+.export-center-heading-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.export-center-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.export-center-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.export-center-field>span{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.export-center-field select,.export-center-field input{width:100%;min-height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface,#fff);color:var(--text);padding:0 12px;font:inherit;box-sizing:border-box}
+.export-center-custom-range{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;border:1px dashed var(--border);border-radius:14px;background:color-mix(in srgb,var(--surface,#fff) 88%,var(--accent,#2563eb) 12%)}
+.export-center-custom-range[hidden],.export-center-field[hidden]{display:none!important}
+.export-center-preview-shell{margin-top:16px;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface,#fff)}
+.export-center-preview-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 13px;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--surface,#fff) 93%,var(--accent,#2563eb) 7%)}
+.export-center-preview-toolbar strong{font-size:12px}.export-center-preview-toolbar span{font-size:10px;color:var(--muted)}
+.export-center-preview{padding:14px}
+.export-center-preview-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.export-center-preview-head>div{display:flex;flex-direction:column;gap:3px}.export-center-preview-head strong{font-size:13px}.export-center-preview-head span{font-size:10px;color:var(--muted)}
+.export-center-sync-badge{flex:0 0 auto;border-radius:999px;padding:5px 8px;font-size:9px!important;font-weight:900;letter-spacing:.06em}.export-center-sync-badge.is-good{background:#dcfce7;color:#166534}.export-center-sync-badge.is-warn{background:#fef3c7;color:#92400e}
+.export-center-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.export-center-metrics>div{padding:10px;border:1px solid var(--border);border-radius:12px;background:color-mix(in srgb,var(--surface,#fff) 96%,var(--accent,#2563eb) 4%);display:flex;flex-direction:column;gap:2px;min-width:0}
+.export-center-metrics strong{font-size:17px;font-variant-numeric:tabular-nums}.export-center-metrics span{font-size:9px;color:var(--muted);line-height:1.3}
+.export-center-warning,.export-center-ok,.export-center-error{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:10px;line-height:1.5}.export-center-warning{background:#fffbeb;border:1px solid #fde68a;color:#92400e}.export-center-ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}.export-center-error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;display:flex;flex-direction:column;gap:3px}
+.export-center-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}.export-center-actions-left,.export-center-actions-right{display:flex;gap:8px;align-items:center}.export-center-actions button{min-height:42px}
+.export-center-download{min-width:152px}
+@media(max-width:720px){.export-center-grid{grid-template-columns:1fr}.export-center-custom-range{grid-column:auto;grid-template-columns:1fr}.export-center-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.export-center-preview-head{flex-direction:column}.export-center-actions{align-items:stretch}.export-center-actions-left,.export-center-actions-right{width:100%}.export-center-actions button{flex:1}}

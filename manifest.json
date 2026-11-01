@@ -1,0 +1,32 @@
+{
+  "name": "OOS TrinoTime",
+  "short_name": "TrinoTime",
+  "description": "TrinoTime attendance and operations portal for OOS teams.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#F8FAFC",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "trinotime-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "version": "1.1.76",
+  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "staging": {
+    "environment": "staging-qa",
+    "sourceParity": "UX18P46",
+    "productionDataShared": false
+  },
+  "bio_break_scroll_fix": "2026-11-01-scroller-centering-preserved"
+}

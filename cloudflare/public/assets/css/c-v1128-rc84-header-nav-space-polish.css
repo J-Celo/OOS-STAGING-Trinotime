@@ -1,0 +1,81 @@
+/* TrinoTime v1.1.128 RC84 — Header Navigation Space Polish.
+   Presentation only. Removes the redundant signed-in account chevron from both
+   Standard and Premium/custom workspaces, compacts the command-search launcher,
+   and prevents desktop navigation labels from shrinking into each other.
+   No auth/session, entitlement, Firebase, Attendance, Schedule, Messaging,
+   voice/video, or screen-sharing behavior is changed. */
+
+/* The account-detail chevron consumed a full control slot without adding a
+   required workflow. Keep its underlying session data/runtime untouched, but
+   remove the control from the visible action rail in every signed-in edition. */
+body[data-trino-role] #appRoot > .band .action-rail > #sessionMeta,
+body[data-trino-role] #appRoot > .band .action-rail #sessionMetaToggle {
+  display: none !important;
+}
+
+/* The launcher still opens the full command palette; only its header footprint
+   is reduced. The visible label is shortened in j-command-palette.js. */
+body[data-trino-role] #appRoot > .band .action-rail #ttCommandTrigger {
+  box-sizing: border-box !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 210px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+body[data-trino-role] #appRoot > .band .action-rail #ttCommandTrigger .tt-command-trigger-label {
+  min-width: 0 !important;
+  max-width: 112px !important;
+}
+
+/* Desktop/laptop: preserve complete labels instead of allowing flexbox to
+   squeeze a button while its nowrap text overflows into the next control. */
+@media (min-width: 900px) {
+  body[data-trino-role] #appRoot > .band .action-rail {
+    gap: 6px !important;
+  }
+
+  body[data-trino-role] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,
+    #openDayOffBtn,
+    #headerSpeedtestBtn,
+    #tlAdminOverviewBtn,
+    #openShiftSettingsBtn,
+    #appReloadBtn,
+    #sessionLogoutBtn
+  ) {
+    flex-shrink: 0 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  body[data-trino-role] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,
+    #openDayOffBtn,
+    #headerSpeedtestBtn,
+    #tlAdminOverviewBtn,
+    #openShiftSettingsBtn,
+    #appReloadBtn,
+    #sessionLogoutBtn
+  ) > span {
+    overflow: hidden !important;
+    text-overflow: clip !important;
+  }
+}
+
+/* Large desktop keeps the useful Ctrl/Cmd+K hint while staying compact. */
+@media (min-width: 1101px) {
+  body[data-trino-role] #appRoot > .band .action-rail #ttCommandTrigger {
+    max-width: 205px !important;
+  }
+}
+
+/* Existing command-palette CSS intentionally hides the text label below
+   1100px. Keep that behavior and make the icon/key launcher even tighter. */
+@media (max-width: 1100px) {
+  body[data-trino-role] #appRoot > .band .action-rail #ttCommandTrigger {
+    max-width: 104px !important;
+  }
+}

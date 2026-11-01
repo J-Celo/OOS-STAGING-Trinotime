@@ -1,0 +1,54 @@
+/* TrinoTime V 2.0.0 RC49 — Manage Group header spacing hotfix.
+   UI layout only. No messaging authority, Favorites/Search behavior, group permissions, or data changes. */
+
+/* The active consolidated Messaging CSS gives .tt-wm-icon-btn a fixed 38px width.
+   Manage group is a text action on desktop, so explicitly opt it out of that icon width. */
+#ttWorkspaceChatOverlay #ttChatManageGroup {
+  width: max-content !important;
+  min-width: max-content !important;
+  height: 38px;
+  padding-inline: 12px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+#ttWorkspaceChatOverlay .tt-wm-thread-id {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 12px;
+}
+
+#ttWorkspaceChatOverlay .tt-wm-thread-actions {
+  flex: 0 0 auto;
+  column-gap: 8px;
+}
+
+/* Preserve RC47 compact action on genuinely narrow/mobile viewports. */
+@media (max-width: 720px) {
+  #ttWorkspaceChatOverlay .tt-wm-thread-id { margin-right: 0; }
+  #ttWorkspaceChatOverlay #ttChatManageGroup {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center;
+    flex: 0 0 42px !important;
+    overflow: hidden;
+    font-size: 0 !important;
+  }
+}
+
+@media (max-width: 520px) {
+  #ttWorkspaceChatOverlay #ttChatManageGroup {
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    flex-basis: 38px !important;
+  }
+}

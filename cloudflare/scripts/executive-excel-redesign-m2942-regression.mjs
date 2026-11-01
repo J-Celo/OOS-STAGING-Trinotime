@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const js=fs.readFileSync(path.join(root,'public/assets/js/j-report-exports-m2935.js'),'utf8');
+const html=fs.readFileSync(path.join(root,'public/index.html'),'utf8');
+const ctx={window:{},document:{addEventListener(){}},TextEncoder,Uint8Array,Uint32Array,DataView,Date,Intl,console,Set,Map,Math,Number,Error,Array,Blob};
+vm.runInNewContext(js,ctx);
+assert(html.includes('m2942=1'),'staging cache-bust includes M2.9.42');
+assert(js.includes("TrinoTimeStoreIntelligence?.getReportData?.(workflow,context)"),'store export keeps authorized getter');
+assert(js.includes('TrinoTimeMessagingSessionContext?.getActor?.()'),'actor check remains');
+const base={workflow:'Metrics',date:'2026-10-08',period:'Previous 7 days',scope:'own-pod',viewer:'Demo Lead',role:'team_leader',filter:'Coverage',generated:'QA',kpis:[],tables:{activity:{headers:['Agent','Submitted','Seconds / Task','Grade'],rows:[['Agent A','25','106.9s','A'],['Agent B','15','180s','B']]},stores:{headers:['Store','Confirmed'],rows:[['Preston','25'],['Miranda','15']]},storeTrends:{headers:['Date','Confirmed'],rows:[['2026-10-07','10'],['2026-10-08','30']]},storeJobs:{headers:['Job ID','Mapping'],rows:[['JOB_SAMPLE','tracker-observed']]},storeStatus:'QA'},notes:['Synthetic demo — no real users']};
+function files(bytes){const b=Buffer.from(bytes),m=new Map();let i=0;while(i+30<=b.length&&b.readUInt32LE(i)===0x04034b50){const size=b.readUInt32LE(i+18),n=b.readUInt16LE(i+26),x=b.readUInt16LE(i+28);const start=i+30+n+x;m.set(b.toString('utf8',i+30,i+30+n),b.toString('utf8',start,start+size));i=start+size;}return m;}
+let z=files(ctx.window.TrinoTimeReportExports.buildXlsx(base));
+const sheet=z.get('xl/worksheets/sheet1.xml'),agent=z.get('xl/worksheets/sheet2.xml'),drawing=z.get('xl/drawings/drawing1.xml');
+assert(sheet && !sheet.includes('<pane '),'Overview KPI labels and values scroll together');
+assert(agent.includes('<pane ySplit="5"'),'detail sheet column headings remain frozen');
+assert(sheet.includes('r="A5"')&&sheet.includes('r="A6"'),'KPI headings and values adjacent');
+assert(sheet.includes('AGENT RANKING')===false&&sheet.includes('TOP AGENT  /  VISIBLE RECORDS'),'visible ranking title is data derived');
+assert(sheet.includes('Agent A')&&sheet.includes('Preston'),'independent ranking labels are in worksheet cells');
+assert(sheet.includes('REPORT DETAILS  /  AUTHORIZED SCOPE'),'full metadata preserved below charts');
+assert(sheet.includes('r="A37"'),'no overlap with third chart');
+assert(drawing.includes('<xdr:row>9</xdr:row>')&&drawing.includes('<xdr:row>25</xdr:row>'),'top chart cards compact; third chart below visible rank rows');
+for(let i=1;i<=3;i++){const c=z.get(`xl/charts/chart${i}.xml`);assert(c&&c.includes('<c:dLbls>'),'native chart has value labels');assert(c.includes('<c:showVal val="1"/>'),'chart displays measurable values');assert(c.includes('Chart Data'),'editable source references preserved');assert(!c.includes('<c:externalData'),'no unresolved external source');}
+assert(z.get('xl/charts/chart1.xml').includes('<c:catAx>')&&z.get('xl/charts/chart1.xml').includes('<c:delete val="0"/>'),'category axis explicitly present');
+assert(agent.includes('numFmt')===false && agent.includes('t="n"'),'numeric seconds stored with style reference');
+assert(agent.includes('conditionalFormatting'),'grade highlighting preserved');
+assert(ctx.window.TrinoTimeReportExports.reportSheets(base)[1].rows[0][2]==='1m 46.9s','readable non-Excel export times');
+let short=files(ctx.window.TrinoTimeReportExports.buildXlsx({...base,tables:{...base.tables,storeTrends:undefined,stores:undefined,storeJobs:undefined}}));
+assert(short.get('xl/worksheets/sheet1.xml').includes('REPORT DETAILS'),'one-chart conditional layout has detail section');
+assert(!short.get('xl/worksheets/sheet1.xml').includes('<pane '),'no freeze even for one chart');
+let empty=files(ctx.window.TrinoTimeReportExports.buildXlsx({...base,tables:{activity:{headers:['Agent','Submitted'],rows:[]},storeStatus:'Unavailable'}}));
+assert(!empty.has('xl/charts/chart1.xml'),'empty rows do not fabricate charts');
+console.log('PASS M2.9.42 Executive Excel: readable chart labels and visible data rankings, no KPI freeze, 1/3/0 chart layout safety, numeric durations, scope checks, role context and grade rules.');

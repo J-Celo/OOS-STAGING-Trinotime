@@ -1,0 +1,84 @@
+/* TrinoTime V2.0.0 RC14 — final production UI closure.
+   Presentation-only refinements after RC13 staging QA. */
+
+#rosterOverlay .history-head.tt-tab-modal-head{
+  position:sticky;
+  top:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  min-height:0;
+  align-items:center;
+  gap:10px;
+}
+#rosterOverlay #rosterTitle{
+  position:static;
+  width:100%;
+  margin:0;
+  text-align:center;
+  white-space:nowrap;
+  pointer-events:auto;
+}
+#rosterOverlay .tt-tab-modal-actions{
+  position:relative;
+  z-index:1;
+  width:100%;
+  margin-left:0;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+@media(max-width:860px){
+  #rosterOverlay .history-head.tt-tab-modal-head{
+    gap:8px;
+  }
+  #rosterOverlay .tt-tab-modal-actions{
+    justify-content:flex-start;
+  }
+}
+
+#ttPremiumRecentActivity,#ttRecentBody{min-width:0}
+#ttRecentBody{overflow:hidden}
+#ttPremiumRecentActivity .tt-recent-table{
+  width:100%;
+  table-layout:fixed;
+}
+#ttPremiumRecentActivity .tt-recent-table th,
+#ttPremiumRecentActivity .tt-recent-table td{
+  min-width:0;
+  box-sizing:border-box;
+}
+#ttPremiumRecentActivity .tt-recent-table th:nth-child(1),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(1){width:12%}
+#ttPremiumRecentActivity .tt-recent-table th:nth-child(2),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(2){width:18%}
+#ttPremiumRecentActivity .tt-recent-table th:nth-child(3),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(3){width:13%}
+#ttPremiumRecentActivity .tt-recent-table th:nth-child(4),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(4){width:24%}
+#ttPremiumRecentActivity .tt-recent-table th:nth-child(5),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(5){width:21%}
+#ttPremiumRecentActivity .tt-recent-table th:nth-child(6),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(6){width:12%;white-space:nowrap}
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(2),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(4),
+#ttPremiumRecentActivity .tt-recent-table td:nth-child(5){
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#ttPremiumRecentActivity .tt-recent-table th:last-child,
+#ttPremiumRecentActivity .tt-recent-table td:last-child{padding-right:12px}
+
+@media(min-width:1281px) and (max-width:1760px){
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table th:nth-child(3),
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table td:nth-child(3){display:none}
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table th:nth-child(1),
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table td:nth-child(1){width:14%}
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table th:nth-child(2),
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table td:nth-child(2){width:21%}
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table th:nth-child(4),
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table td:nth-child(4){width:30%}
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table th:nth-child(5),
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table td:nth-child(5){width:23%}
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table th:nth-child(6),
+  body:not(.tt-premium-sidebar-collapsed) #ttPremiumRecentActivity .tt-recent-table td:nth-child(6){width:12%}
+}

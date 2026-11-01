@@ -1,0 +1,15 @@
+/* TrinoTime v1.1.96 — Profile-to-DM UX update */
+.profile-directory-message-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:38px;padding:8px 14px;margin-top:8px;border:1px solid color-mix(in srgb,var(--accent,#d7a72f) 72%,transparent);
+  border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#d7a72f) 88%,#fff 12%),color-mix(in srgb,var(--accent,#d7a72f) 72%,#7a5710 28%));
+  color:#111827;font:700 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.12);transition:transform .14s ease,box-shadow .14s ease,filter .14s ease;
+}
+.profile-directory-message-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.profile-directory-message-btn:hover{transform:translateY(-1px);filter:brightness(1.04);box-shadow:0 10px 24px rgba(0,0,0,.16)}
+.profile-directory-message-btn:active{transform:translateY(0)}
+.profile-directory-message-btn:focus-visible{outline:3px solid color-mix(in srgb,var(--accent,#d7a72f) 42%,transparent);outline-offset:3px}
+html.dark .profile-directory-message-btn,[data-theme="dark"] .profile-directory-message-btn{color:#111827}
+@media (max-width:720px){.profile-directory-message-btn{width:100%;min-height:44px;margin-top:10px}}
+@media (prefers-reduced-motion:reduce){.profile-directory-message-btn{transition:none}.profile-directory-message-btn:hover{transform:none}}

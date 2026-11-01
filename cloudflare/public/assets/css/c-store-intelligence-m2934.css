@@ -1,0 +1,72 @@
+/* Store Intelligence · quiet executive data surface */
+.tt-si-panel{margin:18px 0 10px;padding:20px 22px;border:1px solid rgba(120,139,165,.23);border-radius:22px;background:linear-gradient(145deg,#fff,#f8fafc);box-shadow:0 12px 34px rgba(15,23,42,.055);color:#172238}
+.tt-si-head{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.tt-si-head small{font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#62748a}.tt-si-head h3{margin:4px 0;font-size:24px;letter-spacing:-.03em}.tt-si-head p{margin:0;font-size:12px;color:#758398}.tt-si-actions{display:flex;gap:10px;align-items:end}.tt-si-actions label{font-size:11px;color:#62748a;font-weight:800}.tt-si-actions select{display:block;max-width:310px;width:250px;margin-top:6px;padding:10px;border:1px solid #d6dfed;border-radius:11px;color:#162139;background:#fff}.tt-si-actions button{border:1px solid #d6dfed;background:#fff;color:#253854;padding:10px 14px;min-height:40px;border-radius:11px;font-weight:750;cursor:pointer}.tt-si-status{font-size:12px;color:#76869a;margin:16px 0 10px}.tt-si-table-wrap{max-height:360px;overflow:auto;border:1px solid #e3e9f2;border-radius:14px}.tt-si-table-wrap table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}.tt-si-table-wrap th{position:sticky;top:0;text-align:left;background:#f4f7fb;padding:12px 14px;font-weight:800;color:#67768c;text-transform:uppercase;font-size:10px;letter-spacing:.07em}.tt-si-table-wrap td{padding:12px 14px;border-top:1px solid #e8edf4;color:#34445b}.tt-si-table-wrap td strong{color:#19263a}.tt-si-table-wrap td small{display:block;color:#9b6b17;margin-top:5px}.tt-si-empty{padding:22px;color:#64748b;font-size:13px;border:1px dashed #d6dfed;border-radius:14px}
+body.dark-mode .tt-si-panel{background:linear-gradient(160deg,#121d2f,#0d1626);border-color:#304159;color:#edf3fa;box-shadow:0 20px 44px rgba(0,0,0,.22)}body.dark-mode .tt-si-head h3{color:#f2f7fc}body.dark-mode .tt-si-head small,body.dark-mode .tt-si-head p,body.dark-mode .tt-si-status{color:#9eb0c7}body.dark-mode .tt-si-actions select,body.dark-mode .tt-si-actions button{background:#162338;border-color:#394d66;color:#e4ecf9}body.dark-mode .tt-si-table-wrap{border-color:#344760}body.dark-mode .tt-si-table-wrap th{background:#1a2a42;color:#a8b8cb}body.dark-mode .tt-si-table-wrap td{border-color:#2c3e55;color:#c8d7e8}body.dark-mode .tt-si-table-wrap td strong{color:#f1f6fc}body.dark-mode .tt-si-empty{color:#9fb0c4;border-color:#344760}
+@media(max-width:700px){.tt-si-panel{padding:15px}.tt-si-head h3{font-size:21px}.tt-si-actions{width:100%;flex-wrap:wrap}.tt-si-actions label{flex:1}.tt-si-actions select{max-width:100%;width:100%}}
+
+.tt-si-current-store{display:block;margin-top:4px;font-size:11px;color:#72839a;white-space:normal}.tt-si-task-store{font-size:11px;color:#637b9a;max-width:240px;overflow-wrap:anywhere}body.dark-mode .tt-si-current-store,body.dark-mode .tt-si-task-store{color:#acc0d7}
+
+/* M2.9.36 — per-store job ledger */
+.tt-si-jobs{margin-top:18px}.tt-si-jobs-head{display:flex;gap:12px;justify-content:space-between;align-items:end;margin-bottom:11px;flex-wrap:wrap}.tt-si-jobs-head h4{font-size:16px;font-weight:800;letter-spacing:-.02em;margin:0;color:#172238}.tt-si-jobs-head p{margin:4px 0 0;color:#697e93;font-size:12px}.tt-si-limit{font-size:11px;color:#ac6a16;max-width:310px}.tt-si-jobs .tt-si-table-wrap{max-height:430px}.tt-si-jobs .tt-si-table-wrap table{min-width:980px}.tt-si-jobs td:nth-child(2){font-variant-numeric:tabular-nums}.tt-si-jobs .tt-si-table-wrap td{padding:10px 12px}body.dark-mode .tt-si-jobs-head h4{color:#f0f5fb}body.dark-mode .tt-si-jobs-head p{color:#9db1c8}
+
+.tt-si-drawer-filter{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin:8px 14px 12px;color:#64748b;font-size:12px;font-weight:700}.tt-si-drawer-filter select{max-width:300px;padding:9px 12px;border:1px solid #cdd9e9;border-radius:11px;background:#fff;color:#1e293b}.tt-coverage-task[data-tt-si-task-store][hidden]{display:none!important}body.dark-mode .tt-si-drawer-filter select{background:#142338;color:#e2eaf6;border-color:#41516b}
+/* M2.9.37 executive expandable store intelligence */
+.tt-si-tools{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.tt-si-tools label{min-width:170px;flex:1;color:#68788e;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.tt-si-tools input,.tt-si-tools select{margin-top:5px;width:100%;min-height:40px;padding:8px 11px;background:#fff;color:#172238;border:1px solid #d6dfeb;border-radius:10px;font-size:12px;font-weight:600}.tt-si-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 17px}.tt-si-kpi{background:#f7f9fc;border:1px solid #e2e8f0;border-radius:13px;padding:12px}.tt-si-kpi small{display:block;font-size:10px;color:#7b899d;font-weight:750;letter-spacing:.06em;text-transform:uppercase}.tt-si-kpi strong{display:block;margin-top:7px;font-size:23px;font-weight:850;letter-spacing:-.035em;color:#13243b}.tt-si-list{display:grid;gap:9px}.tt-si-store-card{border:1px solid #dfe6ef;border-radius:14px;background:#fff;overflow:hidden}.tt-si-store-card[data-mapping="conflict"]{border-color:#efcb98}.tt-si-store-toggle{display:flex;gap:12px;align-items:center;width:100%;padding:12px 14px;border:0;background:transparent;color:#1b2a40;cursor:pointer;text-align:left}.tt-si-store-toggle:hover{background:#f7fafe}.tt-si-chevron{font-size:20px;width:18px;color:#7085a0}.tt-si-store-title{flex:1;min-width:0;display:grid;gap:5px}.tt-si-store-title strong{font-size:13px;line-height:1.4;overflow-wrap:anywhere}.tt-si-store-title small{color:#75879b;font-size:11px}.tt-si-store-numbers{min-width:72px;text-align:right;display:grid;gap:2px}.tt-si-store-numbers strong{font-size:16px;font-weight:850}.tt-si-store-numbers small{font-size:10px;color:#7f8da0}.tt-si-badge{display:inline-flex;white-space:nowrap;border-radius:24px;padding:5px 9px;font-size:10px;font-weight:800;color:#62758d;background:#f1f4f8;border:1px solid #e3e8ef}.tt-si-badge.is-observed{color:#11715a;background:#edf9f4;border-color:#cfebdf}.tt-si-badge.is-warning{color:#a66212;background:#fff5e8;border-color:#f4d7b2}.tt-si-store-details{padding:12px 15px 16px;border-top:1px solid #e4eaf1}.tt-si-store-details p,.tt-si-store-details>small,.tt-si-method{font-size:11px;color:#77899f;line-height:1.6}.tt-si-store-details .tt-si-table-wrap{max-height:310px}.tt-si-full-ledger{margin-top:12px;border:1px solid #e0e8f1;border-radius:12px;padding:10px 13px}.tt-si-full-ledger summary{cursor:pointer;color:#30435e;font-size:12px;font-weight:750}.tt-si-full-ledger .tt-si-table-wrap{margin-top:12px}.tt-si-method{margin:13px 0 0}.tt-si-store-details .tt-si-table-wrap table,.tt-si-full-ledger table{min-width:1020px}.tt-si-store-details td:nth-child(3),.tt-si-full-ledger td:nth-child(3){font-family:monospace;font-weight:700}.tt-si-store-card:focus-within{outline:1px solid rgba(37,99,235,.23)}
+body.dark-mode .tt-si-tools label,body.dark-mode .tt-si-store-title small,body.dark-mode .tt-si-store-numbers small,body.dark-mode .tt-si-store-details p,body.dark-mode .tt-si-method{color:#98aac1}body.dark-mode .tt-si-tools input,body.dark-mode .tt-si-tools select{background:#162338;border-color:#374b66;color:#ecf3ff}body.dark-mode .tt-si-kpi{background:#142238;border-color:#2b405a}body.dark-mode .tt-si-kpi strong{color:#eef4ff}body.dark-mode .tt-si-store-card,body.dark-mode .tt-si-full-ledger{background:#121f33;border-color:#30425b}body.dark-mode .tt-si-store-card[data-mapping="conflict"]{border-color:#815e35}body.dark-mode .tt-si-store-toggle{color:#e8f0fc}body.dark-mode .tt-si-store-toggle:hover{background:#1b2b42}body.dark-mode .tt-si-store-details{border-color:#30425b}body.dark-mode .tt-si-badge{color:#a8b9ce;background:#1c2d43;border-color:#334861}body.dark-mode .tt-si-badge.is-observed{color:#78dbc2;background:#143831;border-color:#235f4e}body.dark-mode .tt-si-badge.is-warning{color:#f2c38e;background:#3d2c1e;border-color:#815e35}body.dark-mode .tt-si-full-ledger summary{color:#c8daef}
+@media(max-width:800px){.tt-si-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.tt-si-store-toggle{flex-wrap:wrap}.tt-si-store-title{min-width:55%}.tt-si-badge{order:4}}
+@media(max-width:420px){.tt-si-store-numbers{min-width:58px}}
+
+.tt-si-trend-bars{display:grid;gap:9px;margin:16px 0}.tt-si-trend-row{display:grid;grid-template-columns:95px minmax(0,1fr) 50px;align-items:center;gap:8px;font-size:11px;color:#63758c}.tt-si-trend-row strong{text-align:right;font-size:12px;color:#1d3453}.tt-si-trend-track{height:8px;background:#e8eef5;border-radius:12px;overflow:hidden}.tt-si-trend-track i{display:block;height:100%;background:linear-gradient(90deg,#416cbb,#8995df);border-radius:12px}.tt-si-review-note{font-size:11px;line-height:1.6;color:#758398}body.dark-mode .tt-si-trend-row strong{color:#dce8f8}body.dark-mode .tt-si-trend-track{background:#253853}body.dark-mode .tt-si-review-note{color:#9badc6}
+
+/* RC2: agent detail, historical POD trend and mapping-quality indicators. */
+.tt-si-freshness{font-size:11px;color:#577a9d;margin:0 0 13px;line-height:1.5}
+.tt-si-unmapped{margin:12px 0}.tt-si-unmapped-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff7ec;border:1px solid #ead1aa;border-radius:12px;padding:13px 16px;color:#71440a}
+.tt-si-unmapped-banner strong{font-size:13px;display:block}.tt-si-unmapped-banner small{display:block;font-size:11px;line-height:1.5;margin-top:4px}
+.tt-si-unmapped-banner button{border-radius:9px;border:1px solid #d2a367;background:#fff;color:#814a0d;font-size:12px;font-weight:750;padding:10px 12px;cursor:pointer}
+.tt-si-clear{color:#41735b;font-size:12px;margin:8px 0 16px}
+.tt-si-focus{padding:16px;margin:16px 0;border:1px solid #dce6f2;border-radius:15px;background:#f9fbff}
+.tt-si-focus-head h4{font-size:16px;margin:0 0 4px;color:#1b3558}
+.tt-si-focus-head p{font-size:11px;color:#657c98;line-height:1.6;margin:0 0 14px}
+.tt-si-focus .tt-si-table-wrap{margin-top:9px;max-height:380px}.tt-si-focus .tt-si-table-wrap table{min-width:740px}
+.tt-si-daily-chart{display:grid;gap:8px;margin:13px 0 20px}.tt-si-day-row{display:grid;grid-template-columns:100px minmax(0,1fr) 65px;align-items:center;gap:12px;color:#516681;font-size:12px}
+.tt-si-day-row strong{text-align:right}.tt-si-day-track{height:11px;border-radius:10px;background:#e8eff7;overflow:hidden}
+.tt-si-day-track span{display:block;background:#326bab;height:100%;border-radius:10px}
+body.dark-mode .tt-si-freshness{color:#a1c3eb}body.dark-mode .tt-si-focus{background:#16263d;border-color:#344d6f}
+body.dark-mode .tt-si-focus-head h4{color:#d2e4fa}body.dark-mode .tt-si-focus-head p,body.dark-mode .tt-si-day-row{color:#adc0d8}
+body.dark-mode .tt-si-unmapped-banner{background:#3b2b1b;color:#ffd9a7;border-color:#805a2a}body.dark-mode .tt-si-unmapped-banner button{background:#554022;color:#ffdfa9;border-color:#956f36}
+body.dark-mode .tt-si-day-track{background:#283b56}
+@media(max-width:600px){.tt-si-focus{padding:11px}.tt-si-day-row{grid-template-columns:75px minmax(0,1fr) 45px;gap:6px;font-size:10px}}
+
+/* UX17.5 — Store Performance rows: protect submission totals at any container width.
+   Scoped to Store Intelligence cards; does not alter ledger or report data. */
+.tt-si-panel,.tt-si-list,.tt-si-store-card{box-sizing:border-box;min-width:0;max-width:100%}
+.tt-si-list{container:tt-store-list / inline-size}
+.tt-si-store-toggle{
+  box-sizing:border-box;display:grid;
+  grid-template-columns:20px minmax(0,1fr) max-content minmax(172px,200px);
+  align-items:center;column-gap:14px;row-gap:10px;max-width:100%;min-width:0;
+}
+.tt-si-store-toggle > *{min-width:0}
+.tt-si-chevron{width:20px;flex:none}
+.tt-si-store-title{min-width:0;width:100%;max-width:100%}
+.tt-si-store-title strong,.tt-si-store-title small{display:block;white-space:normal;overflow-wrap:anywhere}
+.tt-si-store-mapping{min-width:0;max-width:100%;justify-self:end}
+.tt-si-store-mapping .tt-si-badge{max-width:100%;box-sizing:border-box}
+.tt-si-store-stats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:center;min-width:0;justify-self:stretch}
+.tt-si-store-stats .tt-si-store-numbers{min-width:0;max-width:100%;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tt-si-store-stats .tt-si-store-numbers strong,.tt-si-store-stats .tt-si-store-numbers small{display:block;white-space:nowrap;overflow:visible;text-overflow:clip}
+@container tt-store-list (max-width: 830px){
+ .tt-si-store-toggle{grid-template-columns:20px minmax(0,1fr) max-content;row-gap:9px}
+ .tt-si-store-mapping{grid-column:3;grid-row:1}
+ .tt-si-store-stats{grid-column:2 / -1;grid-row:2;justify-self:end;min-width:168px;max-width:220px;width:100%}
+}
+@container tt-store-list (max-width: 480px){
+ .tt-si-store-toggle{grid-template-columns:20px minmax(0,1fr);column-gap:10px;padding:12px}
+ .tt-si-store-mapping{grid-column:2;grid-row:2;justify-self:start}
+ .tt-si-store-stats{grid-column:2;grid-row:3;justify-self:start;max-width:220px}
+}
+/* Fallback for browsers without container queries. */
+@supports not (container-type:inline-size){
+ @media(max-width:1050px){.tt-si-store-toggle{grid-template-columns:20px minmax(0,1fr) max-content}.tt-si-store-stats{grid-column:2/-1;max-width:220px;width:100%;justify-self:end}}
+ @media(max-width:600px){.tt-si-store-toggle{grid-template-columns:20px minmax(0,1fr)}.tt-si-store-mapping{grid-column:2;justify-self:start}.tt-si-store-stats{grid-column:2;justify-self:start}}
+}

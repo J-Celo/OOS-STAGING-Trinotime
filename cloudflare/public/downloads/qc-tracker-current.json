@@ -1,0 +1,10 @@
+{
+  "schema": "trinotime-qc-tracker-release-v1",
+  "channel": "staging-qa",
+  "version": "2.2.62",
+  "downloadUrl": "/api/workforce/governance/qc-tracker-download",
+  "file": "TrinoTime-QC-Tracker-v2.2.62.zip",
+  "sha256": "b329bbc9b3982ed2c8b6f4a07cccddf62abc9865fedd47c6cc804e04882cba06",
+  "qaStatus": "staging-only automatic Confirmation recovery port; offline synthetic tests, live staging validation pending",
+  "updateMethod": "Use same unpacked staging extension folder; never reinstall or erase extension storage"
+}

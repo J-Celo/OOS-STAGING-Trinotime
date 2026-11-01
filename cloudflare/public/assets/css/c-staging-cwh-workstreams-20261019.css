@@ -1,0 +1,24 @@
+/* Staging-only CWH workstream presentation. Stable POD IDs and Worker authorization remain unchanged. */
+.gate-overlay .gate-cwh-workstreams[hidden]{display:none!important}
+.gate-overlay .gate-cwh-workstreams{margin:12px 0 14px;max-width:100%;min-width:0}
+.gate-overlay .gate-cwh-workstreams-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.gate-overlay .gate-cwh-workstreams-heading strong{font-size:14px;color:#17344b}
+.gate-overlay .gate-cwh-workstreams-heading small{font-size:11px;color:#526576}
+.gate-overlay .gate-cwh-workstream-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gate-overlay .gate-cwh-workstream-btn{appearance:none;min-width:0;display:flex;gap:10px;text-align:left;align-items:center;padding:11px 12px;background:#fff;color:#17344b;border:1px solid #cbd8e4;border-radius:12px;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+.gate-overlay .gate-cwh-workstream-btn:hover{border-color:#276984;background:#f1f8fb}
+.gate-overlay .gate-cwh-workstream-btn.active{border:2px solid #16718b;background:#e9f5f9;padding:10px 11px}
+.gate-overlay .gate-cwh-workstream-btn:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+.gate-overlay .gate-cwh-workstream-btn strong{font-size:13px;line-height:1.3;display:block}
+.gate-overlay .gate-cwh-workstream-btn small{font-size:11px;line-height:1.35;display:block;color:#526576}
+.gate-overlay .gate-cwh-workstream-icon{width:36px;height:36px;display:grid;place-items:center;flex:none;border-radius:10px;background:#deedf3;color:#155b79}
+.gate-overlay .gate-cwh-workstream-icon svg{width:23px;height:23px;stroke-linecap:round;stroke-linejoin:round}
+.gate-overlay .gate-cwh-workstream-help{margin:8px 0 0;font-size:11px;line-height:1.5;color:#526576}
+body.dark-mode .gate-overlay .gate-cwh-workstreams-heading strong,body.dark-mode .gate-overlay .gate-cwh-workstream-btn{color:#eff9ff}
+body.dark-mode .gate-overlay .gate-cwh-workstreams-heading small,body.dark-mode .gate-overlay .gate-cwh-workstream-btn small,body.dark-mode .gate-overlay .gate-cwh-workstream-help{color:#c6dce9}
+body.dark-mode .gate-overlay .gate-cwh-workstream-btn{background:#17364c;border-color:#477084}
+body.dark-mode .gate-overlay .gate-cwh-workstream-btn.active{background:#16445a;border-color:#89cee0}
+body.dark-mode .gate-overlay .gate-cwh-workstream-icon{background:#28536a;color:#a8e8fa}
+@media(max-width:480px){.gate-overlay .gate-cwh-workstream-btn{padding:10px 8px;gap:7px}.gate-overlay .gate-cwh-workstream-btn.active{padding:9px 7px}.gate-overlay .gate-cwh-workstream-icon{width:31px;height:31px}.gate-overlay .gate-cwh-workstream-icon svg{width:20px;height:20px}}
+@media(max-width:360px){.gate-overlay .gate-cwh-workstream-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.gate-overlay .gate-cwh-workstream-btn{transition:none}}

@@ -1,0 +1,140 @@
+/* TrinoTime V 2.0.0 RC47 — responsive Messaging header + Attendance empty-state hotfix.
+   Layout only: no authority, messaging semantics, Attendance calculations, or data changes. */
+
+/* Keep the custom-group management control from shrinking underneath Favorites/Search. */
+#ttChatManageGroup {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  #ttWorkspaceChatOverlay .tt-wm-thread-head {
+    flex-wrap: nowrap !important;
+    gap: 8px;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-thread-id {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-thread-id > div {
+    min-width: 0;
+    overflow: hidden;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-thread-title,
+  #ttWorkspaceChatOverlay .tt-wm-thread-sub {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-thread-actions {
+    flex: 0 0 auto;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    min-width: 0;
+  }
+  #ttWorkspaceChatOverlay #ttChatManageGroup {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    flex: 0 0 42px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    font-size: 0 !important;
+    white-space: nowrap !important;
+  }
+  #ttWorkspaceChatOverlay #ttChatManageGroup::before {
+    content: "⚙︎";
+    display: block;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  #ttWorkspaceChatOverlay .tt-wm-thread-head {
+    padding-inline: 10px !important;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-thread-id {
+    gap: 7px !important;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-thread-actions {
+    gap: 5px !important;
+  }
+  #ttWorkspaceChatOverlay #ttChatManageGroup,
+  #ttWorkspaceChatOverlay .tt-wm-favorite-btn,
+  #ttWorkspaceChatOverlay .tt-wm-conversation-search-btn {
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    flex-basis: 38px !important;
+  }
+  #ttWorkspaceChatOverlay .tt-wm-notify-btn {
+    flex: 0 0 auto;
+    max-width: 70px;
+    padding-inline: 8px !important;
+  }
+}
+
+/* The generic empty-state visual system must never turn a <tr> into a flex card.
+   Keep the table semantics intact and anchor the message to the visible scroll viewport. */
+#desktopTableContainer > .desktop-table tbody tr.attendance-search-empty {
+  display: table-row !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#desktopTableContainer > .desktop-table tbody tr.attendance-search-empty > td {
+  display: table-cell !important;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--card) !important;
+  color: var(--muted) !important;
+  -webkit-text-fill-color: var(--muted) !important;
+  text-align: left !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+#desktopTableContainer .attendance-search-empty-message {
+  position: sticky;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 112px;
+  box-sizing: border-box;
+  padding: 24px 18px;
+  color: var(--muted);
+  -webkit-text-fill-color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: normal;
+  z-index: 2;
+}
+
+body.dark-mode #desktopTableContainer > .desktop-table tbody tr.attendance-search-empty > td {
+  background: var(--card) !important;
+}
+
+@media (max-width: 680px) {
+  #desktopTableContainer .attendance-search-empty-message {
+    left: 12px;
+    min-height: 92px;
+    padding: 20px 12px;
+  }
+}

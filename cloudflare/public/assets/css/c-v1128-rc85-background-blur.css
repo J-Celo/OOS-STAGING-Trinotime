@@ -1,0 +1,15 @@
+/* RC85 — native camera background-blur control. The call layout is otherwise inherited unchanged. */
+#ttVoiceCallBlur[hidden],#ttVoiceCallBlurNotice[hidden]{display:none!important}
+#ttVoiceCallBlur:disabled{opacity:.58;cursor:not-allowed}
+#ttVoiceCallBlur:disabled>span{box-shadow:none!important}
+#ttVoiceCallBlur b{white-space:nowrap}
+#ttVoiceCallBlur[aria-pressed="true"]>span{background:#3659b8!important;border-color:#3659b8!important;color:#fff!important}
+#ttVoiceCallBlurNotice{width:100%;box-sizing:border-box;margin:8px 0 0;padding:9px 11px;border:1px solid rgba(94,112,142,.34);border-radius:10px;background:rgba(92,111,145,.08);font:600 12px/1.45 system-ui;color:inherit}
+.tt-call-overlay.is-minimized #ttVoiceCallBlur{display:none!important}
+.tt-call-overlay.is-minimized #ttVoiceCallBlurNotice{display:none!important}
+html[data-theme="dark"] #ttVoiceCallBlurNotice,body.dark-mode #ttVoiceCallBlurNotice,body.dark #ttVoiceCallBlurNotice{background:rgba(129,155,202,.09);border-color:#40506b;color:#dfe8f8}
+@media(max-width:620px){
+  .tt-call-overlay.is-video:not(.is-minimized) #ttVoiceCallBlur{min-width:56px}
+  .tt-call-overlay.is-video:not(.is-minimized) #ttVoiceCallBlur b{white-space:normal;max-width:66px;line-height:1.15}
+}
+@media(prefers-reduced-motion:reduce){#ttVoiceCallBlur{transition:none}}

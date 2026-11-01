@@ -1,0 +1,124 @@
+/* ========================================================================== */
+/* TrinoTime v1.0.70 - Obsidian / Dark mode text contrast repair             */
+/* Presentation only. Restores readable foregrounds on authenticated dark     */
+/* modal and profile surfaces without changing attendance or security logic.  */
+/* ========================================================================== */
+
+/* Obsidian uses --ink-dark as a structural/background tone in legacy layers.
+   Newer dialog titles that used it as a foreground therefore became nearly
+   black on dark glass. Give those specific foregrounds a semantic light ink. */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) :is(
+  .tl-status-detail-head h3,
+  .tl-status-detail-state div strong,
+  .tl-attendance-head h3,
+  .tl-attendance-live-name,
+  .agent-password-box h3
+) {
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  text-shadow: none !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) :is(
+  .tl-status-detail-head p,
+  .tl-status-detail-eyebrow,
+  .tl-status-detail-state div span,
+  .tl-status-detail-grid span,
+  .tl-attendance-head p,
+  .tl-attendance-live-status
+) {
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .tl-status-detail-grid strong {
+  color: #E5E7EB !important;
+  -webkit-text-fill-color: #E5E7EB !important;
+}
+
+/* My Profile dark-mode hierarchy. The modal shell was darkened correctly, but
+   the title and public display name were still using the light-theme ink. */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileOverlay :is(
+  .agent-profile-modal-title,
+  .profile-public-name
+) {
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  text-shadow: none !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileOverlay :is(
+  .agent-profile-modal-sub,
+  .profile-account-line,
+  .profile-info-label,
+  .profile-public-note,
+  .profile-photo-hint,
+  .profile-char-count
+) {
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileOverlay :is(
+  .profile-bio,
+  .profile-info-value,
+  .profile-no-selection strong
+) {
+  color: #E5E7EB !important;
+  -webkit-text-fill-color: #E5E7EB !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #agentProfileOverlay .profile-info-empty {
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+}
+
+/* Authenticated Obsidian modal primary actions intentionally use a light
+   action surface. Earlier accessibility CSS left -webkit-text-fill-color
+   white, which made labels such as Day-Off Swap and Open TL Attendance vanish
+   on Chromium/WebKit. Keep both color channels synchronized. */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay .modal-btn.save {
+  background: #F8FAFC !important;
+  background-image: none !important;
+  border-color: rgba(255,255,255,.92) !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-shadow: none !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.98) !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay .modal-btn.save * {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay .modal-btn.save:not(:disabled):hover,
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay .modal-btn.save:not(:disabled):focus-visible {
+  background: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+  color: #020617 !important;
+  -webkit-text-fill-color: #020617 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-overlay .modal-btn.save:disabled {
+  background: #263244 !important;
+  border-color: #3A475B !important;
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+  box-shadow: none !important;
+}
+
+/* Keep the Schedule Exceptions action row readable as a group and prevent
+   legacy text-fill inheritance from reappearing on any of its four actions. */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #scheduleExceptionsOverlay .schedule-exception-actions .modal-btn.save {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  font-weight: 750 !important;
+}
+
+/* Dark modal supporting text remains intentionally softer than headings, but
+   never drops to the near-black --ink-dark tone. */
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) .modal-box :is(.modal-sub,.dayoff-module-note) {
+  color: #9AA7B9 !important;
+  -webkit-text-fill-color: #9AA7B9 !important;
+}

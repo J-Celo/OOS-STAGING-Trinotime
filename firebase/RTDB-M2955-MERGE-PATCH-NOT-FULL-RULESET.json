@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "serverTimeAudit": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

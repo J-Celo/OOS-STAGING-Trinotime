@@ -1,0 +1,86 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "oostrinotime-staging-qa",
+  "main": "./src/worker.js",
+  "compatibility_date": "2026-09-12",
+  "keep_vars": true,
+  "workers_dev": true,
+  "vars": {
+    "DEPLOYMENT_ENV": "staging",
+    "ENABLE_OOS_QA_WORKGROUP": "true",
+    "FIREBASE_PROJECT_ID": "trinotime-staging-qa",
+    "FIREBASE_DATABASE_URL": "https://trinotime-staging-qa-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "FIREBASE_WEB_API_KEY": "AIzaSyC1xIGQMLy7Wd5VMtAm-eGDcwiJtigaXDM",
+    "FIREBASE_AUTH_DOMAIN": "trinotime-staging-qa.firebaseapp.com",
+    "FIREBASE_STORAGE_BUCKET": "trinotime-staging-qa.firebasestorage.app",
+    "FIREBASE_MESSAGING_SENDER_ID": "106667992460",
+    "FIREBASE_APP_ID": "1:106667992460:web:b643b511afaa78573462a9",
+    "FIREBASE_MEASUREMENT_ID": "",
+    "LEAVE_API_ENDPOINT": "",
+    "TT_GOOGLE_SHEETS_MANUAL_SYNC_ENABLED": "approved",
+    "TRINOBOT_STAGING_PREFLIGHT_ENABLED": "false",
+    "TRINOBOT_LINK_CONFIRM_ENABLED": "false",
+    "TRINOBOT_QA_WORKER_ORIGIN": "https://trinotime-discord-bot-qa.trinoadmin.workers.dev/"
+  },
+  "assets": {
+    "directory": "./public/",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/trinotime-runtime-config.js",
+      "/api/chat/*",
+      "/api/security/*",
+      "/api/workforce/coverage/*",
+      "/api/workforce/confirmation/*",
+      "/api/workforce/metrics/*",
+      "/api/workforce/sync-guardian/*",
+      "/api/workforce/attendance/*",
+      "/api/workforce/trinobot/*",
+      "/api/workforce/roster/*",
+      "/api/workforce/qa-team/*",
+      "/api/workforce/profile/*",
+      "/api/workforce/overtime/*",
+      "/api/workforce/schedule/*",
+      "/api/workforce/leave/*",
+      "/api/workforce/governance/*",
+      "/api/workforce/audit/*",
+      "/api/workforce/presence/*",
+      "/api/workforce/personnel/*",
+      "/api/workforce/lifecycle/*",
+      "/api/workforce/store-plans/*",
+      "/api/workforce/store-exports/*",
+      "/api/workforce/workspace-read",
+      "/api/workforce/login-directory",
+      "/api/workforce/login-directory/*"
+    ]
+  },
+  "observability": {
+    "enabled": true
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CHAT_REALTIME",
+        "class_name": "ChatRealtimeHub"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1.1.77-durable-workspace-messaging",
+      "new_sqlite_classes": [
+        "ChatRealtimeHub"
+      ]
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "CHAT_FILES",
+      "bucket_name": "trinotime-chat-files-staging"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/5 * * * *"
+    ]
+  }
+}

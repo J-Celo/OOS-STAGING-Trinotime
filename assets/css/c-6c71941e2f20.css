@@ -1,0 +1,169 @@
+/* TrinoTime v1.1.17 - Premium embedded schedule calendar
+   UI-only adapter. Uses the existing authoritative availability resolver and
+   never changes attendance, leave, Firebase, App Check, auth, or permission logic. */
+
+#ttPremiumEmbeddedCalendar { display:none; }
+
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot {
+  display:flex !important;
+  flex-direction:column !important;
+  flex-wrap:nowrap !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:320px !important;
+  height:auto !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot #agentProfileHeaderBtn {
+  order:1 !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  margin:0 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot #tlHomeStatusBadge {
+  order:2 !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  margin:0 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band #ttPremiumEmbeddedCalendar {
+  display:flex;
+  order:3;
+  position:relative;
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  flex-direction:column;
+  padding:11px 12px 10px;
+  border:1px solid rgba(217,222,229,.92);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(249,250,251,.84));
+  color:#252A31;
+  box-shadow:0 12px 30px rgba(31,41,55,.055),inset 0 1px 0 rgba(255,255,255,.96);
+  contain:layout paint style;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='agent'] #appRoot > .band #ttPremiumEmbeddedCalendar {
+  min-height:222px;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #ttPremiumEmbeddedCalendar {
+  min-height:204px;
+  padding-top:10px;
+}
+
+.tt-v1117-cal-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; min-width:0; }
+.tt-v1117-cal-heading { min-width:0; }
+.tt-v1117-cal-heading > span { display:block; color:#9A6712; font:700 7px/1 Poppins,'Plus Jakarta Sans',sans-serif; letter-spacing:.11em; text-transform:uppercase; }
+.tt-v1117-cal-heading > strong { display:block; margin-top:5px; overflow:hidden; color:#20252C; font:650 12px/1.05 Poppins,'Plus Jakarta Sans',sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+.tt-v1117-cal-nav { display:flex; gap:5px; flex:none; }
+.tt-v1117-cal-nav button,
+.tt-v1117-cal-context button { appearance:none; border:1px solid #E4E8ED; background:#FFFFFF; color:#515B68; cursor:pointer; box-shadow:none; touch-action:manipulation; }
+.tt-v1117-cal-nav button { display:grid; place-items:center; width:27px; height:27px; padding:0; border-radius:8px; font:700 15px/1 Inter,sans-serif; }
+.tt-v1117-cal-nav button:hover,
+.tt-v1117-cal-context button:hover { border-color:#D8B86F; background:#FFFCF5; color:#8A5B10; }
+.tt-v1117-cal-nav button:focus-visible,
+.tt-v1117-cal-context button:focus-visible { outline:2px solid rgba(196,139,36,.38); outline-offset:2px; }
+
+.tt-v1117-cal-context { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:7px 0 6px; min-width:0; }
+.tt-v1117-cal-context > span { min-width:0; overflow:hidden; color:#7A8491; font:550 7.5px/1.2 Poppins,sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+.tt-v1117-cal-context button { min-height:23px; padding:0 8px; border-radius:999px; color:#8A5B10; font:650 7px/1 Poppins,sans-serif; }
+
+.tt-v1117-cal-weekdays,
+.tt-v1117-cal-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; }
+.tt-v1117-cal-weekdays { margin-bottom:3px; }
+.tt-v1117-cal-weekdays span { display:grid; place-items:center; min-height:13px; color:#929BA6; font:700 6.5px/1 'IBM Plex Mono',monospace; }
+.tt-v1117-cal-grid { min-height:0; }
+.tt-v1117-cal-day {
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-width:0;
+  min-height:21px;
+  border:1px solid transparent;
+  border-radius:7px;
+  background:rgba(255,255,255,.62);
+  color:#59636F;
+  font:650 7.5px/1 'IBM Plex Mono',monospace;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.56);
+}
+.tt-v1117-cal-day > span { position:relative; z-index:2; }
+.tt-v1117-cal-day.is-outside { background:transparent; color:#B7BEC6; box-shadow:none; opacity:.46; }
+.tt-v1117-cal-day.is-dayoff:not(.is-outside) {
+  border-color:rgba(217,145,18,.28);
+  background:#FFF3D5;
+  color:#88550B;
+}
+.tt-v1117-cal-day.is-dayoff:not(.is-outside)::after {
+  content:''; position:absolute; left:50%; bottom:2px; width:7px; height:2px; border-radius:99px; transform:translateX(-50%); background:#D08A16;
+}
+.tt-v1117-cal-day.is-leave:not(.is-outside) {
+  border-color:rgba(99,102,241,.25);
+  background:#EEF0FF;
+  color:#4F46A5;
+}
+.tt-v1117-cal-day.is-leave:not(.is-outside)::after {
+  content:''; position:absolute; left:50%; bottom:2px; width:4px; height:4px; border-radius:50%; transform:translateX(-50%); background:#7477DE;
+}
+.tt-v1117-cal-day.is-today {
+  border-color:#303741 !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.58),0 0 0 1px rgba(37,42,49,.10) !important;
+  font-weight:800;
+}
+
+.tt-v1117-cal-legend { display:flex; align-items:center; flex-wrap:wrap; gap:5px 9px; margin-top:6px; padding-top:6px; border-top:1px solid #EDF0F3; }
+.tt-v1117-cal-legend span { display:inline-flex; align-items:center; gap:4px; color:#7A8491; font:550 6.5px/1.1 Poppins,sans-serif; white-space:nowrap; }
+.tt-v1117-cal-legend i { display:block; width:6px; height:6px; border-radius:2px; }
+.tt-v1117-cal-legend .is-dayoff i { background:#E1A137; }
+.tt-v1117-cal-legend .is-leave i { background:#7779DF; }
+.tt-v1117-cal-legend .is-today i { border:1px solid #303741; background:transparent; border-radius:50%; }
+#ttPremiumEmbeddedCalendar[data-loading='true'] .tt-v1117-cal-day:not(.is-outside) { color:#9AA3AE; background:rgba(255,255,255,.42); }
+
+html[data-trino-custom-workspace='enabled'] body.dark-mode:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band #ttPremiumEmbeddedCalendar {
+  border-color:rgba(255,255,255,.10);
+  background:linear-gradient(145deg,rgba(18,24,33,.94),rgba(13,19,27,.91));
+  color:#E7EAF0;
+  box-shadow:0 14px 34px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.045);
+}
+body.dark-mode .tt-v1117-cal-heading > strong { color:#F2F4F7; }
+body.dark-mode .tt-v1117-cal-heading > span { color:#D2A852; }
+body.dark-mode .tt-v1117-cal-context > span,
+body.dark-mode .tt-v1117-cal-weekdays span,
+body.dark-mode .tt-v1117-cal-legend span { color:#98A2B0; }
+body.dark-mode .tt-v1117-cal-nav button,
+body.dark-mode .tt-v1117-cal-context button { border-color:rgba(255,255,255,.10); background:rgba(255,255,255,.045); color:#D4DAE2; }
+body.dark-mode .tt-v1117-cal-day { background:rgba(255,255,255,.035); color:#CBD2DC; box-shadow:none; }
+body.dark-mode .tt-v1117-cal-day.is-outside { background:transparent; color:#5E6875; }
+body.dark-mode .tt-v1117-cal-day.is-dayoff:not(.is-outside) { border-color:rgba(224,161,55,.30); background:rgba(224,161,55,.15); color:#F1C872; }
+body.dark-mode .tt-v1117-cal-day.is-leave:not(.is-outside) { border-color:rgba(139,142,255,.28); background:rgba(103,107,214,.18); color:#BFC1FF; }
+body.dark-mode .tt-v1117-cal-day.is-today { border-color:#E5E7EB !important; box-shadow:0 0 0 1px rgba(229,231,235,.10) !important; }
+body.dark-mode .tt-v1117-cal-legend { border-top-color:rgba(255,255,255,.08); }
+body.dark-mode .tt-v1117-cal-legend .is-today i { border-color:#E5E7EB; }
+body.dark-mode #ttPremiumEmbeddedCalendar[data-loading='true'] .tt-v1117-cal-day:not(.is-outside) { color:#697482; background:rgba(255,255,255,.025); }
+
+/* The premium hero has no spare right-hand column once it collapses to the
+   single-column tablet layout. Hide this optional at-a-glance calendar there
+   instead of changing the established responsive geometry. */
+@media (max-width:980px) {
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band #ttPremiumEmbeddedCalendar { display:none !important; }
+}
+
+@media (max-width:1280px) and (min-width:981px) {
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot { max-width:280px !important; }
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='agent'],[data-trino-role='teamleader']) #appRoot > .band #ttPremiumEmbeddedCalendar { padding-left:9px; padding-right:9px; }
+  .tt-v1117-cal-day { min-height:20px; font-size:7px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .tt-v1117-cal-nav button,
+  .tt-v1117-cal-context button { transition:none !important; }
+}

@@ -1,0 +1,236 @@
+/* TrinoTime v1.1.11 - UI Stability Completion.
+   Presentation-only release: notification badge polish, floating-control collision
+   containment, label stability, and safer minimum target sizing.
+   No Firebase, App Check, reCAPTCHA, Auth, database, API-key, permission,
+   entitlement, or security-runtime changes. */
+
+/* Standard notification bell: counters are visually anchored and never affect flex sizing. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #notifBellBtn,
+html[data-trino-custom-workspace='standard'] #notifBellBtn {
+  position: relative !important;
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #notifBellBadge,
+html[data-trino-custom-workspace='standard'] #notifBellBadge {
+  position: absolute !important;
+  top: -5px !important;
+  right: -5px !important;
+  bottom: auto !important;
+  left: auto !important;
+  z-index: 5 !important;
+  min-width: 18px !important;
+  width: auto !important;
+  height: 18px !important;
+  padding: 0 5px !important;
+  margin: 0 !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  border-width: 2px !important;
+  border-radius: 999px !important;
+  box-sizing: border-box !important;
+  font-size: 9px !important;
+  line-height: 14px !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #notifBellBadge.show,
+html[data-trino-custom-workspace='standard'] #notifBellBadge.show {
+  display: inline-flex !important;
+}
+
+/* The release NEW chip is independently pinned to the lower-right corner. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #notifReleaseBadge,
+html[data-trino-custom-workspace='standard'] #notifReleaseBadge {
+  position: absolute !important;
+  top: auto !important;
+  right: -10px !important;
+  bottom: -7px !important;
+  left: auto !important;
+  z-index: 4 !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+
+/* Keep all three right-side quick controls in a predictable safe-area-aware stack. */
+:root {
+  --tt-floating-edge: max(14px, env(safe-area-inset-right));
+  --tt-floating-bottom: calc(14px + env(safe-area-inset-bottom));
+  --tt-floating-size: 46px;
+  --tt-floating-gap: 10px;
+}
+
+#leaveRequestFloater.leave-request-floater {
+  right: var(--tt-floating-edge) !important;
+  bottom: var(--tt-floating-bottom) !important;
+  min-width: var(--tt-floating-size) !important;
+  min-height: var(--tt-floating-size) !important;
+}
+
+#aiChatFloater.ai-chat-floater {
+  right: var(--tt-floating-edge) !important;
+  bottom: calc(var(--tt-floating-bottom) + var(--tt-floating-size) + var(--tt-floating-gap)) !important;
+  width: var(--tt-floating-size) !important;
+  height: var(--tt-floating-size) !important;
+}
+
+#profileDirectorySearchFab.profile-directory-fab {
+  right: var(--tt-floating-edge) !important;
+  bottom: calc(var(--tt-floating-bottom) + var(--tt-floating-size) + var(--tt-floating-gap) + var(--tt-floating-size) + var(--tt-floating-gap)) !important;
+  width: var(--tt-floating-size) !important;
+  height: var(--tt-floating-size) !important;
+}
+
+/* When a floating surface is open, remove the other floating triggers from the
+   interaction layer. The open surface already supplies its own close control. */
+html:is(.tt-ai-chat-open,.tt-profile-search-open,.tt-leave-request-open) :is(
+  #leaveRequestFloater,
+  #aiChatFloater,
+  #profileDirectorySearchFab
+) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* The corresponding floating drawers also stay out of one another's way. */
+html.tt-ai-chat-open #profileDirectorySearchDrawer,
+html.tt-profile-search-open #aiChatPanel {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Standard top bar: stable labels, optical centering, and reliable target sizes. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) {
+  min-height: 52px !important;
+  height: 52px !important;
+  padding-block: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-wrap: nowrap !important;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) > span,
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,
+  #openDayOffBtn,
+  #headerSpeedtestBtn,
+  #appReloadBtn,
+  #sessionLogoutBtn
+) > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 1.2em;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+/* Safer minimum widths on normal desktop/laptop widths; smaller breakpoints below
+   deliberately release these values so the existing responsive grouping can work. */
+@media (min-width: 681px) {
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #openShiftGuidelinesBtn,
+  html[data-trino-custom-workspace='standard'] #openShiftGuidelinesBtn { min-width: 154px !important; }
+
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #openDayOffBtn,
+  html[data-trino-custom-workspace='standard'] #openDayOffBtn { min-width: 138px !important; }
+
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #headerSpeedtestBtn,
+  html[data-trino-custom-workspace='standard'] #headerSpeedtestBtn { min-width: 132px !important; }
+
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) :is(#appReloadBtn,#sessionLogoutBtn),
+  html[data-trino-custom-workspace='standard'] :is(#appReloadBtn,#sessionLogoutBtn) { min-width: 126px !important; }
+}
+
+/* Maintain at least a 44px interactive target for Standard icon controls. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #appRoot > .band .action-rail > :is(
+  #installAppBtn,#notifBellBtn,#settingsGearBtn,#sessionMeta
+),
+html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+  #installAppBtn,#notifBellBtn,#settingsGearBtn,#sessionMeta
+) {
+  min-width: 48px !important;
+  min-height: 48px !important;
+}
+
+/* On narrower screens, slightly reduce the floating stack footprint and keep it
+   inside the visual edge so it does not sit over primary card controls. */
+@media (max-width: 1100px) {
+  :root {
+    --tt-floating-edge: max(10px, env(safe-area-inset-right));
+    --tt-floating-bottom: calc(10px + env(safe-area-inset-bottom));
+    --tt-floating-size: 42px;
+    --tt-floating-gap: 8px;
+  }
+  #leaveRequestFloater .leave-request-floater-label { display: none !important; }
+  #leaveRequestFloater.leave-request-floater:is(:hover,:focus-visible,:focus-within) {
+    width: var(--tt-floating-size) !important;
+    min-width: var(--tt-floating-size) !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+}
+
+@media (max-width: 680px) {
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn
+  ),
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn
+  ) {
+    min-width: 0 !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    overflow: hidden !important;
+  }
+
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn
+  ) > span,
+  html[data-trino-custom-workspace='standard'] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn
+  ) > span {
+    max-width: 100%;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(#leaveRequestFloater,#aiChatFloater,#profileDirectorySearchFab) {
+    transition: none !important;
+  }
+}

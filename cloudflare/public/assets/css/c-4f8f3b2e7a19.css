@@ -1,0 +1,295 @@
+/* TrinoTime v1.0.63 — portal clock containment + animated calendar.
+   Presentation layer only. Loaded after prior Welcome patches so it resolves the
+   older absolute-position clock rules without modifying protected auth logic. */
+
+.gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+  --tt-gate-gap:clamp(16px,2.2vw,34px);
+}
+
+/* Desktop/laptop: explicit 12-column composition. Hero and clock use the left
+   six columns; the interactive calendar owns the open right six columns. */
+@media (min-width:860px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+    display:grid!important;
+    grid-template-columns:repeat(12,minmax(0,1fr))!important;
+    grid-template-rows:auto minmax(0,1fr) auto auto!important;
+    column-gap:var(--tt-gate-gap)!important;
+    row-gap:clamp(9px,1.45vh,16px)!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+    overflow:hidden!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-nav{
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    align-self:start!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-copy{
+    grid-column:1/span 6!important;
+    grid-row:2!important;
+    align-self:center!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    padding:clamp(6px,1.35vh,16px) 0!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-calendar-card{
+    grid-column:7/span 6!important;
+    grid-row:2/span 2!important;
+    align-self:stretch!important;
+    min-height:0!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+    grid-column:1/span 6!important;
+    grid-row:3!important;
+    position:relative!important;
+    inset:auto!important;
+    top:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    left:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:clamp(14px,1.55vw,18px) clamp(15px,1.7vw,20px) clamp(17px,1.8vw,21px)!important;
+    transform:none!important;
+    align-self:end!important;
+    justify-self:stretch!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-footer{
+    grid-column:1/-1!important;
+    grid-row:4!important;
+    margin:0!important;
+    align-self:end!important;
+  }
+}
+
+/* The clock's internal rhythm stays inside its dark panel. The extra bottom
+   padding and date line-height are the containment fix requested for v1.0.63. */
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock{
+  margin-top:clamp(10px,1.45vh,15px)!important;
+  min-width:0!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-clock strong{
+  max-width:100%!important;
+  font-size:clamp(28px,2.45vw,39px)!important;
+  line-height:1!important;
+  letter-spacing:-.06em!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-date{
+  margin-top:7px!important;
+  padding-bottom:2px!important;
+  line-height:1.45!important;
+}
+.gate-overlay[data-gate-step='welcome'] .gate-live-divider{margin:12px 0 10px!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-stat{padding:9px 10px!important}
+.gate-overlay[data-gate-step='welcome'] .gate-live-foot{margin-top:8px!important}
+
+/* Interactive calendar card. */
+.gate-calendar-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  box-sizing:border-box;
+  padding:clamp(15px,1.7vw,21px);
+  border:1px solid rgba(255,255,255,.84);
+  border-radius:clamp(20px,2vw,27px);
+  overflow:hidden;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 90% 8%,rgba(213,165,72,.13),transparent 34%),
+    linear-gradient(145deg,rgba(255,255,255,.84),rgba(248,249,248,.69));
+  box-shadow:0 24px 58px rgba(51,67,82,.105),inset 0 1px 0 rgba(255,255,255,.98);
+  -webkit-backdrop-filter:blur(14px) saturate(1.03);
+  backdrop-filter:blur(14px) saturate(1.03);
+  color:#20252C;
+  perspective:1100px;
+  transform-style:preserve-3d;
+}
+.gate-calendar-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:linear-gradient(125deg,rgba(255,255,255,.42),transparent 31%,transparent 70%,rgba(184,132,36,.05));
+}
+.gate-calendar-card>*{position:relative;z-index:1}
+.gate-calendar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.gate-calendar-heading{min-width:0}
+.gate-calendar-kicker{display:block;color:#A16C13;font:700 8px/1 Poppins,'Plus Jakarta Sans',sans-serif;letter-spacing:.13em;text-transform:uppercase}
+.gate-calendar-heading h2{margin:7px 0 0;color:#252A31;font:600 clamp(21px,2vw,29px)/1.05 'Source Serif 4',Georgia,serif;letter-spacing:-.035em}
+.gate-calendar-nav{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.gate-calendar-nav button,.gate-calendar-today{
+  border:1px solid rgba(117,130,143,.17);
+  background:rgba(255,255,255,.70);
+  color:#3A424C;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 7px 15px rgba(55,68,81,.05);
+  cursor:pointer;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
+}
+.gate-calendar-nav button{display:grid;place-items:center;width:34px;height:34px;padding:0;border-radius:12px;font:600 17px/1 Inter,sans-serif}
+.gate-calendar-nav button:hover,.gate-calendar-today:hover{transform:translateY(-1px);border-color:rgba(184,132,36,.28);background:#fff;box-shadow:0 9px 18px rgba(55,68,81,.08)}
+.gate-calendar-nav button:focus-visible,.gate-calendar-today:focus-visible{outline:2px solid rgba(184,132,36,.48);outline-offset:2px}
+.gate-calendar-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:clamp(10px,1.5vh,15px) 0 12px;padding:9px 10px;border:1px solid rgba(121,134,147,.12);border-radius:13px;background:rgba(255,255,255,.44)}
+.gate-calendar-meta-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.gate-calendar-meta-copy small{color:#8A949F;font:600 7px/1 Poppins,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.gate-calendar-meta-copy strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#5D6671;font:500 9px/1.3 Poppins,sans-serif}
+.gate-calendar-today{flex:0 0 auto;min-height:29px;padding:0 10px;border-radius:999px;color:#8A5B10;font:650 8px/1 Poppins,sans-serif}
+.gate-calendar-weekdays,.gate-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(4px,.55vw,7px)}
+.gate-calendar-weekdays{margin:0 0 6px}
+.gate-calendar-weekdays span{display:grid;place-items:center;min-height:20px;color:#909AA5;font:650 7px/1 Poppins,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.gate-calendar-grid{flex:1;min-height:0;align-content:stretch;transform-origin:center 18%}
+.gate-calendar-day{
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-width:0;
+  min-height:31px;
+  border:1px solid transparent;
+  border-radius:12px;
+  background:rgba(255,255,255,.38);
+  color:#515A65;
+  font:600 clamp(9px,.78vw,11px)/1 'IBM Plex Mono',monospace;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+  transition:transform .15s ease,border-color .15s ease,background .15s ease;
+}
+.gate-calendar-day>span{position:relative;z-index:2}
+.gate-calendar-day.is-outside{background:transparent;color:#B9C0C7;box-shadow:none;opacity:.58}
+.gate-calendar-day.is-shift:not(.is-outside){border-color:rgba(188,139,42,.15);background:linear-gradient(145deg,rgba(255,249,233,.90),rgba(249,239,210,.66));color:#775116}
+.gate-calendar-day.is-shift:not(.is-outside)::after{
+  content:'';position:absolute;left:50%;bottom:4px;width:4px;height:4px;border-radius:50%;transform:translateX(-50%);background:#C38A25;box-shadow:0 0 0 2px rgba(195,138,37,.08)
+}
+.gate-calendar-day.is-day-off:not(.is-outside){border-color:rgba(110,126,143,.13);background:linear-gradient(145deg,rgba(235,239,243,.82),rgba(224,230,236,.64));color:#66717D}
+.gate-calendar-day.is-day-off:not(.is-outside)::after{
+  content:'';position:absolute;left:50%;bottom:4px;width:10px;height:2px;border-radius:99px;transform:translateX(-50%);background:#8F9BA7;opacity:.76
+}
+.gate-calendar-day.is-live-date{
+  border-color:rgba(201,156,65,.68)!important;
+  background:linear-gradient(145deg,#20252C,#10151B)!important;
+  color:#FFF9EB!important;
+  box-shadow:0 8px 18px rgba(24,30,37,.20),inset 0 1px 0 rgba(255,255,255,.11),0 0 0 3px rgba(190,139,40,.08)!important;
+  transform:translateY(-1px)
+}
+.gate-calendar-day.is-live-date::before{content:'';position:absolute;inset:3px;border:1px solid rgba(232,194,111,.26);border-radius:9px;pointer-events:none}
+.gate-calendar-day.is-live-date::after{background:#E6BD67!important;box-shadow:0 0 9px rgba(230,189,103,.35)!important}
+.gate-calendar-legend{display:flex;align-items:center;flex-wrap:wrap;gap:8px 13px;margin-top:11px;padding-top:10px;border-top:1px solid rgba(124,137,150,.12)}
+.gate-calendar-legend span{display:inline-flex;align-items:center;gap:6px;color:#7F8994;font:500 7.5px/1.2 Poppins,sans-serif;white-space:nowrap}
+.gate-calendar-legend i{display:block;width:7px;height:7px;border-radius:50%}
+.gate-calendar-legend .is-shift i{background:#C38A25;box-shadow:0 0 0 3px rgba(195,138,37,.09)}
+.gate-calendar-legend .is-off i{background:#8F9BA7}
+.gate-calendar-legend .is-live i{background:#171C23;box-shadow:0 0 0 2px rgba(203,158,69,.34)}
+
+/* Page-turn/slide effect on month navigation. */
+.gate-calendar-card.is-page-next .gate-calendar-grid{animation:ttGateCalendarNext .40s cubic-bezier(.22,.75,.22,1)}
+.gate-calendar-card.is-page-prev .gate-calendar-grid{animation:ttGateCalendarPrev .40s cubic-bezier(.22,.75,.22,1)}
+.gate-calendar-card.is-page-next .gate-calendar-heading h2,.gate-calendar-card.is-page-prev .gate-calendar-heading h2{animation:ttGateCalendarLabel .30s ease both}
+@keyframes ttGateCalendarNext{
+  0%{opacity:.12;transform:translate3d(34px,0,-26px) rotateY(-7deg) scale(.985);filter:blur(1px)}
+  55%{opacity:.84;transform:translate3d(-3px,0,0) rotateY(.6deg) scale(1)}
+  100%{opacity:1;transform:none;filter:none}
+}
+@keyframes ttGateCalendarPrev{
+  0%{opacity:.12;transform:translate3d(-34px,0,-26px) rotateY(7deg) scale(.985);filter:blur(1px)}
+  55%{opacity:.84;transform:translate3d(3px,0,0) rotateY(-.6deg) scale(1)}
+  100%{opacity:1;transform:none;filter:none}
+}
+@keyframes ttGateCalendarLabel{0%{opacity:.25;transform:translateY(4px)}100%{opacity:1;transform:none}}
+
+body.dark-mode .gate-calendar-card{
+  border-color:rgba(222,183,98,.12);
+  background:radial-gradient(circle at 90% 8%,rgba(205,159,66,.12),transparent 34%),linear-gradient(145deg,rgba(23,29,37,.91),rgba(13,18,24,.84));
+  box-shadow:0 24px 58px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.045);
+  color:#EEF1F4;
+}
+body.dark-mode .gate-calendar-heading h2{color:#F1EFE9}
+body.dark-mode .gate-calendar-nav button,body.dark-mode .gate-calendar-today{border-color:rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#D3D9DF;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+body.dark-mode .gate-calendar-meta{border-color:rgba(255,255,255,.06);background:rgba(255,255,255,.025)}
+body.dark-mode .gate-calendar-meta-copy strong,body.dark-mode .gate-calendar-legend span{color:#9FA9B4}
+body.dark-mode .gate-calendar-day{background:rgba(255,255,255,.025);color:#BFC7CF;box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
+body.dark-mode .gate-calendar-day.is-outside{background:transparent;color:#68737E}
+body.dark-mode .gate-calendar-day.is-shift:not(.is-outside){border-color:rgba(211,171,92,.14);background:rgba(211,171,92,.08);color:#E2C987}
+body.dark-mode .gate-calendar-day.is-day-off:not(.is-outside){border-color:rgba(255,255,255,.05);background:rgba(146,160,174,.07);color:#A5AFB9}
+body.dark-mode .gate-calendar-legend{border-top-color:rgba(255,255,255,.06)}
+
+/* Short screens: preserve all content by tightening the hero and telemetry,
+   rather than allowing the dark clock to fall through the card boundary. */
+@media (min-width:860px) and (max-height:820px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-footer{display:none!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-glass{grid-template-rows:auto minmax(0,1fr) auto!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-copy{grid-row:2!important;padding:2px 0!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-calendar-card{grid-row:2/span 2!important;padding:14px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{grid-row:3!important;padding:12px 14px 14px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-mark-shell{width:48px!important;height:48px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-kicker{margin-top:9px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-title{font-size:clamp(31px,3.25vw,47px)!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-lede{margin:9px 0 12px!important;line-height:1.42!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-pills{margin-top:7px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-clock{margin-top:8px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-divider{margin:8px 0 7px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-stat{padding:7px 8px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-foot{margin-top:5px!important;font-size:6.9px!important}
+  .gate-calendar-meta{margin:8px 0!important;padding:7px 8px!important}
+  .gate-calendar-legend{margin-top:8px!important;padding-top:8px!important}
+  .gate-calendar-day{min-height:27px!important;border-radius:10px!important}
+}
+
+@media (min-width:860px) and (max-height:680px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-pills{display:none!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-stats{gap:6px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-foot{display:none!important}
+  .gate-calendar-meta-copy strong{font-size:8px!important}
+  .gate-calendar-day{min-height:23px!important}
+}
+
+/* Tablet/phone: stack inside a scroll-safe card so neither the calendar nor
+   the clock can be clipped by the fixed viewport. */
+@media (max-width:859px){
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-glass{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-start!important;
+    gap:12px!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+    scrollbar-gutter:stable;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-nav{flex:0 0 auto!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-copy{flex:0 0 auto!important;width:100%!important;max-width:none!important;padding:12px 0 4px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-calendar-card{order:3;flex:0 0 auto;min-height:360px;width:100%}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-telemetry{
+    order:4;
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:13px 14px 16px!important;
+    transform:none!important;
+    flex:0 0 auto!important;
+  }
+  .gate-overlay[data-gate-step='welcome'] .gate-hero-footer{order:5;flex:0 0 auto!important;margin:2px 0 4px!important}
+}
+
+@media (max-width:560px){
+  .gate-calendar-card{min-height:338px!important;padding:13px!important;border-radius:18px!important}
+  .gate-calendar-heading h2{font-size:21px!important}
+  .gate-calendar-nav button{width:31px;height:31px;border-radius:10px!important}
+  .gate-calendar-weekdays,.gate-calendar-grid{gap:4px!important}
+  .gate-calendar-day{min-height:29px!important;border-radius:10px!important;font-size:9px!important}
+  .gate-calendar-meta{margin:9px 0!important;padding:7px 8px!important}
+  .gate-calendar-legend{gap:7px 10px!important;margin-top:8px!important;padding-top:8px!important}
+  .gate-overlay[data-gate-step='welcome'] .gate-live-clock strong{font-size:27px!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .gate-calendar-card.is-page-next .gate-calendar-grid,.gate-calendar-card.is-page-prev .gate-calendar-grid,
+  .gate-calendar-card.is-page-next .gate-calendar-heading h2,.gate-calendar-card.is-page-prev .gate-calendar-heading h2{animation:none!important}
+  .gate-calendar-nav button,.gate-calendar-today,.gate-calendar-day{transition:none!important}
+}

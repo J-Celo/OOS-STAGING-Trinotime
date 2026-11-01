@@ -1,0 +1,10 @@
+/* TrinoTime v1.1.4 — resilient Agent Local Mode */
+.gate-overlay .gate-secure-access-note[data-state='degraded']{background:linear-gradient(145deg,rgba(255,248,231,.96),rgba(255,252,244,.92))!important;box-shadow:inset 0 0 0 1px rgba(196,135,28,.25),0 10px 26px rgba(111,76,17,.06)!important}
+.gate-overlay .gate-secure-access-note[data-state='degraded'] strong{color:#7A5009!important}
+.gate-overlay .gate-secure-access-note[data-state='degraded'] span{color:#725F3B!important}
+.gate-overlay .gate-selection-continue[data-local-mode='true'],.gate-overlay .gate-mobile-action button[data-local-mode='true']{box-shadow:inset 0 0 0 1px rgba(196,135,28,.32),0 10px 24px rgba(130,87,14,.12)!important}
+body.dark-mode .gate-overlay .gate-secure-access-note[data-state='degraded']{background:linear-gradient(145deg,rgba(77,56,19,.62),rgba(48,38,20,.72))!important;box-shadow:inset 0 0 0 1px rgba(214,168,70,.28),0 12px 30px rgba(0,0,0,.16)!important}
+body.dark-mode .gate-overlay .gate-secure-access-note[data-state='degraded'] strong{color:#F2D28D!important}
+body.dark-mode .gate-overlay .gate-secure-access-note[data-state='degraded'] span{color:#C7B38A!important}
+body[data-trino-connectivity-mode='local-agent'] .online-dot{box-shadow:0 0 0 3px rgba(214,168,70,.12)!important}
+@media(prefers-reduced-motion:reduce){.gate-overlay .gate-selection-continue[data-local-mode='true'],.gate-overlay .gate-mobile-action button[data-local-mode='true']{transition:none!important}}

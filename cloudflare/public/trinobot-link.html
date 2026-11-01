@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>TrinoBot | Verify TrinoTime Staging</title>
+<link rel="stylesheet" href="/assets/css/trinobot-link-v108.css">
+<script src="/trinotime-runtime-config.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js" defer></script>
+<script src="/assets/js/trinobot-link-v108.js" defer></script>
+</head><body><main class="card"><div class="badge">TrinoTime • Private Staging</div><h1>Connect TrinoBot securely</h1><p>This confirmation links your Discord identity to your currently signed-in <strong>TrinoTime staging</strong> account. No production access or store permissions are granted.</p>
+<label for="identitySource">Choose the account you are confirming</label><select id="identitySource"><option value="workforce">Current Team Leader / Agent / QA session</option><option value="firebase">Current Firebase Admin / workforce account</option></select><div id="status" role="status" aria-live="polite">Checking your link request…</div>
+<div class="actions"><button id="check" type="button">Check signed-in identity</button><button id="confirm" type="button" disabled>Confirm this identity</button><a href="/">Sign in to staging (same tab)</a></div>
+<p class="fine">Do not paste passwords or authentication tokens into Discord. Links expire in two minutes; you can run <b>/link</b> again.</p>
+</main></body></html>

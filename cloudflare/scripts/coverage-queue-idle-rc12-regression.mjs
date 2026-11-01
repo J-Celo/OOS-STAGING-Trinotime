@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(new URL(p,import.meta.url),'utf8');
+const worker=read('../src/worker.js');
+const client=read('../public/assets/js/j-coverage-dashboard-rc20.js');
+const html=read('../public/index.html');
+const must=(ok,msg)=>{if(!ok){console.error('FAIL — '+msg);process.exitCode=1}else console.log('PASS — '+msg)};
+must(worker.includes('explicitIdleSinceAt')&&worker.includes('Number(source.idleSinceAt)'),'RC12 Worker preserves an explicit Tracker idle start timestamp');
+must(worker.includes('explicitIdleSinceAt || (lastActivityAt ? lastActivityAt + WORKFORCE_COVERAGE_IDLE_THRESHOLD_MS'),'RC12 keeps the legacy 5-minute derived idle fallback when no explicit timestamp is supplied');
+must(client.includes('No job selected · ${fmtLiveDuration(idleNow)}'),'RC12 dashboard identifies queue idle as No job selected');
+must(client.includes('const noJob=!row?.currentJob'),'RC12 queue-idle label is limited to Agent rows with no current Coverage job');
+must(html.includes('coverage-rc23'),'RC23 Coverage assets are cache-busted');
+if(process.exitCode)process.exit(process.exitCode);

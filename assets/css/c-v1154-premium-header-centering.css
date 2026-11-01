@@ -1,0 +1,57 @@
+/* TrinoTime v1.1.54 — Premium Workspace header centering repair.
+   Presentation-only. Keeps the hero clock/action lane centered inside the
+   usable workspace between the live Premium sidebar and the profile/right rail.
+   Attendance, Firebase/App Check, authentication, permissions and calculations
+   are intentionally untouched. */
+
+@media (min-width:1281px){
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']){
+    --tt-premium-hero-profile-col:268px;
+    --tt-premium-hero-center-gap:24px;
+  }
+
+  /* Never hard-code the expanded rail width here. The same geometry now follows
+     --tt-dash-sidebar, so expanding/collapsing the Premium sidebar does not move
+     the center point of the usable hero lane. */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band{
+    width:calc(100% - var(--tt-dash-sidebar))!important;
+    margin-left:var(--tt-dash-sidebar)!important;
+  }
+
+  /* Column 1 is the usable hero workspace; column 2 is the profile/right-rail
+     lane. Center both the toolbar and clock inside column 1 instead of placing
+     a flexible blank column before a fixed clock column. */
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band>.band-inner.wrap{
+    grid-template-columns:minmax(0,1fr) var(--tt-premium-hero-profile-col)!important;
+    grid-template-rows:52px 281px!important;
+    grid-template-areas:
+      "actions profile"
+      "clock profile"!important;
+    column-gap:var(--tt-premium-hero-center-gap)!important;
+    row-gap:0!important;
+  }
+
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .band-side{
+    grid-area:actions!important;
+    justify-self:center!important;
+    align-self:start!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    max-width:100%!important;
+  }
+
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .clock-box{
+    grid-area:clock!important;
+    justify-self:center!important;
+    align-self:start!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+
+  html[data-trino-custom-workspace='enabled'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot>.band .header-profile-slot{
+    grid-area:profile!important;
+    min-width:0!important;
+    width:100%!important;
+    justify-self:stretch!important;
+  }
+}

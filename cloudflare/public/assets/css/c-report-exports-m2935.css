@@ -1,0 +1,13 @@
+/* M2.9.35 — restrained executive dashboard export controls */
+.tt-export-actions{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;padding:4px 5px;border:1px solid rgba(123,141,163,.26);border-radius:13px;background:rgba(255,255,255,.76);box-shadow:0 4px 12px rgba(19,33,55,.04)}
+.tt-export-label{padding:0 8px;font:750 10px/1.15 'Inter',system-ui,sans-serif;letter-spacing:.055em;text-transform:uppercase;color:#66758b;white-space:nowrap}
+.tt-export-actions button{min-height:34px;padding:0 11px;border:1px solid transparent;border-radius:9px;background:#f4f7fb;color:#253a56;font:750 11px/1 'Inter',system-ui,sans-serif;cursor:pointer;transition:background .15s,border-color .15s,transform .15s;white-space:nowrap}
+.tt-export-actions button:hover:not(:disabled){background:#e8f0fb;border-color:#c6d8ef;transform:translateY(-1px)}
+.tt-export-actions button:focus-visible{outline:2px solid #4c82e0;outline-offset:2px}
+.tt-export-actions button:disabled{opacity:.5;cursor:wait}
+body.dark-mode .tt-export-actions{background:rgba(13,24,42,.83);border-color:rgba(143,167,203,.23);box-shadow:0 10px 30px rgba(0,0,0,.12)}
+body.dark-mode .tt-export-label{color:#a5b5cd}
+body.dark-mode .tt-export-actions button{background:#1b2b44;color:#e6eefb;border-color:#31425e}
+body.dark-mode .tt-export-actions button:hover:not(:disabled){background:#273d5c;border-color:#6485b3}
+@media(max-width:760px){.tt-export-actions{width:100%;justify-content:flex-start}.tt-export-actions button{flex:1;min-width:64px}.tt-export-label{flex:1;min-width:96px}}
+@media print{.tt-export-actions{display:none!important}}

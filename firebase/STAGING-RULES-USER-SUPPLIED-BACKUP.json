@@ -1,0 +1,101 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "kv": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "secureCredentials": {
+      ".read": false,
+      ".write": false
+    },
+    "securityConfig": {
+      ".read": false,
+      ".write": false
+    },
+    "identityMigrationRequests": {
+      ".read": false,
+      ".write": false
+    },
+    "serverTimeAudit": {
+      ".read": "auth != null",
+      "$eventId": {
+        ".write": "auth != null && !data.exists() && newData.exists() && newData.child('firebaseUid').val() === auth.uid",
+        ".validate": "newData.hasChildren(['action','clientTs','serverTs','firebaseUid']) && newData.child('action').isString() && newData.child('action').val().length > 0 && newData.child('action').val().length <= 80 && newData.child('clientTs').isString() && newData.child('firebaseUid').isString() && newData.child('firebaseUid').val() === auth.uid && newData.child('serverTs').isNumber() && newData.child('serverTs').val() >= now - 60000 && newData.child('serverTs').val() <= now + 60000"
+      }
+    },
+    "agentPresence": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "securePremiumEntitlements": {
+      "tt_emp_bebless_velasco_p0_001": {
+        ".read": "auth != null",
+        ".write": false,
+        ".validate": "newData.exists() && newData.hasChildren(['version','employeeId','enabled','targetName','targetPod','updatedAt','updatedByName','updatedByUid','updatedByPod']) && newData.child('version').val() === 3 && newData.child('employeeId').val() === 'tt_emp_bebless_velasco_p0_001' && newData.child('enabled').isBoolean() && newData.child('targetName').val() === 'Bebless Velasco' && newData.child('targetPod').val() === 'POD 0' && newData.child('updatedAt').isString() && newData.child('updatedByName').val() === 'Jhan Roi Celo' && newData.child('updatedByUid').val() === auth.uid && newData.child('updatedByPod').val() === 'POD 2'"
+      },
+      "$other": {
+        ".write": false
+      },
+      ".write": false
+    },
+    "auditEvents": {
+      ".read": "auth != null && root.child('roles').child(auth.uid).child('role').val() === 'admin' && root.child('roles').child(auth.uid).child('active').val() === true",
+      ".indexOn": [
+        "serverTs"
+      ],
+      "$eventId": {
+        ".write": false,
+        ".validate": "newData.hasChildren(['schemaVersion','eventId','action','clientTs','serverTs','firebaseUid','firebaseAuthAnonymous','actorRole','details']) && newData.child('schemaVersion').val() === 2 && newData.child('eventId').val() === $eventId && newData.child('action').isString() && newData.child('action').val().length > 0 && newData.child('action').val().length <= 80 && newData.child('clientTs').isString() && newData.child('firebaseUid').isString() && newData.child('firebaseUid').val() === auth.uid && newData.child('serverTs').isNumber() && newData.child('serverTs').val() >= now - 60000 && newData.child('serverTs').val() <= now + 60000 && newData.child('actorRole').isString() && newData.child('actorRole').val().length > 0 && newData.child('actorRole').val().length <= 40 && newData.child('details').exists()"
+      },
+      ".write": false
+    },
+    "workforceAttendance": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceAuthorization": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceProfiles": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceOvertime": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceSchedule": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceLeave": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceRoster": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceGovernance": {
+      ".read": false,
+      ".write": false
+    },
+    "workforcePersonnel": {
+      ".read": false,
+      ".write": false
+    },
+    "workforceLifecycle": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

@@ -1,0 +1,32 @@
+/* TrinoTime V2 RC48 — Workspace Contact directory identity polish.
+   Presentation only. Authority remains Worker/server-side. */
+.profile-directory-workspace-contact{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:3px 9px;
+  border:1px solid color-mix(in srgb,#d6a52a 44%,transparent);
+  border-radius:999px;
+  background:linear-gradient(135deg,color-mix(in srgb,#f4c958 16%,transparent),color-mix(in srgb,#d6a52a 7%,transparent));
+  box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 52%,transparent);
+  color:color-mix(in srgb,#6e4d00 90%,currentColor 10%);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.025em;
+  line-height:1.2;
+  white-space:nowrap;
+}
+html[data-theme="dark"] .profile-directory-workspace-contact,
+body.dark .profile-directory-workspace-contact,
+.dark-mode .profile-directory-workspace-contact{
+  border-color:color-mix(in srgb,#f0c65b 46%,transparent);
+  background:linear-gradient(135deg,color-mix(in srgb,#f0c65b 18%,transparent),color-mix(in srgb,#b58418 10%,transparent));
+  box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 12%,transparent),0 0 0 1px color-mix(in srgb,#000 22%,transparent);
+  color:#f5d77f;
+}
+@media (max-width:720px){
+  .profile-directory-workspace-contact{min-height:22px;padding:3px 8px;font-size:10px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .profile-directory-workspace-contact{transition:none!important;}
+}

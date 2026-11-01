@@ -1,0 +1,42 @@
+/* M2.9.7 — synchronized top horizontal scroll rails for Coverage, Confirmation and Metrics */
+.tt-wide-table-top-scroll{
+  width:100%;height:18px;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;
+  overscroll-behavior-inline:contain;scrollbar-gutter:stable;margin:0;padding:2px 0 1px;
+  background:linear-gradient(180deg,rgba(248,250,252,.96),rgba(241,245,249,.82));
+  border-bottom:1px solid rgba(148,163,184,.18);outline:none;
+  scrollbar-color:#94a3b8 rgba(226,232,240,.72);scrollbar-width:auto;
+}
+.tt-wide-table-top-scroll[hidden]{display:none!important}
+.tt-wide-table-top-scroll-spacer{height:1px;min-height:1px;pointer-events:none}
+.tt-wide-table-top-scroll::-webkit-scrollbar{height:11px}
+.tt-wide-table-top-scroll::-webkit-scrollbar-track{background:rgba(226,232,240,.72);border-radius:999px}
+.tt-wide-table-top-scroll::-webkit-scrollbar-thumb{background:#94a3b8;border:2px solid transparent;background-clip:padding-box;border-radius:999px;min-width:44px}
+.tt-wide-table-top-scroll:hover::-webkit-scrollbar-thumb,.tt-wide-table-top-scroll:focus-visible::-webkit-scrollbar-thumb{background:#64748b;background-clip:padding-box}
+.tt-wide-table-top-scroll:focus-visible{box-shadow:inset 0 0 0 2px rgba(79,70,229,.24)}
+body.dark-mode .tt-wide-table-top-scroll{
+  background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(17,28,45,.9));
+  border-bottom-color:rgba(100,116,139,.28);scrollbar-color:#64748b rgba(30,41,59,.94)
+}
+body.dark-mode .tt-wide-table-top-scroll::-webkit-scrollbar-track{background:rgba(30,41,59,.94)}
+body.dark-mode .tt-wide-table-top-scroll::-webkit-scrollbar-thumb{background:#64748b;background-clip:padding-box}
+body.dark-mode .tt-wide-table-top-scroll:hover::-webkit-scrollbar-thumb,body.dark-mode .tt-wide-table-top-scroll:focus-visible::-webkit-scrollbar-thumb{background:#94a3b8;background-clip:padding-box}
+@media(max-width:760px){.tt-wide-table-top-scroll{height:20px}}
+
+/* STAGING UX2 — smooth horizontal column navigation (no data or sync changes). */
+.tt-wide-table-navigation{display:flex;align-items:center;gap:5px;min-width:0;padding:1px 6px;
+  background:linear-gradient(180deg,rgba(248,250,252,.96),rgba(241,245,249,.82));
+  border-bottom:1px solid rgba(148,163,184,.18)}
+.tt-wide-table-navigation[hidden]{display:none!important}
+.tt-wide-table-navigation .tt-wide-table-top-scroll{min-width:0;flex:1;height:21px;
+  padding:3px 0 1px;margin:0;background:transparent;border-bottom:0}
+.tt-wide-table-step{flex:0 0 25px;width:25px;height:21px;display:grid;place-items:center;
+  border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#475569;
+  font:700 19px/1 system-ui;cursor:pointer;transition:background-color .15s ease,border-color .15s ease}
+.tt-wide-table-step:hover:not(:disabled){background:#edf2f8;border-color:#94a3b8}
+.tt-wide-table-step:focus-visible{outline:2px solid #2563eb;outline-offset:1px}
+.tt-wide-table-step:disabled{opacity:.32;cursor:default}
+body.dark-mode .tt-wide-table-navigation{background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(17,28,45,.9));border-color:rgba(100,116,139,.28)}
+body.dark-mode .tt-wide-table-navigation .tt-wide-table-top-scroll{background:transparent;border:0}
+body.dark-mode .tt-wide-table-step{background:#17243a;border-color:#405169;color:#d5e1f3}
+body.dark-mode .tt-wide-table-step:hover:not(:disabled){background:#23364f;border-color:#60738c}
+@media (prefers-reduced-motion:reduce){.tt-wide-table-step{transition:none}}

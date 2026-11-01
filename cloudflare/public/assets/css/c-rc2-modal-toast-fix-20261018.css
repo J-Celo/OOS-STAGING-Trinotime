@@ -1,0 +1,23 @@
+/* Staging RC2 — feedback from Agent, TL and Admin password dialogs.
+   Toast is temporarily portaled INSIDE the active body-level modal overlay,
+   not above other global emergency alerts or unrelated dialogs. */
+#adminPasswordOverlay > .toast.tt-password-dialog-toast,
+#agentPasswordOverlay > .toast.tt-password-dialog-toast,
+#teamLeaderPasswordOverlay > .toast.tt-password-dialog-toast {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: max(20px, env(safe-area-inset-bottom)) !important;
+  z-index: 40 !important;
+  width: max-content;
+  max-width: min(92vw, 560px);
+  box-sizing: border-box;
+  white-space: normal;
+  text-align: center;
+  transform: translateX(-50%) !important;
+  pointer-events: none;
+}
+#adminPasswordOverlay > .toast.tt-password-dialog-toast .toast-undo-btn,
+#agentPasswordOverlay > .toast.tt-password-dialog-toast .toast-undo-btn,
+#teamLeaderPasswordOverlay > .toast.tt-password-dialog-toast .toast-undo-btn {
+  pointer-events: auto;
+}

@@ -1,0 +1,10 @@
+/* Keep the dimming layer on the outer overlay, never over the form. */
+.pod-team-management-overlay{background:rgba(15,23,42,.55)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.pod-team-management-overlay>.pod-team-management-modal{position:relative;z-index:1;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transform:none!important;isolation:isolate}
+.pod-team-management-modal::before,.pod-team-management-modal::after{content:none!important}
+.pod-team-management-modal :is(select,option,optgroup){color-scheme:light;background-color:#fff!important;color:#172033!important;-webkit-text-fill-color:#172033}
+.pod-team-management-modal :is(select,input){filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.dark-mode .pod-team-management-modal :is(select,option,optgroup){color-scheme:dark;background-color:#182638!important;color:#edf2fa!important;-webkit-text-fill-color:#edf2fa}
+#ttRestDayWork{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;border:1px solid var(--line,#cbd5e1);border-radius:14px;background:var(--card,#fff);color:var(--text,#172033);margin-bottom:14px}
+#ttRestDayWork[hidden]{display:none!important}#ttRestDayWork strong,#ttRestDayWork small{display:block}#ttRestDayWork small{margin-top:5px;font-size:13px;line-height:1.4;color:var(--muted,#64748b)}#ttRestDayWork input{width:22px;height:22px;flex-shrink:0;accent-color:#b97808}
+body.dark-mode #ttRestDayWork{background:#182638;color:#edf2fa;border-color:#42536b}body.dark-mode #ttRestDayWork small{color:#bac7d9}

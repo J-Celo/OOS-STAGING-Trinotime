@@ -1,0 +1,49 @@
+/* TrinoTime v1.1.128 RC38 — Attendance Time Out Affordance Closure
+   Presentation-only fix. The active Time Out action must look enabled/live in
+   Standard Dark Mode without changing punch eligibility or attendance authority. */
+
+/* RC37 exposed a cascade conflict: .primary supplied a dark foreground while
+   the later dark .log-out surface forced a dark red background. The action was
+   enabled but visually resembled a dead/disabled control. Scope the correction
+   to the exact ready state: Standard workspace + dark mode + Time Out + primary
+   + not disabled. Completed/disabled Time Out remains muted and unchanged. */
+html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary:not(:disabled) {
+  background: linear-gradient(145deg,#8B2430 0%,#6F1D28 48%,#4F141D 100%) !important;
+  border-color: rgba(248,113,113,.72) !important;
+  color: #FFF7F8 !important;
+  -webkit-text-fill-color: #FFF7F8 !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+  text-shadow: none !important;
+  box-shadow: 0 0 0 1px rgba(248,113,113,.10), 0 10px 24px rgba(127,29,29,.22), inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary:not(:disabled) .sub {
+  color: #FECACA !important;
+  -webkit-text-fill-color: #FECACA !important;
+  opacity: 1 !important;
+}
+html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary.tt-action-option:not(:disabled) {
+  border-color: rgba(248,113,113,.78) !important;
+}
+html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary:not(:disabled):hover {
+  background: linear-gradient(145deg,#A52A38 0%,#81212E 48%,#5B1721 100%) !important;
+  border-color: #FB7185 !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 2px rgba(248,113,113,.12), 0 14px 30px rgba(127,29,29,.30), inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary:not(:disabled):active {
+  transform: translateY(0);
+  filter: brightness(.96);
+}
+html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary:not(:disabled):focus-visible {
+  outline: 3px solid rgba(251,113,133,.48) !important;
+  outline-offset: 3px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-trino-custom-workspace='standard'] body.dark-mode #punchCard .punch-btn.log-out.primary:not(:disabled) {
+    transition: none !important;
+  }
+}

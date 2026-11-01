@@ -1,0 +1,32 @@
+/* TrinoTime v1.1.19 - Premium Team Leader right-rail order correction.
+   Presentation only: Profile -> TL Status -> Schedule Calendar.
+   Scoped to Premium Team Leader workspace; Standard and Premium Agent layouts are untouched. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot.has-tl-status.tt-v1117-calendar-slot,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status.tt-v1117-calendar-slot {
+  display:flex !important;
+  flex-direction:column !important;
+  flex-wrap:nowrap !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot.has-tl-status.tt-v1117-calendar-slot > #agentProfileHeaderBtn,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status.tt-v1117-calendar-slot > #agentProfileHeaderBtn {
+  order:1 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot.has-tl-status.tt-v1117-calendar-slot > #tlHomeStatusBadge,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status.tt-v1117-calendar-slot > #tlHomeStatusBadge {
+  order:2 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-inner.tl-status-visible .header-profile-slot.has-tl-status.tt-v1117-calendar-slot > #ttPremiumEmbeddedCalendar,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.has-tl-status.tt-v1117-calendar-slot > #ttPremiumEmbeddedCalendar {
+  order:3 !important;
+  width:100% !important;
+  margin:0 !important;
+}

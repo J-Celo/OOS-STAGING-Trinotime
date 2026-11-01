@@ -1,0 +1,58 @@
+/* TrinoTime RC65 — dark-mode Agent Search contrast closure.
+   Scoped to the Attendance punch-card search only; light mode is unchanged. */
+body.dark-mode #punchCard .emp-search-wrap .emp-search-input {
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  caret-color: #93C5FD !important;
+  background: linear-gradient(135deg, rgba(15,23,42,.96), rgba(30,41,59,.92)) !important;
+  border-color: rgba(148,163,184,.38) !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-input::placeholder {
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+  opacity: 1 !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-input:focus,
+body.dark-mode #punchCard .emp-search-wrap .emp-search-input:focus-visible {
+  border-color: #60A5FA !important;
+  box-shadow: 0 0 0 4px rgba(96,165,250,.18), 0 12px 30px rgba(2,6,23,.34) !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .clear-btn {
+  color: #CBD5E1 !important;
+  background: rgba(30,41,59,.88) !important;
+  border-color: rgba(148,163,184,.34) !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .clear-btn:hover,
+body.dark-mode #punchCard .emp-search-wrap .clear-btn:focus-visible {
+  color: #FFFFFF !important;
+  background: rgba(51,65,85,.96) !important;
+  border-color: rgba(96,165,250,.64) !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-input:disabled,
+body.dark-mode #punchCard .emp-search-wrap .emp-search-input[readonly] {
+  color: #CBD5E1 !important;
+  -webkit-text-fill-color: #CBD5E1 !important;
+  opacity: .78 !important;
+  cursor: not-allowed;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-list {
+  color: #E2E8F0 !important;
+  -webkit-text-fill-color: currentColor !important;
+  background: linear-gradient(145deg, rgba(15,23,42,.98), rgba(30,41,59,.96)) !important;
+  border-color: rgba(148,163,184,.30) !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-item {
+  color: #F1F5F9 !important;
+  -webkit-text-fill-color: #F1F5F9 !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-item small {
+  color: #94A3B8 !important;
+  -webkit-text-fill-color: #94A3B8 !important;
+}
+body.dark-mode #punchCard .emp-search-wrap .emp-search-item:hover,
+body.dark-mode #punchCard .emp-search-wrap .emp-search-item.focused {
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  background: rgba(30,64,175,.22) !important;
+  border-color: rgba(96,165,250,.38) !important;
+}

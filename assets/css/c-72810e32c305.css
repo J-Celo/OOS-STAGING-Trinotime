@@ -1,0 +1,171 @@
+.gate-overlay {
+  position: fixed;
+  inset: 0;
+  isolation: isolate;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: clamp(16px, 3vw, 32px);
+  background: #07111f !important;
+  background-image: none !important;
+}
+
+.gate-cloudscape {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  pointer-events: none;
+  background: #163d67;
+}
+
+.gate-cloud-layer {
+  position: absolute;
+  inset: -2%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  will-change: opacity;
+  transform: translateZ(0);
+  animation: ttPortalCloudCrossfade 32s ease-in-out infinite;
+}
+
+.gate-cloud-layer--1 {
+  background-image: url('../img/portal-cloud-1.webp');
+  animation-delay: 0s;
+}
+
+.gate-cloud-layer--2 {
+  background-image: url('../img/portal-cloud-2.webp');
+  animation-delay: -24s;
+}
+
+.gate-cloud-layer--3 {
+  background-image: url('../img/portal-cloud-3.webp');
+  animation-delay: -16s;
+}
+
+.gate-cloud-layer--4 {
+  background-image: url('../img/portal-cloud-4.webp');
+  animation-delay: -8s;
+}
+
+@keyframes ttPortalCloudCrossfade {
+  0%, 20% { opacity: 1; }
+  25%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.gate-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(4, 12, 24, 0.12) 0%, rgba(4, 12, 24, 0.28) 46%, rgba(4, 12, 24, 0.54) 100%),
+    rgba(15, 23, 42, 0.28);
+}
+
+.gate-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 40%, transparent 34%, rgba(2, 8, 18, 0.16) 72%, rgba(2, 8, 18, 0.34) 100%);
+}
+
+.gate-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.97) !important;
+  border: 1px solid rgba(255, 255, 255, 0.78) !important;
+  box-shadow: 0 28px 70px rgba(2, 8, 23, 0.30), 0 6px 18px rgba(2, 8, 23, 0.14) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.gate-overlay .trino-brand,
+.gate-overlay .gate-title,
+.gate-overlay .gate-subtitle {
+  text-rendering: optimizeLegibility;
+}
+.gate-overlay,
+.agent-login-overlay,
+.modal-overlay,
+.profile-photo-crop-overlay,
+.agent-password-overlay,
+.secure-credential-overlay,
+.settings-overlay,
+.announce-overlay {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.agent-login-overlay,
+.modal-overlay,
+.profile-photo-crop-overlay,
+.agent-password-overlay,
+.secure-credential-overlay,
+.settings-overlay,
+.announce-overlay {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+}
+
+body.agent-password-required #appRoot {
+  filter: none !important;
+}
+body[data-trino-role='agent'] #teamTabsOuter,
+body[data-trino-role='agent'] #executiveStatusStrip {
+  display: none !important;
+}
+
+body[data-trino-role='teamleader'] #teamTabsOuter {
+  display: none !important;
+}
+body[data-trino-role='agent'] #appReloadBtn {
+  min-width: 112px;
+  width: auto;
+  padding-inline: 14px;
+  justify-content: center;
+}
+
+body[data-trino-role='agent'] #appReloadBtn > span,
+body[data-trino-role='agent'] #appReloadBtn .btn-label,
+body[data-trino-role='agent'] #appReloadBtn .button-label {
+  display: inline !important;
+}
+
+@media (max-width: 720px) {
+  .gate-overlay {
+    padding: 14px;
+  }
+
+  .gate-card {
+    width: min(100%, 560px) !important;
+    padding: clamp(22px, 7vw, 30px) !important;
+    border-radius: 22px !important;
+  }
+
+  .gate-cloud-layer {
+    inset: -5%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate-cloud-layer {
+    animation: none !important;
+    opacity: 0;
+  }
+
+  .gate-cloud-layer--1 {
+    opacity: 1;
+  }
+}
+body:not([data-trino-role='admin']):not([data-trino-role='teamleader']):not([data-trino-role='agent']) #appRoot,
+body[data-trino-role='gate'] #appRoot,
+body[data-trino-role='agent-pending'] #appRoot {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

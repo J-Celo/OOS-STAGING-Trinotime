@@ -1,0 +1,142 @@
+/* TrinoTime v1.1.69 - Overtime Reliability & Payroll Safeguards */
+.ot-hours-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+.ot-hours-breakdown > span,
+.ot-breakdown-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel, #fff) 94%, transparent);
+}
+.ot-hours-breakdown small,
+.ot-breakdown-cell small {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.ot-hours-breakdown strong,
+.ot-breakdown-cell strong {
+  color: var(--ink);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+}
+.ot-shift-date-hint {
+  display: block;
+  margin-top: 7px !important;
+  padding: 8px 10px;
+  border-radius: 9px;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+}
+.ot-request-info {
+  color: #1d4ed8;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.ot-status-chip[data-status="revoked"] {
+  color: #7c2d12;
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+.ot-review-row {
+  grid-template-columns: minmax(210px, 1fr) minmax(250px, .95fr) minmax(260px, 1.25fr) auto;
+}
+.ot-review-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(70px, 1fr));
+  gap: 6px;
+}
+.ot-review-breakdown > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel, #fff) 94%, transparent);
+}
+.ot-review-breakdown small { color: var(--muted); font-size: 9px; text-transform: uppercase; font-weight: 800; }
+.ot-review-breakdown strong { color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+
+.ot-payroll-lock-section {
+  border-color: color-mix(in srgb, var(--accent-blue, #2563eb) 24%, var(--line));
+  background: color-mix(in srgb, var(--accent-blue-dim, #eff6ff) 24%, var(--panel, #fff));
+}
+.ot-payroll-lock-grid {
+  display: grid;
+  grid-template-columns: minmax(190px, .72fr) minmax(260px, 1.2fr) minmax(220px, .9fr);
+  gap: 14px;
+  align-items: end;
+}
+.ot-payroll-lock-grid .modal-field { margin: 0; }
+.ot-payroll-period-summary,
+.ot-payroll-lock-actions {
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel, #fff);
+}
+.ot-payroll-period-summary > span,
+.ot-payroll-lock-actions > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.ot-payroll-period-summary strong { color: var(--ink); font-size: 13px; }
+.ot-payroll-period-summary small { color: var(--muted); line-height: 1.35; }
+.ot-payroll-lock-actions { align-items: stretch; }
+.ot-lock-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 850;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  white-space: nowrap;
+}
+.ot-lock-status[data-status="locked"] {
+  color: #991b1b;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.tl-ot-correction-box {
+  width: min(760px, calc(100vw - 36px));
+  max-width: 760px !important;
+}
+.ot-management-table { min-width: 1120px; }
+.ot-table-review-note { max-width: 250px; }
+
+@media (max-width: 960px) {
+  .ot-payroll-lock-grid { grid-template-columns: 1fr; align-items: stretch; }
+  .ot-review-row { grid-template-columns: 1fr; }
+  .ot-review-breakdown { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .ot-hours-breakdown,
+  .ot-review-breakdown { grid-template-columns: 1fr; }
+  .tl-ot-correction-box .modal-actions { align-items: stretch; flex-direction: column; }
+  .tl-ot-correction-box .modal-actions > div { width: 100%; }
+  .tl-ot-correction-box .modal-actions button { flex: 1; }
+}

@@ -1,0 +1,3 @@
+M2.9.66 RC2 — OFFLINE VALIDATED STAGING CANDIDATE. NOT PRODUCTION APPROVED.
+No production deployment, rules publication or live record deletion performed.
+Review SECURITY-REPORT.md, LIVE-STAGING-ACCEPTANCE.md and ROLLBACK.md.

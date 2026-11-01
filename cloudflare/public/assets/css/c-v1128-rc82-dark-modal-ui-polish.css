@@ -1,0 +1,61 @@
+/* TrinoTime v1.1.128 RC82 — dark/modal UI polish only. */
+
+/* Profile Search: explicit dark-mode contrast for drawer title, filter labels,
+   scope copy, results, selects and empty states. */
+body.dark-mode .profile-directory-fab-drawer-title strong,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-search-label,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-result-copy strong,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope strong {
+  color:#F8FAFC !important;
+  -webkit-text-fill-color:#F8FAFC !important;
+}
+body.dark-mode .profile-directory-fab-drawer-title span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-field label,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-result-copy span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-empty,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-scope-chip {
+  color:#CBD5E1 !important;
+  -webkit-text-fill-color:#CBD5E1 !important;
+}
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-field select {
+  color:#F8FAFC !important;
+  -webkit-text-fill-color:#F8FAFC !important;
+  background:#111827 !important;
+  border-color:#475569 !important;
+}
+
+/* Bio Break report owns the viewport while open: scroll remains inside dialog. */
+html.tt-bio-modal-open,
+body.tt-bio-modal-open {
+  overflow:hidden !important;
+  overscroll-behavior:none !important;
+}
+.tt-bio-dialog { overscroll-behavior:contain; }
+
+/* Speedtest History header: no sticky/card-like header; it is ordinary modal content. */
+#networkOverlay .tt-tab-modal-head {
+  position:static !important;
+  top:auto !important;
+  z-index:auto !important;
+  padding:0 0 14px !important;
+  margin-bottom:6px !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+}
+body.dark-mode #networkOverlay .tt-tab-modal-head { background:transparent !important; border:0 !important; }
+
+/* POD Network Health: explicit readable text in dark mode. */
+body.dark-mode #networkOverlay .network-pod-health-head strong,
+body.dark-mode #networkOverlay .network-pod-health-title strong {
+  color:#F8FAFC !important;
+}
+body.dark-mode #networkOverlay .network-pod-health-head span,
+body.dark-mode #networkOverlay .network-pod-health-title span,
+body.dark-mode #networkOverlay .network-pod-health-empty {
+  color:#CBD5E1 !important;
+}

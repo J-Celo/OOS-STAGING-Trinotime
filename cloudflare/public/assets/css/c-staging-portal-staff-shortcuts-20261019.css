@@ -1,0 +1,103 @@
+/* SECTION 22: compact adjacent access shortcuts. Existing click handlers & roles remain unchanged. */
+.gate-overlay[data-gate-step="selection"] .gate-access-shortcuts {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:stretch;
+  gap:10px; margin:11px 0 12px; width:100%; min-width:0;
+}
+/* When QA is unavailable (e.g. Albertsons), use two balanced staff cards. */
+.gate-overlay[data-gate-step="selection"] .gate-access-shortcuts:has(> .gate-qa-team-card[hidden]) {grid-template-columns:repeat(2,minmax(0,1fr))}
+.gate-overlay .gate-access-shortcuts .gate-qa-team-card,
+.gate-overlay .gate-access-shortcuts .gate-staff-shortcut {
+  display:flex!important; align-items:center!important; justify-content:flex-start!important;
+  gap:10px!important; padding:10px 12px!important; margin:0!important;
+  width:100%!important; max-width:none!important; min-width:0; min-height:60px!important;
+  border-radius:13px!important; border:1px solid #c7dbe5!important;
+  background:#f5fafc!important; color:#17374a!important;
+  box-sizing:border-box!important; font:600 13px/1.3 Poppins,Arial,sans-serif!important;
+  text-decoration:none!important; text-align:left!important; box-shadow:none!important;
+  cursor:pointer; white-space:normal!important; overflow-wrap:anywhere;
+}
+.gate-overlay .gate-access-shortcuts .gate-qa-team-card[hidden] {display:none!important}
+.gate-overlay .gate-access-shortcuts .gate-qa-team-card.active {border:2px solid #147a98!important;background:#e5f5f9!important}
+.gate-overlay .gate-access-shortcuts .gate-qa-team-icon,
+.gate-overlay .gate-access-shortcuts .gate-staff-shortcut-icon {
+  width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;
+  background:#dceef4;color:#176f8d;border-radius:10px;
+}
+.gate-overlay .gate-access-shortcuts .gate-staff-shortcut-icon svg {width:23px;height:23px}
+.gate-overlay .gate-access-shortcuts .gate-qa-team-card strong,
+.gate-overlay .gate-access-shortcuts .gate-staff-shortcut strong {font-size:13px!important;font-weight:700!important;line-height:1.35!important;color:inherit!important}
+.gate-overlay .gate-access-shortcuts .gate-access-shortcut-tl {
+  margin:0!important;padding:0!important;min-width:0;display:block!important;
+  border:0!important;box-shadow:none!important;background:transparent!important;
+}
+.gate-overlay .gate-access-shortcuts .gate-tl-attendance-copy[hidden] {display:none!important}
+.gate-overlay .gate-access-shortcuts .gate-staff-shortcut:hover,
+.gate-overlay .gate-access-shortcuts .gate-qa-team-card:hover {background:#e9f6f9!important;border-color:#4d9fba!important;transform:none!important}
+.gate-overlay .gate-access-shortcuts .gate-staff-shortcut:focus-visible,
+.gate-overlay .gate-access-shortcuts .gate-qa-team-card:focus-visible {
+  outline:3px solid #1685a7!important;outline-offset:2px;
+}
+.gate-overlay .gate-access-shortcuts .gate-admin-toggle[aria-expanded="true"] {background:#e5f5f9!important;border-color:#147a98!important}
+.gate-overlay .gate-pod-section > #gateAdminBox {
+  margin:0 0 12px!important; padding:15px!important;border-radius:14px!important;
+  border:1px solid #c5dde5!important; background:#f7fafc!important;
+}
+.gate-overlay .gate-pod-section > #gateAdminBox:not(.open) {display:none!important}
+.gate-overlay .gate-pod-section > .gate-security-note {display:none!important}
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-qa-team-card,
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-staff-shortcut {
+  color:#eef9fc!important;background:#182c3a!important;border-color:#36596a!important;
+}
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-qa-team-card.active,
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-admin-toggle[aria-expanded="true"] {background:#1c4353!important;border-color:#6ab1c6!important}
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-staff-shortcut-icon,
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-qa-team-icon {background:#254c5e;color:#a2e4f4}
+body.dark-mode .gate-overlay .gate-pod-section > #gateAdminBox {background:#132938!important;border-color:#31586a!important}
+@media(max-width:760px){
+  .gate-overlay[data-gate-step="selection"] .gate-access-shortcuts {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+}
+@media(max-width:480px){
+  .gate-overlay[data-gate-step="selection"] .gate-access-shortcuts:has(> .gate-qa-team-card[hidden]) {grid-template-columns:1fr}
+
+  .gate-overlay[data-gate-step="selection"] .gate-access-shortcuts {grid-template-columns:1fr;gap:8px}
+  .gate-overlay .gate-access-shortcuts .gate-qa-team-card,
+  .gate-overlay .gate-access-shortcuts .gate-staff-shortcut {min-height:52px!important;padding:8px 11px!important}
+}
+
+/* SECTION22: role-specific visual ownership of the one existing protected sign-in form. */
+.gate-overlay .gate-access-shortcuts .gate-admin-shortcut-section {
+  min-width:0; margin:0; padding:0; background:transparent; border:0;
+}
+.gate-overlay .gate-access-shortcuts .gate-staff-login-slot { min-width:0; width:100%; }
+.gate-overlay .gate-access-shortcuts .gate-admin-box {
+  margin:8px 0 0!important; padding:12px!important; min-width:0; width:100%;
+  box-sizing:border-box; border:1px solid #c5dde5!important;
+  border-radius:13px!important; background:#f7fafc!important;
+  box-shadow:none!important;
+}
+.gate-overlay .gate-access-shortcuts .gate-admin-box:not(.open) {display:none!important}
+/* TL shortcut owns TL fields; Admin/Owner can only choose the two authorized roles. */
+.gate-overlay #gateAdminBox[data-staff-mode="tl"] .gate-admin-role-select {display:none!important}
+.gate-overlay #gateAdminBox[data-staff-mode="admin"] .gate-admin-role-select label:has(input[value="teamleader"]) {display:none!important}
+.gate-overlay .gate-access-shortcuts #gateTlAttendanceBtn[aria-expanded="true"] {
+  background:#e5f5f9!important; border-color:#147a98!important;
+}
+.gate-overlay .gate-access-shortcuts .gate-admin-row {gap:8px;min-width:0}
+.gate-overlay .gate-access-shortcuts .gate-admin-row .gate-password-wrap {min-width:0;flex:1 1 auto}
+.gate-overlay .gate-access-shortcuts .gate-admin-row > button {min-width:72px!important}
+.gate-overlay .gate-access-shortcuts .gate-admin-role-select {display:flex;flex-wrap:wrap;gap:10px}
+.gate-overlay .gate-access-shortcuts .gate-admin-role-select label {white-space:nowrap}
+body.dark-mode .gate-overlay .gate-access-shortcuts .gate-admin-box {background:#132938!important;border-color:#31586a!important}
+@media(max-width:760px) and (min-width:481px) {
+  .gate-overlay .gate-access-shortcuts .gate-admin-shortcut-section {grid-column:auto}
+}
+@media(max-width:480px){
+ .gate-overlay .gate-access-shortcuts .gate-admin-row {flex-direction:column;align-items:stretch}
+ .gate-overlay .gate-access-shortcuts .gate-admin-row > button {width:100%;min-height:42px}
+}
+
+/* Keep the other shortcuts compact when one role-specific form is expanded. */
+.gate-overlay[data-gate-step="selection"] .gate-access-shortcuts {align-items:start!important}
+.gate-overlay .gate-access-shortcuts > .gate-qa-team-card,
+.gate-overlay .gate-access-shortcuts > .gate-access-shortcut-tl,
+.gate-overlay .gate-access-shortcuts > .gate-admin-shortcut-section {align-self:start;min-width:0}

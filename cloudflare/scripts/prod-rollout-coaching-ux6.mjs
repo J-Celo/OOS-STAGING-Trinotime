@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const load=x=>readFileSync(new URL('../'+x,import.meta.url),'utf8');
+const html=load('public/index.html');
+const js=load('public/assets/js/j-5a9b0d9aeabc.js');
+const css=load('public/assets/css/c-staging-coaching-side-ux6.css');
+for(const id of ['btnTimeIn','btnStartBreak','btnEndBreak','btnLogOut','btnCoaching','coachingActionRow'])
+  assert.equal((html.match(new RegExp(`id="${id}"`,'g'))||[]).length,1,id+' must have one existing live control');
+assert.match(html,/c-staging-coaching-side-ux6\.css\?v=prod-301-ux6/);
+assert.match(html,/j-5a9b0d9aeabc\.js\?[^"\n]+prod-301-ux6=1/);
+assert.match(js,/if\(row\)row\.hidden=isGuest\|\|isAgent/,'Agent Coaching management button must be removed from punch row');
+assert(js.includes("actor.role==='agent'&&document.body.dataset.trinoRole==='agent'"),'Read-only coaching must be scoped to authenticated Agent');
+assert(js.includes('getActiveCoachingSession(name)'),'Must reuse existing Coaching authority snapshot');
+assert(js.includes('coachingUx6ServerFresh'),'Must distinguish server-confirmed data from cached observations');
+assert(js.includes('card.hidden=true') && js.includes("el.textContent='—'"),'Role change must clear hidden card details');
+assert(js.includes("calendar.insertAdjacentElement('afterend',card)"),'Put card under right schedule calendar');
+assert(js.includes('coach.textContent=') && js.includes('start.textContent=') && js.includes('elapsed.textContent='),'Coach, start and elapsed fields must be populated safely');
+assert(!js.includes('window.TrinoTimeCoachingUX6Write'),'No new Coaching writing endpoint');
+assert(css.includes("body[data-trino-role='agent']") && css.includes('dark-mode') && css.includes('max-width:720px'),'Agent-only dark and responsive styles');
+assert(css.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'The four Agent punch tiles remain intact');
+const manifest=JSON.parse(load('public/downloads/qc-tracker-current.json'));
+assert.equal(manifest.version,'2.3.10');
+console.log('PASS UX6: Agent-only right Coaching card, metadata, authoritativeness, four punch controls, Admin/TL isolation, responsive CSS');

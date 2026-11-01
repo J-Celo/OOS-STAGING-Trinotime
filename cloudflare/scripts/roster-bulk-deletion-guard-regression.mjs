@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {assessBulkRosterRemoval} from '../src/roster-bulk-deletion-guard.js';
+const make=(n,pod)=>Array.from({length:n},(_,i)=>({name:`Employee ${pod} ${i}`,pod}));
+const all=[...make(15,'POD 2'),...make(13,'POD 0'),...make(12,'POD 1'),...make(16,'TESCO')];
+assert.equal(assessBulkRosterRemoval(all,all).blocked,false,'unchanged roster allowed');
+assert.equal(assessBulkRosterRemoval(all,[...all,...make(2,'POD 4')]).blocked,false,'restoration/additions allowed');
+assert.equal(assessBulkRosterRemoval(all,all.filter(x=>x.pod==='POD 2')).blocked,true,'filtered POD write denied');
+assert.equal(assessBulkRosterRemoval(all,all.filter(x=>x.pod!=='POD 0')).blocked,true,'whole POD deletion denied');
+assert.equal(assessBulkRosterRemoval(all,all.slice(2)).blocked,false,'small edits allowed');
+assert.equal(assessBulkRosterRemoval(make(15,'POD 2'),[]).blocked,true,'full roster purge denied');
+const source=fs.readFileSync(new URL('../src/worker.js',import.meta.url),'utf8');
+assert.match(source,/const rosterMassRemoval=assessBulkRosterRemoval\(current\.entries\|\|\[\],entries\)/);
+assert.match(source,/ROSTER_BULK_REMOVAL_BLOCKED/);
+console.log('PASS roster bulk-deletion guard: filtered roster, whole-POD disappearance, and mass removal rejected; additions and normal edits allowed.');

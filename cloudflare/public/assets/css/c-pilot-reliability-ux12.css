@@ -1,0 +1,45 @@
+/* UX12 Pilot Reliability · compact, responsive, readable in light and dark. */
+.tt-pilot-root{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+.tt-pilot-root[hidden]{display:none!important}
+.tt-pilot-shell{max-width:1440px;margin:auto}
+.tt-pilot-hero{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
+.tt-pilot-header-actions{display:flex;flex-wrap:wrap;gap:8px}
+.tt-pilot-section{border:1px solid var(--tt-ops-border,rgba(110,130,155,.19));border-radius:16px;padding:18px;margin:16px 0;background:var(--tt-ops-surface,rgba(128,146,170,.055));min-width:0}
+.tt-pilot-section-title{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tt-pilot-section-title h3{font-size:1.02rem;margin:0;color:inherit}
+.tt-pilot-section-title p,.tt-pilot-section-title small{font-size:.81rem;line-height:1.4;color:var(--tt-ops-muted,#69788d);margin:3px 0}
+.tt-pilot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tt-pilot-tile{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border-radius:13px;border:1px solid rgba(117,144,177,.23);background:var(--tt-ops-card,rgba(105,133,165,.09))}
+.tt-pilot-tile>span{font-size:.8rem;font-weight:650;line-height:1.35}
+.tt-pilot-tile>strong{font-size:clamp(1.05rem,1.5vw,1.5rem);overflow-wrap:anywhere;font-variant-numeric:tabular-nums;line-height:1.25}
+.tt-pilot-tile>small{font-size:.75rem;line-height:1.5;color:var(--tt-ops-muted,#69788d)}
+.tt-pilot-tile[data-kind=caution]{border-color:rgba(219,159,49,.45)}
+.tt-pilot-status{border-radius:12px;padding:11px 14px;background:rgba(114,143,180,.09);border:1px solid rgba(114,143,180,.2);font-size:.86rem}
+.tt-pilot-status[data-state=failed]{border-color:rgba(219,101,91,.5)}
+.tt-pilot-status[data-state=fresh]{border-color:rgba(62,169,116,.35)}
+.tt-pilot-selector{display:flex;gap:8px;align-items:center;font-size:.82rem;font-weight:600}
+.tt-pilot-selector select{border:1px solid rgba(113,137,169,.42);color:inherit;background:var(--tt-ops-card,#fff);border-radius:9px;padding:9px;max-width:min(300px,60vw)}
+.tt-pilot-note,.tt-pilot-instruction{font-size:.84rem;line-height:1.55;opacity:.85;margin:12px 0 4px}
+.tt-pilot-footer{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 35px}
+.tt-pilot-root :is(button,select):focus-visible{outline:3px solid #459aef;outline-offset:2px}
+@media(max-width:1050px){.tt-pilot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.tt-pilot-section{padding:13px}.tt-pilot-grid{grid-template-columns:minmax(0,1fr)}.tt-pilot-header-actions,.tt-pilot-header-actions button{width:100%}.tt-pilot-selector{width:100%;justify-content:space-between}.tt-pilot-footer button{flex:1 1 45%}}
+@media(prefers-reduced-motion:reduce){.tt-pilot-root *{scroll-behavior:auto!important}}
+
+/* UX16: read-only server/device-evidence boundary. No new requests. */
+.tt-pilot-delivery-section .tt-pilot-section-title{margin-bottom:10px}
+.tt-pilot-delivery-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.tt-pilot-delivery-stages .tt-pilot-tile{padding:12px}
+.tt-pilot-delivery-stages .tt-pilot-tile>strong{font-size:1rem}
+.tt-pilot-delivery-scope{font-size:.84rem;line-height:1.5;margin:6px 0 12px}
+.tt-pilot-delivery-table-wrap{max-width:100%;overflow-x:auto;border:1px solid rgba(117,144,177,.23);border-radius:11px}
+.tt-pilot-delivery-table{width:100%;border-collapse:collapse;min-width:480px;font-size:.85rem;text-align:left}
+.tt-pilot-delivery-table caption{text-align:left;font-size:.76rem;color:var(--tt-ops-muted,#69788d);padding:10px 12px}
+.tt-pilot-delivery-table th,.tt-pilot-delivery-table td{padding:11px 12px;border-top:1px solid rgba(117,144,177,.2)}
+.tt-pilot-delivery-table thead th{font-weight:700}
+.tt-pilot-delivery-table tbody td:nth-child(2){font-variant-numeric:tabular-nums;font-weight:700}
+.tt-pilot-reconcile-steps{border:1px solid rgba(117,144,177,.23);border-radius:11px;padding:12px 14px;margin:14px 0}
+.tt-pilot-reconcile-steps summary{cursor:pointer;font-weight:700}
+.tt-pilot-reconcile-steps li{padding:3px 0;line-height:1.5}
+@media(max-width:1050px){.tt-pilot-delivery-stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.tt-pilot-delivery-stages{grid-template-columns:1fr}.tt-pilot-delivery-table{min-width:460px}}

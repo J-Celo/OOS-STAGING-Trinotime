@@ -1,0 +1,45 @@
+{
+  "candidate": "TrinoTime V2.0.3 M2.9.66 RC2",
+  "date": "2026-10-11",
+  "timezone": "Asia/Manila",
+  "node": "24.19.0",
+  "application": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "regressionPrograms": 106,
+    "syntaxChecks": 7
+  },
+  "synchronization": {
+    "command": "npm run qa:sync",
+    "exitCode": 0,
+    "programs": 12
+  },
+  "identity": {
+    "workerSyntheticCases": 35,
+    "clientVmCases": 10,
+    "messagingSqliteCases": 5,
+    "total": 50
+  },
+  "rulesOffline": {
+    "command": "npm run qa:rules:offline",
+    "exitCode": 0,
+    "invariants": 18,
+    "emulator": false
+  },
+  "rulesIdentity": {
+    "command": "npm run qa:rules:identity",
+    "exitCode": 0,
+    "kind": "structural generator and surface checks"
+  },
+  "liveStaging": "NOT RUN",
+  "browserEndToEnd": "NOT RUN",
+  "firebaseEmulator": "NOT RUN",
+  "cloudflareRuntime": "NOT RUN",
+  "publishedRules": "UNCHANGED AND NOT VERIFIED",
+  "production": "UNTOUCHED",
+  "releaseGate": {
+    "command": "npm run release:gate",
+    "exitCode": 0,
+    "freshIdentityAndRulesChecks": true
+  }
+}

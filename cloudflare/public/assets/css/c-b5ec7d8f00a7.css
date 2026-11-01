@@ -1,0 +1,254 @@
+/* TrinoTime v1.1.16 - Standard navigation consistency hotfix.
+   Presentation only. This layer is intentionally scoped to Standard / Non-Premium
+   Admin, Team Leader, and Agent workspaces. Premium/customized workspace geometry
+   is not changed. No Firebase, App Check, reCAPTCHA, Auth, database, API-key,
+   permission, attendance-write, entitlement, or idle-session changes. */
+
+/* Standard workspace selector guard. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .band-side,
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .band-side {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  justify-content: center !important;
+}
+
+/* Keep Standard desktop navigation in one intentional row. Older v1.1.8 helpers
+   inserted forced row-break spans; suppress those so the browser only wraps when
+   the viewport is genuinely narrow. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(.tt-action-account-break,.tt-action-secondary-break),
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(.tt-action-account-break,.tt-action-secondary-break) {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail,
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail {
+  box-sizing: border-box !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  align-content: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  overflow: visible !important;
+  border-radius: 22px !important;
+}
+
+/* Restore the rounded individual controls in Standard. This deliberately overrides
+   the older transparent .dayoff-btn treatment that left Agent/TL labels floating. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn
+),
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn
+) {
+  box-sizing: border-box !important;
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  overflow: visible !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+  border-radius: 15px !important;
+  background: rgba(255,255,255,.72) !important;
+  color: #1F2937 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.78), 0 5px 14px rgba(15,23,42,.06) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  text-wrap: nowrap !important;
+  text-indent: 0 !important;
+  transform: none !important;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn
+):is(:hover,:focus-visible),
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn
+):is(:hover,:focus-visible) {
+  background: rgba(255,255,255,.92) !important;
+  border-color: rgba(148,163,184,.46) !important;
+}
+
+/* The icon actions receive the same visible rounded container instead of floating
+   glyphs. sessionMeta itself stays structural; its inner toggle gets the box. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn),
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn),
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail #sessionMetaToggle,
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail #sessionMetaToggle {
+  box-sizing: border-box !important;
+  flex: 0 0 50px !important;
+  width: 50px !important;
+  min-width: 50px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(148,163,184,.30) !important;
+  border-radius: 15px !important;
+  background: rgba(255,255,255,.72) !important;
+  color: #1F2937 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.78), 0 5px 14px rgba(15,23,42,.06) !important;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > #sessionMeta,
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > #sessionMeta {
+  box-sizing: border-box !important;
+  flex: 0 0 50px !important;
+  width: 50px !important;
+  min-width: 50px !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Keep every label optically centered and prevent the first Admin control from
+   clipping at the left edge. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail :is(button,a) > span,
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail :is(button,a) > span {
+  min-width: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  transform: none !important;
+}
+
+/* Admin owns more header actions, so use slightly tighter but still comfortable
+   spacing to guarantee Shift Guidelines is fully visible on common desktops. */
+@media (min-width: 900px) {
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body[data-trino-role='admin'] #appRoot > .band .action-rail,
+  html[data-trino-custom-workspace='standard'] body[data-trino-role='admin'] #appRoot > .band .action-rail {
+    gap: 6px !important;
+    padding-inline: 7px !important;
+  }
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body[data-trino-role='admin'] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn
+  ),
+  html[data-trino-custom-workspace='standard'] body[data-trino-role='admin'] #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn
+  ) {
+    height: 48px !important;
+    min-height: 48px !important;
+    padding-inline: 13px !important;
+    font-size: 13px !important;
+  }
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body[data-trino-role='admin'] #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn),
+  html[data-trino-custom-workspace='standard'] body[data-trino-role='admin'] #appRoot > .band .action-rail > :is(#installAppBtn,#notifBellBtn,#settingsGearBtn),
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body[data-trino-role='admin'] #appRoot > .band .action-rail #sessionMetaToggle,
+  html[data-trino-custom-workspace='standard'] body[data-trino-role='admin'] #appRoot > .band .action-rail #sessionMetaToggle,
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body[data-trino-role='admin'] #appRoot > .band .action-rail > #sessionMeta,
+  html[data-trino-custom-workspace='standard'] body[data-trino-role='admin'] #appRoot > .band .action-rail > #sessionMeta {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    flex-basis: 48px !important;
+  }
+}
+
+/* Obsidian/dark Standard styling. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn,#installAppBtn,#notifBellBtn,#settingsGearBtn
+),
+html[data-trino-custom-workspace='standard'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn,#installAppBtn,#notifBellBtn,#settingsGearBtn
+),
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail #sessionMetaToggle,
+html[data-trino-custom-workspace='standard'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail #sessionMetaToggle {
+  background: rgba(255,255,255,.075) !important;
+  border-color: rgba(226,232,240,.22) !important;
+  color: #F1F5F9 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 5px 14px rgba(0,0,0,.12) !important;
+}
+
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn,#installAppBtn,#notifBellBtn,#settingsGearBtn
+):is(:hover,:focus-visible),
+html[data-trino-custom-workspace='standard'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+  #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn,#appReloadBtn,#sessionLogoutBtn,#installAppBtn,#notifBellBtn,#settingsGearBtn
+):is(:hover,:focus-visible),
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail #sessionMetaToggle:is(:hover,:focus-visible),
+html[data-trino-custom-workspace='standard'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail #sessionMetaToggle:is(:hover,:focus-visible) {
+  background: rgba(255,255,255,.12) !important;
+  border-color: rgba(226,232,240,.34) !important;
+}
+
+/* Natural responsive wrapping only when the available width actually requires it. */
+@media (max-width: 899px) {
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail,
+  html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn
+  ),
+  html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(
+    #openShiftGuidelinesBtn,#openDayOffBtn,#headerSpeedtestBtn,#tlAdminOverviewBtn,#openShiftSettingsBtn
+  ) {
+    flex: 1 1 132px !important;
+    min-width: 116px !important;
+    max-width: 190px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(#appReloadBtn,#sessionLogoutBtn),
+  html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail > :is(#appReloadBtn,#sessionLogoutBtn) {
+    flex: 1 1 145px !important;
+    max-width: 210px !important;
+  }
+}
+
+/* Preserve the existing Standard active-navigation cue after restoring button boxes. */
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail .tt-action-active,
+html[data-trino-custom-workspace='standard'] body:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail .tt-action-active {
+  background: color-mix(in srgb, #D79A25 18%, rgba(255,255,255,.92)) !important;
+  border-color: color-mix(in srgb, #D79A25 52%, rgba(148,163,184,.35)) !important;
+  color: #6F4B08 !important;
+}
+html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail .tt-action-active,
+html[data-trino-custom-workspace='standard'] body.dark-mode:is([data-trino-role='admin'],[data-trino-role='teamleader'],[data-trino-role='agent']) #appRoot > .band .action-rail .tt-action-active {
+  background: rgba(213,172,92,.16) !important;
+  border-color: rgba(213,172,92,.38) !important;
+  color: #F6D999 !important;
+}
+
+/* Admin has two extra navigation actions. Let only the Admin rail wrap on smaller
+   laptops instead of clipping either edge; Agent/TL remain one-row at this width. */
+@media (min-width: 900px) and (max-width: 1240px) {
+  html[data-trino-tier='normal']:not([data-trino-custom-workspace='enabled']) body[data-trino-role='admin'] #appRoot > .band .action-rail,
+  html[data-trino-custom-workspace='standard'] body[data-trino-role='admin'] #appRoot > .band .action-rail {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+}

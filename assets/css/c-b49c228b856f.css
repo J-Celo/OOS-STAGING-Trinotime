@@ -1,0 +1,27 @@
+/* TrinoTime v1.1.18 - Premium Team Leader profile stack order hotfix.
+   Presentation-only. Standard/non-premium and Premium Agent layouts are untouched. */
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot {
+  display:flex !important;
+  flex-direction:column !important;
+  flex-wrap:nowrap !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot > #agentProfileHeaderBtn {
+  order:-30 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot > #tlHomeStatusBadge {
+  order:-20 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .header-profile-slot.tt-v1117-calendar-slot > #ttPremiumEmbeddedCalendar {
+  order:-10 !important;
+  width:100% !important;
+  margin:0 !important;
+}

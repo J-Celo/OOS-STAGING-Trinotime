@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const read=(path)=>readFileSync(new URL(path,import.meta.url),'utf8');
+const cand=JSON.parse(read('../../tracker/manifest.json'));
+const published=cand;
+const env=JSON.parse(read('../wrangler.jsonc'));
+const worker=read('../src/worker.js');
+const manager=read('../public/assets/js/j-store-plan-manager-phase1.js');
+const extfiles=['coverage-background.js','confirmation-background.js','coverage.js','confirmation.js','qa-smart-recovery.js','popup.js','popup.html','store-intelligence.js'];
+assert.equal(env.vars.DEPLOYMENT_ENV,'production');assert.equal(env.vars.FIREBASE_PROJECT_ID,'cwh-timeclock');
+assert.equal(cand.version,'2.3.10');assert.equal(published.version,'2.3.10');
+assert.deepEqual(cand.host_permissions,['https://labeling-tools.augmoto.com/*','https://oos.trinotime.com/*']);
+assert(cand.content_scripts.some(x=>x.matches.includes('https://oos.trinotime.com/*')));
+for(const f of extfiles){const src=read('../../tracker/'+f);
+ assert(!src.includes('oostrinotime-staging-qa.trinoadmin.workers.dev'),f+': staging URL forbidden');
+ assert(!src.includes('STAGING QA'),f+': staging label forbidden');
+ assert(!src.includes('2.3.3'),f+': outdated candidate version forbidden');}
+for(const f of ['coverage-background.js','confirmation-background.js','coverage.js','confirmation.js','qa-smart-recovery.js'])
+ assert(read('../../tracker/'+f).includes('2.3.10'),f+': current production version required');
+assert(worker.includes('PRODUCTION_SHEETS_HARD_HOLD'));
+assert(worker.includes("'/coverage-sequence/all-stores'"));
+assert(worker.includes("'/store-observations'"));
+assert(manager.includes('Coverage · All Stores'));
+assert(!manager.includes('production-staging-secret-override'));
+const prodZip=readFileSync(new URL('../public/downloads/TrinoTime-QC-Tracker-v2.3.10.zip',import.meta.url));
+const digest=createHash('sha256').update(prodZip).digest('hex');
+assert(worker.includes(digest),'published production tracker digest must remain accurate');
+const html=read('../public/index.html');assert(html.includes('content="3.0.4"'));
+console.log('PASS production parity: Website v3.0.4 and Firebase cwh-timeclock held; Tracker current candidate 2.3.5 packaged; production v2.3.5-only endpoints; Coverage-only sequence, mapping V2 and Google Sheets hard hold verified.');

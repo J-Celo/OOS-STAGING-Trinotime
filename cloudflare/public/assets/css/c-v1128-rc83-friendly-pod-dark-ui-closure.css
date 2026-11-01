@@ -1,0 +1,42 @@
+/* TrinoTime v1.1.128 RC83 — final friendly POD / dark UI closure. */
+
+/* Profile Search: force crisp readable typography in dark mode, including nested
+   spans/options that previously inherited muted opacity/foreground values. */
+body.dark-mode .profile-directory-fab-drawer-title,
+body.dark-mode .profile-directory-fab-drawer-title strong,
+body.dark-mode .profile-directory-fab-drawer-title span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-search-label,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-field label,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope strong,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-result-copy strong,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-result-copy span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-empty,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-scope-chip {
+  opacity:1 !important;
+  filter:none !important;
+}
+body.dark-mode .profile-directory-fab-drawer-title strong,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-search-label,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope strong,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-result-copy strong {
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+}
+body.dark-mode .profile-directory-fab-drawer-title span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-field label,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-scope span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-result-copy span,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-empty,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-scope-chip {
+  color:#E2E8F0 !important;
+  -webkit-text-fill-color:#E2E8F0 !important;
+}
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-field select,
+body.dark-mode .profile-directory-fab-drawer .profile-directory-filter-field select option {
+  color:#F8FAFC !important;
+  -webkit-text-fill-color:#F8FAFC !important;
+  background:#111827 !important;
+}

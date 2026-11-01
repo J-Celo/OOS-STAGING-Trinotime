@@ -1,0 +1,154 @@
+/* TrinoTime V2.0.3 Shift Metrics M2.7 — Agent Security top toolbar cleanup.
+   Presentation-only. Security actions and behavior are unchanged. */
+
+#agentSecurityPanel .agent-security-head{
+  position:relative!important;
+  padding:22px 24px 20px!important;
+}
+#agentSecurityPanel .agent-security-head>div:first-child{
+  max-width:840px!important;
+  padding-right:240px!important;
+}
+
+/* Move panel utilities to a true top toolbar. */
+#agentSecurityPanel .agent-security-head-toolbar{
+  position:absolute!important;
+  top:22px!important;
+  right:24px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  z-index:3!important;
+}
+#agentSecurityPanel .agent-security-head-toolbar .agent-security-toggle,
+#agentSecurityPanel .agent-security-head-toolbar .context-help-btn{
+  position:static!important;
+  margin:0!important;
+}
+#agentSecurityPanel .agent-security-head-toolbar .agent-security-toggle{
+  width:auto!important;
+  min-width:122px!important;
+  max-width:none!important;
+  height:40px!important;
+  min-height:40px!important;
+  padding:0 14px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+}
+#agentSecurityPanel .agent-security-head-toolbar .context-help-btn{
+  width:40px!important;
+  min-width:40px!important;
+  height:40px!important;
+  min-height:40px!important;
+  padding:0!important;
+}
+
+/* Primary controls stay in one clean row below the title. */
+#agentSecurityPanel .agent-security-head-actions{
+  display:grid!important;
+  grid-template-columns:minmax(280px,1fr) minmax(300px,1fr) 220px!important;
+  grid-template-areas:"search tl generate"!important;
+  align-items:start!important;
+  column-gap:14px!important;
+  row-gap:8px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#agentSecurityPanel .agent-security-head-actions>.agent-security-search-wrap:first-of-type{grid-area:search!important}
+#agentSecurityPanel .agent-security-head-actions>.agent-security-search-wrap:nth-of-type(2){grid-area:tl!important}
+#agentSecurityPanel .agent-security-head-actions>.team-leader-temp-btn{
+  grid-area:generate!important;
+  align-self:start!important;
+  justify-self:stretch!important;
+  width:220px!important;
+  min-width:220px!important;
+  max-width:220px!important;
+  height:44px!important;
+  margin-top:20px!important;
+  padding:0 16px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  white-space:normal!important;
+  text-align:center!important;
+  line-height:1.15!important;
+}
+
+#agentSecurityPanel .agent-security-search-wrap{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+}
+#agentSecurityPanel .agent-security-search-wrap input,
+#agentSecurityPanel .agent-security-search-wrap select{
+  height:44px!important;
+  min-height:44px!important;
+}
+#agentSecurityPanel .agent-security-search-wrap>span{
+  min-height:16px!important;
+  margin-top:6px!important;
+  text-align:right!important;
+}
+
+/* Collapsed state keeps toolbar on top and compact. */
+#agentSecurityPanel.is-collapsed .agent-security-head{
+  min-height:72px!important;
+  padding:16px 24px!important;
+}
+#agentSecurityPanel.is-collapsed .agent-security-head>div:first-child{padding-right:240px!important}
+#agentSecurityPanel.is-collapsed .agent-security-head-toolbar{top:16px!important;right:24px!important}
+
+@media(max-width:1180px){
+  #agentSecurityPanel .agent-security-head-actions{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    grid-template-areas:"search tl" ". generate"!important;
+  }
+  #agentSecurityPanel .agent-security-head-actions>.team-leader-temp-btn{
+    width:220px!important;
+    min-width:220px!important;
+    max-width:220px!important;
+    justify-self:end!important;
+    margin-top:0!important;
+  }
+}
+
+@media(max-width:820px){
+  #agentSecurityPanel .agent-security-head{padding:18px!important}
+  #agentSecurityPanel .agent-security-head>div:first-child{
+    max-width:none!important;
+    padding-right:0!important;
+    padding-top:56px!important;
+  }
+  #agentSecurityPanel .agent-security-head-toolbar{
+    top:16px!important;
+    right:18px!important;
+  }
+  #agentSecurityPanel .agent-security-head-actions{
+    grid-template-columns:1fr!important;
+    grid-template-areas:"search" "tl" "generate"!important;
+    gap:10px!important;
+  }
+  #agentSecurityPanel .agent-security-head-actions>.team-leader-temp-btn{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    justify-self:stretch!important;
+    margin-top:0!important;
+    white-space:nowrap!important;
+  }
+}
+
+@media(max-width:520px){
+  #agentSecurityPanel .agent-security-head>div:first-child{padding-top:100px!important}
+  #agentSecurityPanel .agent-security-head-toolbar{
+    left:18px!important;
+    right:18px!important;
+    justify-content:space-between!important;
+  }
+  #agentSecurityPanel .agent-security-head-toolbar .agent-security-toggle{
+    min-width:0!important;
+    flex:1 1 auto!important;
+  }
+}

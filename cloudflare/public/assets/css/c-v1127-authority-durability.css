@@ -1,0 +1,9 @@
+/* TrinoTime v1.1.127 — Authority Durability Closure Hotfix RC1
+   Fail-closed launcher visibility outside an authenticated portal. */
+
+#workspaceChatBtn[hidden],
+#leaveRequestFloater[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

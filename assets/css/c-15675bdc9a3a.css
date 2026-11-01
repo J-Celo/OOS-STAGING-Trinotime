@@ -1,0 +1,195 @@
+/* ========================================================================== */
+/* TrinoTime v1.0.67 - Team Leader single-row action rail + badge containment */
+/* Presentation only. Auth, Firebase/App Check, attendance, scheduling, and   */
+/* role permission behavior remain unchanged.                                 */
+/* ========================================================================== */
+
+/* TL headers carry more management controls than Agent views. Keep the whole
+   navigation capsule on one line and reclaim horizontal space without
+   changing which controls are available to the role. */
+body[data-trino-role='teamleader'] #appRoot > .band .band-side,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-side {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  overflow: visible !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding: 5px 6px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail > *,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail > * {
+  flex-shrink: 0 !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail .dayoff-btn,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail .dayoff-btn {
+  min-height: 34px !important;
+  height: 34px !important;
+  padding-inline: 8px !important;
+  gap: 4px !important;
+  font-size: 9.5px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.app-reload-btn, .session-logout-btn),
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.app-reload-btn, .session-logout-btn) {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+  padding-inline: 8px !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.app-reload-btn, .session-logout-btn, .header-speedtest-link) svg,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.app-reload-btn, .session-logout-btn, .header-speedtest-link) svg {
+  width: 12px !important;
+  height: 12px !important;
+  flex: 0 0 12px !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.settings-gear-btn, .notif-bell-btn),
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.settings-gear-btn, .notif-bell-btn) {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  flex: 0 0 34px !important;
+  padding: 0 !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.settings-gear-btn, .notif-bell-btn) svg,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail :is(.settings-gear-btn, .notif-bell-btn) svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail .session-meta,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail .session-meta {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .action-rail .session-meta-toggle,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail .session-meta-toggle {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .tl-admin-overview-btn,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .tl-admin-overview-btn {
+  gap: 4px !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band .tl-admin-overview-count,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .tl-admin-overview-count {
+  min-width: 23px !important;
+  height: 18px !important;
+  padding-inline: 4px !important;
+  font-size: 8px !important;
+}
+
+/* Preserve the one-row contract at narrower desktop/tablet widths. If a very
+   small viewport cannot physically show every TL control at once, keep them
+   inside the capsule with horizontal scrolling instead of creating row two. */
+@media (max-width: 1240px) {
+  body[data-trino-role='teamleader'] #appRoot > .band .band-side,
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-side {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-top: 1px !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-inline: contain;
+  }
+  body[data-trino-role='teamleader'] #appRoot > .band .band-side::-webkit-scrollbar,
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .band-side::-webkit-scrollbar {
+    display: none;
+  }
+  body[data-trino-role='teamleader'] #appRoot > .band .action-rail,
+  html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .action-rail {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: max-content !important;
+    max-width: none !important;
+    overflow: visible !important;
+  }
+}
+
+/* The count and release labels are anchored to the notification icon instead
+   of participating in the rail's layout, so they cannot push or overlap the
+   neighboring management buttons. */
+body[data-trino-role='teamleader'] #appRoot > .band .notif-bell-btn,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band .notif-bell-btn {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band :is(#notifBellBadge, #notifReleaseBadge),
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band :is(#notifBellBadge, #notifReleaseBadge) {
+  position: absolute !important;
+  top: -4px !important;
+  right: -4px !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: 4 !important;
+  pointer-events: none !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band #notifBellBadge,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #notifBellBadge {
+  min-width: 18px !important;
+  height: 18px !important;
+  padding-inline: 4px !important;
+  font-size: 8px !important;
+  line-height: 1 !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band #notifReleaseBadge,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #notifReleaseBadge {
+  min-width: 28px !important;
+  height: 15px !important;
+  padding-inline: 4px !important;
+  font-size: 7.5px !important;
+  line-height: 1 !important;
+}
+
+body[data-trino-role='teamleader'] #appRoot > .band #notifReleaseBadge.show,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #notifReleaseBadge.show {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* When both indicators are active, keep the count at the absolute top-right
+   and tuck NEW immediately to its left; neither badge overlaps the icon or
+   adjacent buttons. The base position for each badge remains top:-4/right:-4. */
+body[data-trino-role='teamleader'] #appRoot > .band #notifBellBadge.show + #notifReleaseBadge.show,
+html[data-trino-custom-workspace='enabled'] body[data-trino-role='teamleader'] #appRoot > .band #notifBellBadge.show + #notifReleaseBadge.show {
+  right: 16px !important;
+}

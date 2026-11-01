@@ -1,0 +1,36 @@
+// TrinoTime V3.0.4 production source preflight. No network or deployment actions.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const cfg=JSON.parse(read('wrangler.jsonc'));
+const v=JSON.parse(read('public/version.json'));
+const manifest=JSON.parse(read('public/manifest.json'));
+const tr=JSON.parse(fs.readFileSync(path.join(root,'../tracker/manifest.json'),'utf8'));
+const index=read('public/index.html'),worker=read('src/worker.js');
+assert.equal(cfg.name,'oostrinotime');
+assert.equal(cfg.vars.DEPLOYMENT_ENV,'production');
+assert.equal(cfg.vars.FIREBASE_PROJECT_ID,'cwh-timeclock');
+assert.equal(cfg.r2_buckets.find(x=>x.binding==='CHAT_FILES')?.bucket_name,'trinotime-chat-files');
+assert.equal(v.version,'3.0.4');assert.equal(manifest.version,v.version);
+assert.equal(v.build_fingerprint,manifest.build_fingerprint);
+assert.ok(worker.includes(v.build_fingerprint)&&index.includes(v.build_fingerprint));
+assert.equal(tr.version,'2.3.10');
+assert.deepEqual(tr.content_scripts[1].matches,['https://oos.trinotime.com/*']);
+assert.ok(!JSON.stringify(tr).includes('oostrinotime-staging-qa'));
+assert.ok(!cfg.triggers?.crons?.length);
+assert.ok(!fs.existsSync(path.join(root,'wrangler.staging.jsonc')));
+for(const p of ['/api/workforce/coverage/*','/api/workforce/confirmation/*','/api/workforce/store-plans/*','/api/workforce/store-exports/*'])
+  assert.ok(cfg.assets.run_worker_first.includes(p),'Missing worker route '+p);
+const meta=JSON.parse(read('public/downloads/qc-tracker-current.json'));
+const zip=fs.readFileSync(path.join(root,'public/downloads/TrinoTime-QC-Tracker-v2.3.10.zip'));
+const hash=createHash('sha256').update(zip).digest('hex');
+assert.equal(meta.sha256,hash);assert.equal(meta.version,tr.version);
+assert.ok(worker.includes(hash)&&worker.includes('qc-tracker-v2.3.10-production'));
+assert.ok(worker.includes("if (env.DEPLOYMENT_ENV==='production' && (route==='/sync-now' || route==='/scheduled'))"));
+assert.ok(worker.includes("if(env.DEPLOYMENT_ENV==='production') throw Error('PRODUCTION_SHEETS_HARD_HOLD')"));
+assert.ok(worker.includes('coverageSyncServer(request,env)')&&worker.includes('confirmationSyncServer(request,env)'));
+console.log('PASS production V3.0.4 + Tracker v2.3.10 preflight, sync routes, package digest and disabled Google writes');
