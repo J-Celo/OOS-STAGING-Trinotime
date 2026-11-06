@@ -22,7 +22,7 @@
     }
   ],
   "version": "1.1.76",
-  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106",
   "staging": {
     "environment": "staging-qa",
     "sourceParity": "UX18P46",

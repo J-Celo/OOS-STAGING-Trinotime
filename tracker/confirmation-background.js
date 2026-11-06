@@ -18,18 +18,19 @@ const CFT = Object.freeze({
 const AUGMOTO = 'https://labeling-tools.augmoto.com';
 const TRINOTIME = 'https://oostrinotime-staging-qa.trinoadmin.workers.dev';
 const BUILD_CHANNEL = 'staging-qa';
-const EXT_VERSION = '2.2.62';
+const EXT_VERSION = '2.2.63';
 const MAX_DAYS = 45;
 const MAX_RECENT_EVENTS = 4000;
 const MANAGED_IDLE_MINUTES = 5;
 const MANAGED_IDLE_MS = MANAGED_IDLE_MINUTES * 60 * 1000;
 const SUMMARY_PENDING_KEY = '__summary__';
-const VALID_TRACKER_STATES = new Set(['active', 'idle', 'away', 'paused', 'ready', 'offline', 'unknown']);
+const VALID_TRACKER_STATES = new Set(['active', 'idle', 'away', 'searching', 'grace', 'unverified', 'paused', 'ready', 'offline', 'unknown']);
 
 let writeChain = Promise.resolve();
 let syncInFlight = null;
 let lastSyncAttemptAt = 0;
 let syncWakeTimer = null;
+let syncWakeDueAt = 0;
 let syncFollowUpRequested = false;
 let syncBackoffUntil = 0;
 let syncFailureCount = 0;
@@ -112,7 +113,7 @@ function blankSummary() {
     interval1ManualAdjustment: 0, interval2ManualAdjustment: 0, interval3ManualAdjustment: 0,
     interval1DisplayTotal: 0, interval2DisplayTotal: 0, interval3DisplayTotal: 0,
     currentInterval: 1, submitted: 0, created: 0, blurred: 0, deleted: 0, noMatch: 0,
-    activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+    activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
     currentJob: '', currentTask: 0, totalTasks: 0,
     pendingSubmission: false, trackerState: 'offline',
     lastActivityAt: 0, idleSinceAt: 0, awaySinceAt: 0, presenceUpdatedAt: 0,
@@ -138,12 +139,14 @@ function ensureJob(day, jobId, totalTasks = 0, ts = Date.now()) {
   if (!day.jobs[jobId]) {
     day.jobs[jobId] = {
       jobId, submitted: 0, created: 0, blurred: 0, deleted: 0, noMatch: 0,
-      activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+      activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
       lastTask: 0, totalTasks: num(totalTasks, 100000), status: 'active', firstSeenAt: ts, lastSeenAt: ts
     };
   }
   const j = day.jobs[jobId];
   j.awayMs = num(j.awayMs);
+  j.searchingMs = num(j.searchingMs);
+  j.graceMs = num(j.graceMs); j.unverifiedMs = num(j.unverifiedMs);
   j.totalTasks = Math.max(num(j.totalTasks, 100000), num(totalTasks, 100000));
   j.lastSeenAt = Math.max(epochMs(j.lastSeenAt), epochMs(ts));
   return j;
@@ -155,7 +158,7 @@ function ensureTask(day, jobId, taskIndex, totalTasks = 0, ts = Date.now()) {
     day.tasks[key] = {
       jobId, taskIndex: num(taskIndex, 100000), totalTasks: num(totalTasks, 100000),
       created: 0, blurred: 0, deleted: 0, noMatch: 0,
-      activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+      activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
       submitted: false, skipped: false, status: 'active',
       trackerState: 'active', lastActivityAt: ts, idleSinceAt: 0, awaySinceAt: 0, idleThresholdMs: MANAGED_IDLE_MS,
       startedAt: ts, endedAt: 0, updatedAt: ts
@@ -163,6 +166,8 @@ function ensureTask(day, jobId, taskIndex, totalTasks = 0, ts = Date.now()) {
   }
   const t = day.tasks[key];
   t.awayMs = num(t.awayMs);
+  t.searchingMs = num(t.searchingMs);
+  t.graceMs = num(t.graceMs); t.unverifiedMs = num(t.unverifiedMs);
   t.totalTasks = Math.max(num(t.totalTasks, 100000), num(totalTasks, 100000));
   t.idleThresholdMs = MANAGED_IDLE_MS;
   t.updatedAt = Math.max(epochMs(t.updatedAt), epochMs(ts));
@@ -284,8 +289,8 @@ async function readCore() {
 function cleanShift(raw){const source=raw&&typeof raw==='object'?raw:{},status=['active','completed','not_clocked_in'].includes(String(source.status||''))?String(source.status):'not_clocked_in';return{sessionId:String(source.sessionId||'').slice(0,80),generation:Math.max(0,Math.floor(Number(source.generation)||0)),status,locked:status!=='active',reportDate:/^\d{4}-\d{2}-\d{2}$/.test(String(source.reportDate||''))?String(source.reportDate):'',startedAt:source.startedAt?String(source.startedAt):null,startedAtMs:epochMs(source.startedAtMs),endedAt:source.endedAt?String(source.endedAt):null,endedAtMs:epochMs(source.endedAtMs),lockedAt:source.lockedAt?String(source.lockedAt):null,resetAt:source.resetAt?String(source.resetAt):null,resetBy:source.resetBy?String(source.resetBy):null};}
 function shiftIsActive(core){return core?.shift?.status==='active'&&Boolean(core.shift.sessionId);}
 function reportDateForCore(core){return core?.shift?.reportDate||core?.settings?.reportDate||dateKey();}
-function localSummaryHasActivity(summary){const s=summary||{};return ['interval1','interval2','interval3','submitted','activeMs','idleMs','awayMs','elapsedMs'].some(k=>num(s[k])>0);}
-function applyAuthoritativeConfirmationSummary(day,remote){if(!remote||typeof remote!=='object')return;const s=day.summary={...blankSummary(),...day.summary};for(const key of ['interval1','interval2','interval3','activeMs','idleMs','awayMs','elapsedMs','currentTask','totalTasks','lastActivityAt','idleSinceAt','awaySinceAt','presenceUpdatedAt','clientSequence'])if(remote[key]!==undefined)s[key]=num(remote[key],Number.MAX_SAFE_INTEGER);for(const i of [1,2,3])s[`interval${i}ManualAdjustment`]=Number.isFinite(Number(remote[`interval${i}ManualAdjustment`]))?Math.trunc(Number(remote[`interval${i}ManualAdjustment`])):0;s.currentInterval=[1,2,3].includes(Number(remote.currentInterval))?Number(remote.currentInterval):1;s.currentJob=String(remote.currentJob||'');s.pendingSubmission=remote.pendingSubmission===true;s.trackerState=trackerState(remote.trackerState,'offline');normalizeIntervalAdjustments(s);}
+function localSummaryHasActivity(summary){const s=summary||{};return ['interval1','interval2','interval3','submitted','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs'].some(k=>num(s[k])>0);}
+function applyAuthoritativeConfirmationSummary(day,remote){if(!remote||typeof remote!=='object')return;const s=day.summary={...blankSummary(),...day.summary};for(const key of ['interval1','interval2','interval3','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs','currentTask','totalTasks','lastActivityAt','idleSinceAt','awaySinceAt','presenceUpdatedAt','clientSequence'])if(remote[key]!==undefined)s[key]=num(remote[key],Number.MAX_SAFE_INTEGER);for(const i of [1,2,3])s[`interval${i}ManualAdjustment`]=Number.isFinite(Number(remote[`interval${i}ManualAdjustment`]))?Math.trunc(Number(remote[`interval${i}ManualAdjustment`])):0;s.currentInterval=[1,2,3].includes(Number(remote.currentInterval))?Number(remote.currentInterval):1;s.currentJob=String(remote.currentJob||'');s.pendingSubmission=remote.pendingSubmission===true;s.trackerState=trackerState(remote.trackerState,'offline');normalizeIntervalAdjustments(s);}
 // QA SYNC HARDENING v2.2.42 — retain old-shift state and unacknowledged
 // records before replacing the day slot. No auto replay across shift identity.
 function preserveUnackedShiftSnapshot(core,previous,sourceDate,reason){
@@ -356,6 +361,10 @@ async function diag(state, message, extra = {}) {
 }
 
 function applyPresenceFields(target, source, ts) {
+  // A delayed outgoing-tab packet may still carry its final elapsed time,
+  // but must not overwrite a newer foreground tab's presence header.
+  const incomingAt = epochMs(source.presenceUpdatedAt || ts);
+  if (epochMs(target.presenceUpdatedAt) > incomingAt) return;
   const state = trackerState(source.trackerState, target.trackerState || 'unknown');
   const lastActivityAt = epochMs(source.lastActivityAt || target.lastActivityAt || ts);
   const explicitIdleSinceAt = epochMs(source.idleSinceAt);
@@ -374,6 +383,12 @@ async function applyEvent(event) {
     const core = await readCore();
     if(!shiftIsActive(core))return {ok:true,frozen:true,shift:core.shift};
     const eventId = String(event.eventId || '');
+    if (/^submit-(pending|confirmed|cancelled)$/.test(String(event.type||'')) &&
+        event.shiftSessionId &&
+        (String(event.shiftSessionId)!==String(core.shift.sessionId||'') ||
+         Number(event.shiftGeneration)!==Number(core.shift.generation)||
+         String(event.date||'')!==String(reportDateForCore(core))))
+      return {ok:false,frozen:true,error:'Submission belongs to a different shift; no task was changed.'};
     if (eventId && core.recent.includes(eventId)) return { ok: true, duplicate: true };
 
     const ts = epochMs(event.timestamp) || Date.now();
@@ -384,8 +399,11 @@ async function applyEvent(event) {
     const ti = num(event.taskIndex || s.currentTask, 100000);
     const tt = num(event.totalTasks || s.totalTasks, 100000);
 
-    if (jobId) { s.currentJob = jobId; s.currentTask = ti; s.totalTasks = tt || s.totalTasks; }
     const eventType = String(event.type || '');
+    // Late receipts for an earlier task update that task's totals, not the
+    // currently displayed task header. The active task comes from task-start.
+    const delayedReceipt = eventType === 'submit-pending' || eventType === 'submit-cancelled' || eventType === 'submit-confirmed';
+    if (jobId && !delayedReceipt) { s.currentJob = jobId; s.currentTask = ti; s.totalTasks = tt || s.totalTasks; }
     const presenceNeutral = eventType === 'job-open' || eventType === 'job-clear';
     // Job visibility events must not reset the inactivity boundary. Confirmation
     // presence is driven by explicit cft-presence/cft-time messages, just like Coverage.
@@ -422,11 +440,14 @@ async function applyEvent(event) {
         }
         break;
       case 'submit-pending':
-        s.pendingSubmission = true; s.pendingSinceAt = ts;
-        if (task) { task.interval = task.interval || s.currentInterval; task.status = 'active'; task.updatedAt = ts; pendingAdd(core.pending, date, taskKey(jobId, ti)); }
+        if (task && !task.submitted) task.submitPending = true;
+        s.pendingSubmission = Object.values(day.tasks).some(t=>t.submitPending===true);
+        if (s.pendingSubmission) s.pendingSinceAt = ts;
+        if (task) { if (!task.submitted) task.status = 'active'; task.interval = task.interval || s.currentInterval; task.updatedAt = ts; pendingAdd(core.pending, date, taskKey(jobId, ti)); }
         break;
       case 'submit-cancelled':
-        s.pendingSubmission = false;
+        if(task)task.submitPending=false;
+        s.pendingSubmission = Object.values(day.tasks).some(t=>t.submitPending===true);
         if (task && !task.submitted) delete task.interval;
         if (task) { task.updatedAt = ts; pendingAdd(core.pending, date, taskKey(jobId, ti)); }
         break;
@@ -437,7 +458,8 @@ async function applyEvent(event) {
           task.interval = task.interval || s.currentInterval;
           s['interval'+task.interval]++; normalizeIntervalAdjustments(s); if (job) job.submitted++;
         }
-        s.pendingSubmission = false;
+        if(task)task.submitPending=false;
+        s.pendingSubmission = Object.values(day.tasks).some(t=>t.submitPending===true);
         pendingAdd(core.pending, date, taskKey(jobId, ti));
         break;
       case 'skip-confirmed':
@@ -485,9 +507,9 @@ async function applyEvent(event) {
 async function leaveMode(){return queue(async()=>{const core=await readCore();if(!shiftIsActive(core))return{ok:true,frozen:true,shift:core.shift};const ts=Date.now(),date=reportDateForCore(core),day=ensureDate(core.data,date),s=day.summary,task=day.tasks[taskKey(s.currentJob,s.currentTask)];if(task&&!task.submitted){task.status='exited';task.updatedAt=ts;pendingAdd(core.pending,date,taskKey(s.currentJob,s.currentTask));}s.pendingSubmission=false;s.currentJob='';s.currentTask=0;s.totalTasks=0;applyPresenceFields(s,{trackerState:'paused',presenceUpdatedAt:ts},ts);s.clientSequence=num(s.clientSequence)+1;day.updatedAt=ts;pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);await chrome.storage.local.set({[CFT.data]:core.data,[CFT.pendingTasks]:core.pending});scheduleSyncSoon(250);return{ok:true};});}
 async function applyEfficiencyTime(payload){return queue(async()=>{const core=await readCore();if(!shiftIsActive(core))return{ok:true,frozen:true,shift:core.shift};const eventId=String(payload.eventId||'');if(!eventId||core.recent.includes(eventId))return{ok:true,duplicate:true};const date=reportDateForCore(core),ts=epochMs(payload.timestamp)||Date.now();if(!payload.jobId||!Number(payload.taskIndex))return{ok:false,error:'Invalid measured task.'};const day=ensureDate(core.data,date),task=ensureTask(day,String(payload.jobId),num(payload.taskIndex),num(payload.totalTasks),ts);if(!task.submitted)task.efficiencyMs=num(task.efficiencyMs)+num(payload.activeMs,5000);core.recent.push(eventId);core.recent=core.recent.slice(-MAX_RECENT_EVENTS);day.summary.clientSequence=num(day.summary.clientSequence)+1;pendingAdd(core.pending,date,taskKey(payload.jobId,payload.taskIndex));pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);await chrome.storage.local.set({[CFT.data]:core.data,[CFT.recent]:core.recent,[CFT.pendingTasks]:core.pending});scheduleSyncSoon(1200);return{ok:true};});}
 
-async function applyPresence(payload){return queue(async()=>{const core=await readCore();if(!shiftIsActive(core))return{ok:true,frozen:true,shift:core.shift};const ts=epochMs(payload.timestamp)||Date.now(),date=reportDateForCore(core),day=ensureDate(core.data,date),s=day.summary,jobId=String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000);if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;}applyPresenceFields(s,payload,ts);const job=jobId?ensureJob(day,jobId,tt,ts):null,task=jobId&&ti?ensureTask(day,jobId,ti,tt,ts):null;if(job)job.lastSeenAt=ts;if(task){applyPresenceFields(task,payload,ts);task.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);day.updatedAt=ts;s.clientSequence=num(s.clientSequence)+1;await chrome.storage.local.set({[CFT.data]:core.data,[CFT.pendingTasks]:core.pending});scheduleSyncSoon(350);return{ok:true};});}
+async function applyPresence(payload){return queue(async()=>{const core=await readCore();if(!shiftIsActive(core))return{ok:true,frozen:true,shift:core.shift};const ts=epochMs(payload.timestamp)||Date.now(),date=reportDateForCore(core),day=ensureDate(core.data,date),s=day.summary,jobId=payload.trackerState==='searching'?'':String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000);if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;}applyPresenceFields(s,payload,ts);const job=jobId?ensureJob(day,jobId,tt,ts):null,task=jobId&&ti?ensureTask(day,jobId,ti,tt,ts):null;if(job)job.lastSeenAt=ts;if(task){applyPresenceFields(task,payload,ts);task.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);day.updatedAt=ts;s.clientSequence=num(s.clientSequence)+1;await chrome.storage.local.set({[CFT.data]:core.data,[CFT.pendingTasks]:core.pending});scheduleSyncSoon(350);return{ok:true};});}
 
-async function applyTime(payload){return queue(async()=>{const core=await readCore();if(!shiftIsActive(core))return{ok:true,frozen:true,shift:core.shift};const ts=epochMs(payload.timestamp)||Date.now(),date=reportDateForCore(core),day=ensureDate(core.data,date),s=day.summary,jobId=String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000),active=num(payload.activeMs,60000),idle=num(payload.idleMs,60000),away=num(payload.awayMs,60000),elapsed=num(payload.elapsedMs,60000);if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;}s.activeMs+=active;s.idleMs+=idle;s.awayMs+=away;s.elapsedMs+=elapsed;applyPresenceFields(s,payload,ts);const j=jobId?ensureJob(day,jobId,tt,ts):null,t=jobId&&ti?ensureTask(day,jobId,ti,tt,ts):null;if(j){j.activeMs+=active;j.idleMs+=idle;j.awayMs+=away;j.elapsedMs+=elapsed;j.lastTask=Math.max(num(j.lastTask),ti);j.lastSeenAt=ts;}if(t){t.activeMs+=active;t.idleMs+=idle;t.awayMs+=away;t.elapsedMs+=elapsed;applyPresenceFields(t,payload,ts);t.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);day.updatedAt=ts;s.clientSequence=num(s.clientSequence)+1;await chrome.storage.local.set({[CFT.data]:core.data,[CFT.pendingTasks]:core.pending});scheduleSyncSoon(1200);return{ok:true};});}
+async function applyTime(payload){return queue(async()=>{const core=await readCore();if(!shiftIsActive(core))return{ok:true,frozen:true,shift:core.shift};const ts=epochMs(payload.timestamp)||Date.now(),date=reportDateForCore(core),day=ensureDate(core.data,date),s=day.summary,jobId=payload.trackerState==='searching'?'':String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000),active=num(payload.activeMs,60000),idle=num(payload.idleMs,60000),away=num(payload.awayMs,60000),searching=num(payload.searchingMs,60000),grace=num(payload.graceMs,60000),unverified=num(payload.unverifiedMs,60000),elapsed=num(payload.elapsedMs,60000);if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;}s.activeMs+=active;s.idleMs+=idle;s.awayMs+=away;s.searchingMs=num(s.searchingMs)+searching;s.graceMs=num(s.graceMs)+grace;s.unverifiedMs=num(s.unverifiedMs)+unverified;s.elapsedMs+=elapsed;applyPresenceFields(s,payload,ts);const j=jobId?ensureJob(day,jobId,tt,ts):null,t=jobId&&ti?ensureTask(day,jobId,ti,tt,ts):null;if(j){j.activeMs+=active;j.idleMs+=idle;j.awayMs+=away;j.searchingMs=num(j.searchingMs)+searching;j.graceMs=num(j.graceMs)+grace;j.unverifiedMs=num(j.unverifiedMs)+unverified;j.elapsedMs+=elapsed;j.lastTask=Math.max(num(j.lastTask),ti);j.lastSeenAt=ts;}if(t){t.activeMs+=active;t.idleMs+=idle;t.awayMs+=away;t.searchingMs=num(t.searchingMs)+searching;t.graceMs=num(t.graceMs)+grace;t.unverifiedMs=num(t.unverifiedMs)+unverified;t.elapsedMs+=elapsed;applyPresenceFields(t,payload,ts);t.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);day.updatedAt=ts;s.clientSequence=num(s.clientSequence)+1;await chrome.storage.local.set({[CFT.data]:core.data,[CFT.pendingTasks]:core.pending});scheduleSyncSoon(1200);return{ok:true};});}
 
 async function ensureDevice() {
   // Keep the same bound device when Chrome preserves the bridge but loses the
@@ -514,9 +536,9 @@ async function ensureDevice() {
 }
 async function pairTrinoTime(preferredTabId=0){
   const device=await ensureDevice(),initialCore=await readCore(),fallbackDate=initialCore.settings.reportDate||dateKey(),tabs=await chrome.tabs.query({}),candidates=tabs.filter(tab=>{try{return Boolean(tab?.id)&&new URL(String(tab.url||'')).origin===TRINOTIME;}catch(_){return false;}}),tab=candidates.find(t=>Number(t.id)===Number(preferredTabId))||candidates.find(t=>t.active)||candidates[0];
-  if(!tab?.id)throw new Error('Open TrinoTime STAGING QA in a tab and sign in as the QA Agent first.');
-  const result=await chrome.scripting.executeScript({target:{tabId:tab.id},world:'MAIN',func:async(deviceId,expectedOrigin,defaultDate)=>{const wait=ms=>new Promise(r=>setTimeout(r,ms));if(location.origin!==expectedOrigin)throw new Error('The selected tab is not the TrinoTime STAGING QA site.');const authHeaders=async()=>{const headers={Accept:'application/json','Content-Type':'application/json'},securityToken=String(window.TrinoTimeMessagingSessionContext?.getSecuritySessionToken?.()||'');if(securityToken)headers['X-TT-Security-Session']=securityToken;else{try{const user=window.firebase?.auth?.().currentUser;if(user&&!user.isAnonymous&&typeof user.getIdToken==='function')headers.Authorization=`Bearer ${await user.getIdToken(false)}`;}catch(_){}}return headers;};let pair=null;for(let i=0;i<16;i++){if(window.TrinoTimeConfirmationBridge?.issueToken){pair=await window.TrinoTimeConfirmationBridge.issueToken({deviceId,deviceName:'Confirmation Activity Tracker · STAGING QA · Chrome'});break;}await wait(250);}const headers=await authHeaders();if(!pair){if(!headers['X-TT-Security-Session']&&!headers.Authorization)throw new Error('The TrinoTime STAGING QA secure session is not ready yet. Refresh the staging tab, wait for the QA Agent profile to load, then try Connect again.');const response=await fetch('/api/workforce/confirmation/bridge-token',{method:'POST',headers,credentials:'same-origin',cache:'no-store',body:JSON.stringify({deviceId,deviceName:'Confirmation Activity Tracker · STAGING QA · Chrome'})});pair=await response.json().catch(()=>({}));if(!response.ok)throw new Error(pair?.message||`Confirmation pairing returned ${response.status}.`);}const date=pair?.shift?.reportDate||defaultDate;let snapshot=null;try{if(headers['X-TT-Security-Session']||headers.Authorization){const response=await fetch(`/api/workforce/confirmation/agent?date=${encodeURIComponent(date)}`,{method:'GET',headers,credentials:'same-origin',cache:'no-store'});const data=await response.json().catch(()=>({}));if(response.ok&&data?.ok)snapshot=data;}}catch(_){}return{pair,snapshot};},args:[device,TRINOTIME,fallbackDate]});
-  const bundle=result?.[0]?.result||{},value=bundle.pair||bundle;if(!value?.ok||!value.bridgeToken)throw new Error(value?.message||'TrinoTime STAGING QA did not issue a Confirmation bridge token.');
+  if(!tab?.id)throw new Error('Open TrinoTime production in a tab and sign in as the QA Agent first.');
+  const result=await chrome.scripting.executeScript({target:{tabId:tab.id},world:'MAIN',func:async(deviceId,expectedOrigin,defaultDate)=>{const wait=ms=>new Promise(r=>setTimeout(r,ms));if(location.origin!==expectedOrigin)throw new Error('The selected tab is not the TrinoTime production site.');const authHeaders=async()=>{const headers={Accept:'application/json','Content-Type':'application/json'},securityToken=String(window.TrinoTimeMessagingSessionContext?.getSecuritySessionToken?.()||'');if(securityToken)headers['X-TT-Security-Session']=securityToken;else{try{const user=window.firebase?.auth?.().currentUser;if(user&&!user.isAnonymous&&typeof user.getIdToken==='function')headers.Authorization=`Bearer ${await user.getIdToken(false)}`;}catch(_){}}return headers;};let pair=null;for(let i=0;i<16;i++){if(window.TrinoTimeConfirmationBridge?.issueToken){pair=await window.TrinoTimeConfirmationBridge.issueToken({deviceId,deviceName:'Confirmation Activity Tracker · production · Chrome'});break;}await wait(250);}const headers=await authHeaders();if(!pair){if(!headers['X-TT-Security-Session']&&!headers.Authorization)throw new Error('The TrinoTime production secure session is not ready yet. Refresh the production tab, wait for the QA Agent profile to load, then try Connect again.');const response=await fetch('/api/workforce/confirmation/bridge-token',{method:'POST',headers,credentials:'same-origin',cache:'no-store',body:JSON.stringify({deviceId,deviceName:'Confirmation Activity Tracker · production · Chrome'})});pair=await response.json().catch(()=>({}));if(!response.ok)throw new Error(pair?.message||`Confirmation pairing returned ${response.status}.`);}const date=pair?.shift?.reportDate||defaultDate;let snapshot=null;try{if(headers['X-TT-Security-Session']||headers.Authorization){const response=await fetch(`/api/workforce/confirmation/agent?date=${encodeURIComponent(date)}`,{method:'GET',headers,credentials:'same-origin',cache:'no-store'});const data=await response.json().catch(()=>({}));if(response.ok&&data?.ok)snapshot=data;}}catch(_){}return{pair,snapshot};},args:[device,TRINOTIME,fallbackDate]});
+  const bundle=result?.[0]?.result||{},value=bundle.pair||bundle;if(!value?.ok||!value.bridgeToken)throw new Error(value?.message||'TrinoTime production did not issue a Confirmation bridge token.');
   const bridge={baseUrl:TRINOTIME,token:String(value.bridgeToken),expiresAt:String(value.expiresAt||''),expiresAtMs:epochMs(value.expiresAtMs),actor:value.actor||null,deviceId:device,connectedAt:Date.now(),lastSyncAt:0},snapshot=bundle.snapshot&&typeof bundle.snapshot==='object'?bundle.snapshot:null;
   let shift=value.shift||{status:'not_clocked_in',reportDate:fallbackDate},authoritativeSummary=snapshot?.summary||null;
   if(!authoritativeSummary){try{const response=await fetch(`${bridge.baseUrl}/api/workforce/confirmation/shift-state`,{method:'GET',headers:{Accept:'application/json','X-TT-Confirmation-Bridge':bridge.token},cache:'no-store'}),body=await response.json().catch(()=>({}));if(response.ok&&body?.ok){shift=body.shift||shift;authoritativeSummary=body.summary||null;}}catch(_){}}
@@ -528,7 +550,7 @@ async function pairTrinoTime(preferredTabId=0){
   await chrome.storage.local.set({[CFT.data]:core.data,[CFT.settings]:core.settings,[CFT.bridge]:bridge,[CFT.pendingTasks]:core.pending,[CFT.shift]:adopted.shift,[CFT.recent]:core.recent,[CFT.sync]:core.sync,[CFT.owner]:identityState.identity});
   return {adopted,identityState};
   });
-  await diag(identityState.ownerChanged?'identity-handoff':'connected',`Connected to TrinoTime STAGING QA as ${value.actor?.name||'Agent'}.`,{actor:value.actor||null,previousOwner:identityState.previousOwner||null,shift:adopted.shift});
+  await diag(identityState.ownerChanged?'identity-handoff':'connected',`Connected to TrinoTime production as ${value.actor?.name||'Agent'}.`,{actor:value.actor||null,previousOwner:identityState.previousOwner||null,shift:adopted.shift});
   if(adopted.shift.status==='active')await syncDirty(true);
   return{ok:true,bridge,shift:adopted.shift,restoredFromServer:Boolean(authoritativeSummary),identityChanged:identityState.ownerChanged};
 }
@@ -538,7 +560,7 @@ async function pairTrinoTime(preferredTabId=0){
 async function trackerRecoveryCall(tabId,stage,core,recoveryId=''){
   const bridge=core.bridge,shift=core.shift;
   const result=await chrome.scripting.executeScript({target:{tabId},world:'MAIN',func:async(workflow,stage,deviceId,bridgeToken,sessionId,generation,recoveryId,expectedOrigin)=>{
-    if(location.origin!==expectedOrigin)throw new Error('Recovery must be initiated from the TrinoTime STAGING QA tab.');
+    if(location.origin!==expectedOrigin)throw new Error('Recovery must be initiated from the TrinoTime production tab.');
     const headers={Accept:'application/json','Content-Type':'application/json'};
     const security=String(window.TrinoTimeMessagingSessionContext?.getSecuritySessionToken?.()||'');
     if(security)headers['X-TT-Security-Session']=security;
@@ -565,6 +587,7 @@ async function recoverCurrentShift(){
   if(recoveryInProgress)return {ok:false,error:'Recovery is already running.'};
   recoveryInProgress=true;
   if(syncWakeTimer){clearTimeout(syncWakeTimer);syncWakeTimer=null;}
+  syncWakeDueAt=0;
   try{
     if(syncInFlight)await syncInFlight.catch(()=>{});
     const core=await readCore();
@@ -573,7 +596,7 @@ async function recoverCurrentShift(){
     if(checkpoint?.recoveryId&&checkpoint.shiftSessionId===core.shift.sessionId&&checkpoint.deviceId===core.bridge.deviceId){
       const tabs=await chrome.tabs.query({});
       const tab=tabs.find(t=>{try{return t.id&&new URL(String(t.url||'')).origin===TRINOTIME;}catch(_){return false;}});
-      if(!tab?.id)throw new Error('Open TrinoTime STAGING QA and sign in to complete the pending recovery acknowledgment.');
+      if(!tab?.id)throw new Error('Open TrinoTime production and sign in to complete the pending recovery acknowledgment.');
       await trackerRecoveryCall(tab.id,'ack',core,checkpoint.recoveryId);
       await chrome.storage.local.remove('cftRecoveryCheckpointV1');
       syncBackoffUntil=0;syncFailureCount=0;syncFollowUpRequested=false;
@@ -593,7 +616,7 @@ async function recoverCurrentShift(){
     if(trackerRecoveryHasLocalWork(day))throw new Error('This new Tracker already has task/job counts. Recovery cannot replace unsynced local work. Keep this installation and ask the administrator to reconcile it safely.');
     const tabs=await chrome.tabs.query({});
     const tab=tabs.find(t=>{try{return t.id&&new URL(String(t.url||'')).origin===TRINOTIME;}catch(_){return false;}});
-    if(!tab?.id)throw new Error('Open TrinoTime STAGING QA, sign in as this Agent, then click Recover This Shift again.');
+    if(!tab?.id)throw new Error('Open TrinoTime production, sign in as this Agent, then click Recover This Shift again.');
     const result=await trackerRecoveryCall(tab.id,'recover',core);
     const remoteShift=cleanShift(result.shift);
     if(remoteShift.sessionId!==core.shift.sessionId||remoteShift.generation!==core.shift.generation||remoteShift.status!=='active')throw new Error('The shift changed during recovery. No local work was cleared.');
@@ -725,13 +748,25 @@ async function reserveSyncSnapshot(expected,force) {
     return latest;
   });
 }
+// Coalesce fast task events without repeatedly postponing synchronization.
+// The earliest scheduled wake wins; newer events may expedite it, never starve it.
+// A failed transport still obeys existing retry backoff. Chrome's minute alarm
+// remains the fallback if the service worker is suspended.
 function scheduleSyncSoon(delayMs=900) {
   const delay=Math.max(200,Math.min(60000,Number(delayMs)||700));
   if(syncInFlight){syncFollowUpRequested=true;return;}
+  const now=Date.now();
+  const minGap=Math.max(0,500-(now-lastSyncAttemptAt));
+  const backoff=Math.max(0,syncBackoffUntil-now);
+  const dueAt=now+Math.max(delay,minGap,backoff);
+  if(syncWakeTimer && syncWakeDueAt && syncWakeDueAt<=dueAt)return;
   if(syncWakeTimer)clearTimeout(syncWakeTimer);
-  const minGap=Math.max(0,500-(Date.now()-lastSyncAttemptAt));
-  const backoff=Math.max(0,syncBackoffUntil-Date.now());
-  syncWakeTimer=setTimeout(()=>{syncWakeTimer=null;syncDirty(false).catch(()=>{});},Math.max(delay,minGap,backoff));
+  syncWakeDueAt=dueAt;
+  syncWakeTimer=setTimeout(()=>{
+    syncWakeTimer=null;syncWakeDueAt=0;
+    if(Date.now()<syncBackoffUntil){scheduleSyncSoon(200);return;}
+    syncDirty(false).catch(()=>{});
+  },Math.max(0,dueAt-Date.now()));
 }
 // v2.3.8: One guarded, read-only server proof for same-device sequence repair.
 // A proof never acknowledges local tasks. The next ordinary sync must still
@@ -775,6 +810,7 @@ async function syncDirty(force=false) {
   if((await chrome.storage.local.get('ttQaRecoveryFreezeV1')).ttQaRecoveryFreezeV1)return {ok:false,recovering:true,qaHandoff:true};
   if(syncInFlight){syncFollowUpRequested=true;return syncInFlight;}
   if(syncWakeTimer){clearTimeout(syncWakeTimer);syncWakeTimer=null;}
+  syncWakeDueAt=0;
   let attemptContext=null;
   syncInFlight=(async()=>{
     lastSyncAttemptAt=Date.now();
@@ -966,6 +1002,17 @@ async function clearToday() {
   return { ok: false, error: 'Managed Confirmation mode does not allow Agents to clear today’s tracked activity.' };
 }
 
+// Re-check the fallback alarm whenever Chrome revives the extension worker.
+// Chrome may clear alarms across some browser restarts; a one-minute fallback
+// limits network load while normal event-driven uploads remain much faster.
+chrome.alarms.get('cft-sync').then(existing => {
+  if (!existing) return chrome.alarms.create('cft-sync', {periodInMinutes:1});
+}).catch(() => {});
+
+const availabilityWake = TrinoTimeAvailabilityCore.create({
+  readCore, refreshShift: refreshShiftState, sync: () => syncDirty(false)
+});
+
 chrome.runtime.onInstalled.addListener(async () => {
   await ensureDevice();
   const r = await chrome.storage.local.get(CFT.settings);
@@ -976,7 +1023,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   syncStoreMappingMetadata().catch(()=>{});
   try {
     const tabs = await chrome.tabs.query({ url: `${AUGMOTO}/*` });
-    await Promise.allSettled(tabs.filter(t => t.id).map(t => chrome.scripting.executeScript({ target: { tabId: t.id }, files: ['job-mode.js','task-efficiency.js','hud-appearance.js','store-intelligence.js','coverage.js','confirmation.js'] })));
+    await Promise.allSettled(tabs.filter(t => t.id).map(t => chrome.scripting.executeScript({ target: { tabId: t.id }, files: ['tracker-availability.js','search-presence.js','activity-integrity.js','workflow-coordinator.js','job-mode.js','task-efficiency.js','hud-appearance.js','store-intelligence.js','coverage.js','confirmation.js'] })));
   } catch (_) {}
 });
 chrome.runtime.onStartup.addListener(() => {
@@ -991,6 +1038,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message || !String(message.type || '').startsWith('cft-')) return;
   const run = async () => {
     switch (message.type) {
+      case 'cft-availability-resume':
+        if (!sender?.tab?.id || !String(sender.url || '').startsWith(`${AUGMOTO}/`)) return {ok:false, denied:true};
+        return availabilityWake(message.reason === 'online' ? 'online' : 'resume');
       case 'cft-context': return context();
       case 'cft-mode-leave': return leaveMode();
       case 'cft-efficiency-time': return applyEfficiencyTime(message.payload||{});

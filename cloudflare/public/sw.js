@@ -9,7 +9,7 @@
  * query strings. Activation removes only legacy TrinoTime Cache Storage generations.
  */
 const TRINOTIME_SW_VERSION = '3.0.4';
-const TRINOTIME_BUILD_FINGERPRINT = 'TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101';
+const TRINOTIME_BUILD_FINGERPRINT = 'TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106';
 const LEGACY_CACHE_PREFIXES = [
   'trinotime-navigation-',
   'trinotime-static-',

@@ -51,7 +51,7 @@ RULES-DIFF.txt
 # Local archives and exports (source itself is tracked separately)
 *.zip
 # Required current staging Tracker and one regression-only fixture
-!cloudflare/public/downloads/TrinoTime-QC-Tracker-v2.2.62.zip
+!cloudflare/public/downloads/TrinoTime-QC-Tracker-STAGING-v2.2.63.zip
 !cloudflare/fixtures/TrinoTime-QC-Tracker-v2.2.32.zip
 *.7z
 *.tar.gz

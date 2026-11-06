@@ -22,7 +22,7 @@
     }
   ],
   "version": "3.0.4",
-  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106",
   "bio_break_pod_label": "rc60-client-directory-friendly-label-no-extra-roster-reads-1",
   "bio_break_duration_display": "rc61-human-readable-hours-minutes-seconds-1",
   "rc83_friendly_pod_dark_ui_closure": "server-authoritative-friendly-pod-label-plus-safe-custom-id-presentation-fallback-1",
@@ -162,7 +162,7 @@
   "staging": {
     "environment": "staging-qa",
     "sourceParity": "UX18P46",
-    "trackerVersion": "2.2.62",
+    "trackerVersion": "2.2.63",
     "productionDataShared": false
   },
   "bio_break_scroll_fix": "2026-11-01-scroller-centering-preserved"

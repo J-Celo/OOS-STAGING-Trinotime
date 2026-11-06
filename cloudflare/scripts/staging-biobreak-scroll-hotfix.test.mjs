@@ -22,7 +22,7 @@ const html=read('public/index.html');
 assert.match(html,/bio-breaks\.css[^"\n]*rc2-biobreak-scroll-fix=20261101/,'updated stylesheet is cache-busted');
 assert.equal(read('../index.html').includes('rc2-biobreak-scroll-fix=20261101'),true,'source and served entrypoints cache-busted');
 assert.equal(read('public/assets/js/bio-breaks.js').includes("window.TrinoTimeBioBreaks=Object.freeze({open,close,message})"),true,'Bio Break API intact');
-const fp='TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101';
+const fp='TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106';
 for(const rel of ['src/worker.js','public/sw.js','public/index.html','public/version.json','public/manifest.json','public/downloads/qc-tracker.json','../index.html','../version.json','../manifest.json']){
   assert.ok(read(rel).includes(fp),`consistent staging fingerprint: ${rel}`);
 }

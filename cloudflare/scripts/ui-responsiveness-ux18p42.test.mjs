@@ -64,6 +64,6 @@ assert.equal(rows[0].outerHTML,'<tr>A</tr>');
 assert.equal(rows[1].outerHTML,'<tr>B new</tr>');
 assert.equal(edits,1);assert.equal(scrollReplacements,0);assert.equal(statEdits,2);assert.equal(handlers,1);
 scope.paint('fixture');assert.equal(handlers,1,'preserved button must not receive duplicate event listener');
-const oldTracker=readFileSync(new URL('../public/downloads/TrinoTime-QC-Tracker-v2.2.62.zip',import.meta.url));
+const oldTracker=readFileSync(new URL('../public/downloads/TrinoTime-QC-Tracker-STAGING-v2.2.63.zip',import.meta.url));
 assert.equal(createHash('sha256').update(oldTracker).digest('hex'),JSON.parse(read('../public/downloads/qc-tracker-current.json')).sha256,'staging Tracker SHA matches manifest');
 console.log('PASS UX18P42: 83h 9m duration, coalesced search/nav/polls, incremental Confirmation render and stable scroller, tracker unchanged');

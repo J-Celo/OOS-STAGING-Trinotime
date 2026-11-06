@@ -26,7 +26,7 @@ import { storePlanDate, validateStorePlanEntries, canManageStorePlan, storePlanI
 import { validateCoverageSequenceStores, classifyCoverageSequenceTask, coverageStoreKey, COVERAGE_SEQUENCE_GRACE_MS, COVERAGE_SEQUENCE_TTL_MS } from './coverage-store-sequence-policy.js';
 
 const RELEASE = '3.0.4';
-const BUILD_FINGERPRINT = 'TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101';
+const BUILD_FINGERPRINT = 'TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106';
 const CHAT_TENANT_ID = 'oos';
 const CHAT_SESSION_TTL_MS = 15 * 60 * 1000;
 const CHAT_SOCKET_MAX_AGE_MS = 15 * 60 * 1000;
@@ -7581,7 +7581,7 @@ function coverageSanitizeSummaryServer(raw) {
   const source = raw && typeof raw === 'object' ? raw : {};
   const submitted = coverageSubmittedBreakdownServer(source);
   const currentJob = coverageSafeJobIdServer(source.currentJob || source.jobId || '');
-  const trackerState = ['active','idle','away','paused','offline','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
+  const trackerState = ['active','idle','away','searching','grace','unverified','paused','offline','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
   const lastActivityAt = Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.lastActivityAt) || 0));
   const presenceUpdatedAt = Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.presenceUpdatedAt) || Number(source.clientUpdatedAtMs) || 0));
   const awaySinceAt = trackerState === 'away' ? Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.awaySinceAt) || presenceUpdatedAt || Date.now())) : 0;
@@ -7603,6 +7603,9 @@ function coverageSanitizeSummaryServer(raw) {
     activeMs: coverageSafeMsServer(source.activeMs),
     idleMs: coverageSafeMsServer(source.idleMs),
     awayMs: coverageSafeMsServer(source.awayMs),
+    searchingMs: coverageSafeMsServer(source.searchingMs),
+    graceMs: coverageSafeMsServer(source.graceMs),
+    unverifiedMs: coverageSafeMsServer(source.unverifiedMs),
     awayTimingAvailable: coverageAwayTimingAvailableServer(source),
     elapsedMs: coverageSafeMsServer(source.elapsedMs),
     currentJob,
@@ -7636,6 +7639,9 @@ function coverageSanitizeJobServer(raw) {
     activeMs: coverageSafeMsServer(source.activeMs),
     idleMs: coverageSafeMsServer(source.idleMs),
     awayMs: coverageSafeMsServer(source.awayMs),
+    searchingMs: coverageSafeMsServer(source.searchingMs),
+    graceMs: coverageSafeMsServer(source.graceMs),
+    unverifiedMs: coverageSafeMsServer(source.unverifiedMs),
     awayTimingAvailable: coverageAwayTimingAvailableServer(source),
     elapsedMs: coverageSafeMsServer(source.elapsedMs),
     lastTask: coverageSafeTaskIndexServer(source.lastTask || source.currentTask),
@@ -7650,7 +7656,7 @@ function coverageSanitizeTaskServer(raw) {
   const jobId = coverageSafeJobIdServer(source.jobId || '');
   const taskIndex = coverageSafeTaskIndexServer(source.taskIndex || source.task);
   if (!jobId || !taskIndex) return null;
-  const trackerState = ['active','idle','away','paused','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
+  const trackerState = ['active','idle','away','searching','grace','unverified','paused','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
   const lastActivityAt = Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.lastActivityAt) || 0));
   return {
     jobId,
@@ -7665,6 +7671,9 @@ function coverageSanitizeTaskServer(raw) {
     activeMs: coverageSafeMsServer(source.activeMs, 12 * 60 * 60 * 1000),
     idleMs: coverageSafeMsServer(source.idleMs, 12 * 60 * 60 * 1000),
     awayMs: coverageSafeMsServer(source.awayMs, 12 * 60 * 60 * 1000),
+    searchingMs: coverageSafeMsServer(source.searchingMs, 12 * 60 * 60 * 1000),
+    graceMs: coverageSafeMsServer(source.graceMs),
+    unverifiedMs: coverageSafeMsServer(source.unverifiedMs),
     awayTimingAvailable: coverageAwayTimingAvailableServer(source),
     elapsedMs: coverageSafeMsServer(source.elapsedMs, 12 * 60 * 60 * 1000),
     submitted: source.submitted === true,
@@ -7775,7 +7784,7 @@ async function coverageResetCurrentShiftServer(request,env){
 }
 function trackerWorkflowRecordHasActivityServer(record, workflow='coverage') {
   const row=record&&typeof record==='object'?record:{};
-  const common=['clientSequence','activeMs','idleMs','awayMs','elapsedMs','created','blurred','deleted','noMatch'];
+  const common=['clientSequence','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs','created','blurred','deleted','noMatch'];
   if(common.some(key=>Math.max(0,Number(row[key])||0)>0))return true;
   if(workflow==='coverage')return ['submitted','productMatched'].some(key=>Math.max(0,Number(row[key])||0)>0)||Number(row.submittedManualAdjustment||0)!==0;
   if(workflow==='confirmation')return ['interval1','interval2','interval3','submitted'].some(key=>Math.max(0,Number(row[key])||0)>0)||[1,2,3].some(i=>Number(row[`interval${i}ManualAdjustment`]||0)!==0)||Number(row.submittedManualAdjustment||0)!==0;
@@ -7896,8 +7905,8 @@ function trackerSequenceLedgerProofServer(serverItems,localItems,workflow,kind){
   for(const serverItem of serverItems){
     const candidate=locals.get(key(serverItem));
     if(!candidate)return false;
-    const fields=job?['submitted','created','blurred','deleted']:['created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','elapsedMs'];
-    if(workflow==='coverage')fields.push(...(job?['noMatch','productMatched','activeMs','idleMs','awayMs','elapsedMs']:['productMatched']));
+    const fields=job?['submitted','created','blurred','deleted']:['created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs'];
+    if(workflow==='coverage')fields.push(...(job?['noMatch','productMatched','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs']:['productMatched']));
     if(!trackerSequenceMonotonicEvidenceServer(serverItem,candidate,fields))return false;
     if(!job){
       if(serverItem.submitted===true&&candidate.submitted!==true)return false;
@@ -7929,7 +7938,7 @@ async function trackerSequenceResumeProofServer(request,env,workflow){
   const cleanSummary=sanitizeSummary(localSummary);
   const cleanJobs=jobs.map(sanitizeJob),cleanTasks=tasks.map(sanitizeTask);
   if(cleanJobs.some(j=>!j)||cleanTasks.some(t=>!t))return {ok:true,safeToResume:false,reason:'INVALID_LOCAL_LEDGER'};
-  const fields=['submitted','created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','elapsedMs'];
+  const fields=['submitted','created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs'];
   if(workflow==='coverage')fields.push('productMatched','efficiencyTaskCount','efficiencyActiveMs');
   else fields.push('interval1','interval2','interval3','efficiencyTaskCount','efficiencyActiveMs');
   if(!trackerSequenceMonotonicEvidenceServer(summary,cleanSummary,fields))
@@ -8126,7 +8135,7 @@ function trackerDashboardOtherWorkflowEvidenceServer(daily, shift, date, workflo
   if (!Number.isFinite(acceptedAtMs) || !acceptedAtMs || acceptedAtMs>nowMs+30000) return null;
   const state=String(daily.trackerState||'unknown').toLowerCase();
   const lastActivityAtMs=Math.max(0,Number(daily.lastActivityAt)||0);
-  return {workflow,acceptedAtMs,trackerState:['active','idle','away','paused','ready','unknown'].includes(state)?state:'unknown',
+  return {workflow,acceptedAtMs,trackerState:['active','idle','away','searching','grace','unverified','paused','ready','unknown'].includes(state)?state:'unknown',
     hasJob:Boolean(cleanText(daily.currentJob||'',80)),
     lastActivityAtMs:Number.isFinite(lastActivityAtMs)&&lastActivityAtMs<=nowMs+30000?lastActivityAtMs:0};
 }
@@ -8239,7 +8248,7 @@ function coverageDashboardRowServer(agent, daily, podLabel) {
     submittedManualAdjustment:coverageSafeSignedCountServer(row.submittedManualAdjustment,-coverageSafeCountServer(row.submitted),100000),
     submittedDisplayTotal:Math.max(0,coverageSafeCountServer(row.submitted)+coverageSafeSignedCountServer(row.submittedManualAdjustment,-coverageSafeCountServer(row.submitted),100000)),
     created:coverageSafeCountServer(row.created), blurred:coverageSafeCountServer(row.blurred), deleted:coverageSafeCountServer(row.deleted), noMatch:coverageSafeCountServer(row.noMatch), productMatched:coverageSafeCountServer(row.productMatched),
-    activeMs:coverageSafeMsServer(row.activeMs), idleMs:coverageSafeMsServer(row.idleMs), awayMs:coverageSafeMsServer(row.awayMs), awayTimingAvailable:row.awayTimingAvailable === true, elapsedMs:coverageSafeMsServer(row.elapsedMs),
+    activeMs:coverageSafeMsServer(row.activeMs), idleMs:coverageSafeMsServer(row.idleMs), awayMs:coverageSafeMsServer(row.awayMs), searchingMs:coverageSafeMsServer(row.searchingMs),graceMs:coverageSafeMsServer(row.graceMs),unverifiedMs:coverageSafeMsServer(row.unverifiedMs), awayTimingAvailable:row.awayTimingAvailable === true, elapsedMs:coverageSafeMsServer(row.elapsedMs),
     currentStoreName:storeIntelSafeNameServer(row.currentStoreName), currentJob:coverageSafeJobIdServer(row.currentJob || ''), currentTask:coverageSafeTaskIndexServer(row.currentTask), totalTasks:coverageSafeTaskIndexServer(row.totalTasks), pendingSubmission:row.pendingSubmission === true,
     trackerState:cleanText(row.trackerState || (daily ? 'unknown' : 'offline'),32) || 'offline',
     lastActivityAt:Math.max(0,Number(row.lastActivityAt)||0),
@@ -8332,7 +8341,7 @@ async function coverageDashboardServer(request, env, url) {
     sum.submitted += Number(row.submittedDisplayTotal) || 0;
     sum.submittedConfirmed += Number(row.submitted) || 0;
     sum.submittedManualAdjustment += Number(row.submittedManualAdjustment) || 0;
-    for (const key of ['created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','elapsedMs']) sum[key] += Number(row[key]) || 0;
+    for (const key of ['created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs']) sum[key] += Number(row[key]) || 0;
     if (row.connected) { sum.connectedAgents++; if (row.awayTimingAvailable) sum.awayTimingAgents++; }
     if (row.attendanceStatus==='timed_in') sum.timedInAgents++;
     if (row.liveNow) sum.liveAgents++;
@@ -8340,15 +8349,15 @@ async function coverageDashboardServer(request, env, url) {
     if (row.delayedNow) sum.delayedAgents++;
     if (row.timeOutRecorded) sum.timeOutRecordedAgents++;
     return sum;
-  }, {submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,productMatched:0,activeMs:0,idleMs:0,awayMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0});
+  }, {submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,productMatched:0,activeMs:0,idleMs:0,awayMs:0,searchingMs:0,graceMs:0,unverifiedMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0});
   const podMap = new Map();
   for (const row of rows) {
-    if (!podMap.has(row.pod)) podMap.set(row.pod,{pod:row.pod,podLabel:row.podLabel,agents:[],totals:{submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,productMatched:0,activeMs:0,idleMs:0,awayMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0}});
+    if (!podMap.has(row.pod)) podMap.set(row.pod,{pod:row.pod,podLabel:row.podLabel,agents:[],totals:{submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,productMatched:0,activeMs:0,idleMs:0,awayMs:0,searchingMs:0,graceMs:0,unverifiedMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0}});
     const group=podMap.get(row.pod); group.agents.push(row);
     group.totals.submitted+=Number(row.submittedDisplayTotal)||0;
     group.totals.submittedConfirmed+=Number(row.submitted)||0;
     group.totals.submittedManualAdjustment+=Number(row.submittedManualAdjustment)||0;
-    for(const key of ['created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','elapsedMs'])group.totals[key]+=Number(row[key])||0;
+    for(const key of ['created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs'])group.totals[key]+=Number(row[key])||0;
     if(row.connected){group.totals.connectedAgents++;if(row.awayTimingAvailable)group.totals.awayTimingAgents++;}
     if(row.attendanceStatus==='timed_in')group.totals.timedInAgents++;
     if(row.liveNow)group.totals.liveAgents++;
@@ -9223,7 +9232,7 @@ function confirmationSanitizeSummaryServer(raw) {
   const interval3DisplayTotal = Math.max(0,interval3Confirmed+interval3ManualAdjustment);
   const submitted = {confirmed:interval1Confirmed+interval2Confirmed+interval3Confirmed,manual:interval1ManualAdjustment+interval2ManualAdjustment+interval3ManualAdjustment,total:interval1DisplayTotal+interval2DisplayTotal+interval3DisplayTotal};
   const currentJob = confirmationSafeJobIdServer(source.currentJob || source.jobId || '');
-  const trackerState = ['active','idle','away','paused','offline','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
+  const trackerState = ['active','idle','away','searching','grace','unverified','paused','offline','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
   const lastActivityAt = Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.lastActivityAt) || 0));
   const presenceUpdatedAt = Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.presenceUpdatedAt) || Number(source.clientUpdatedAtMs) || 0));
   const awaySinceAt = trackerState === 'away' ? Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.awaySinceAt) || presenceUpdatedAt || Date.now())) : 0;
@@ -9249,6 +9258,9 @@ function confirmationSanitizeSummaryServer(raw) {
     activeMs: confirmationSafeMsServer(source.activeMs),
     idleMs: confirmationSafeMsServer(source.idleMs),
     awayMs: confirmationSafeMsServer(source.awayMs),
+    searchingMs: confirmationSafeMsServer(source.searchingMs),
+    graceMs: confirmationSafeMsServer(source.graceMs),
+    unverifiedMs: confirmationSafeMsServer(source.unverifiedMs),
     awayTimingAvailable: confirmationAwayTimingAvailableServer(source),
     elapsedMs: confirmationSafeMsServer(source.elapsedMs),
     currentJob,
@@ -9281,6 +9293,9 @@ function confirmationSanitizeJobServer(raw) {
     activeMs: confirmationSafeMsServer(source.activeMs),
     idleMs: confirmationSafeMsServer(source.idleMs),
     awayMs: confirmationSafeMsServer(source.awayMs),
+    searchingMs: confirmationSafeMsServer(source.searchingMs),
+    graceMs: confirmationSafeMsServer(source.graceMs),
+    unverifiedMs: confirmationSafeMsServer(source.unverifiedMs),
     awayTimingAvailable: confirmationAwayTimingAvailableServer(source),
     elapsedMs: confirmationSafeMsServer(source.elapsedMs),
     lastTask: confirmationSafeTaskIndexServer(source.lastTask || source.currentTask),
@@ -9295,7 +9310,7 @@ function confirmationSanitizeTaskServer(raw) {
   const jobId = confirmationSafeJobIdServer(source.jobId || '');
   const taskIndex = confirmationSafeTaskIndexServer(source.taskIndex || source.task);
   if (!jobId || !taskIndex) return null;
-  const trackerState = ['active','idle','away','paused','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
+  const trackerState = ['active','idle','away','searching','grace','unverified','paused','ready','unknown'].includes(String(source.trackerState || '').toLowerCase()) ? String(source.trackerState).toLowerCase() : 'unknown';
   const lastActivityAt = Math.max(0, Math.min(Date.now() + 5 * 60 * 1000, Number(source.lastActivityAt) || 0));
   return {
     jobId,
@@ -9309,6 +9324,9 @@ function confirmationSanitizeTaskServer(raw) {
     activeMs: confirmationSafeMsServer(source.activeMs, 12 * 60 * 60 * 1000),
     idleMs: confirmationSafeMsServer(source.idleMs, 12 * 60 * 60 * 1000),
     awayMs: confirmationSafeMsServer(source.awayMs, 12 * 60 * 60 * 1000),
+    searchingMs: confirmationSafeMsServer(source.searchingMs, 12 * 60 * 60 * 1000),
+    graceMs: confirmationSafeMsServer(source.graceMs),
+    unverifiedMs: confirmationSafeMsServer(source.unverifiedMs),
     awayTimingAvailable: confirmationAwayTimingAvailableServer(source),
     elapsedMs: confirmationSafeMsServer(source.elapsedMs, 12 * 60 * 60 * 1000),
     interval:[1,2,3].includes(Number(source.interval))?Number(source.interval):null,
@@ -9477,7 +9495,7 @@ function confirmationDashboardRowServer(agent, daily, podLabel) {
     submittedManualAdjustment:confirmationSafeSignedCountServer(row.submittedManualAdjustment,-confirmationSafeCountServer(row.submitted),300000),
     submittedDisplayTotal:Math.max(0,confirmationSafeCountServer(row.submittedDisplayTotal)||confirmationSafeCountServer(row.submitted)+confirmationSafeSignedCountServer(row.submittedManualAdjustment,-confirmationSafeCountServer(row.submitted),300000)),
     created:confirmationSafeCountServer(row.created), blurred:confirmationSafeCountServer(row.blurred), deleted:confirmationSafeCountServer(row.deleted), noMatch:confirmationSafeCountServer(row.noMatch),
-    activeMs:confirmationSafeMsServer(row.activeMs), idleMs:confirmationSafeMsServer(row.idleMs), awayMs:confirmationSafeMsServer(row.awayMs), awayTimingAvailable:row.awayTimingAvailable === true, elapsedMs:confirmationSafeMsServer(row.elapsedMs),
+    activeMs:confirmationSafeMsServer(row.activeMs), idleMs:confirmationSafeMsServer(row.idleMs), awayMs:confirmationSafeMsServer(row.awayMs), searchingMs:confirmationSafeMsServer(row.searchingMs),graceMs:confirmationSafeMsServer(row.graceMs),unverifiedMs:confirmationSafeMsServer(row.unverifiedMs), awayTimingAvailable:row.awayTimingAvailable === true, elapsedMs:confirmationSafeMsServer(row.elapsedMs),
     currentStoreName:storeIntelSafeNameServer(row.currentStoreName), currentJob:confirmationSafeJobIdServer(row.currentJob || ''), currentTask:confirmationSafeTaskIndexServer(row.currentTask), totalTasks:confirmationSafeTaskIndexServer(row.totalTasks), pendingSubmission:row.pendingSubmission === true,
     trackerState:cleanText(row.trackerState || (daily ? 'unknown' : 'offline'),32) || 'offline',
     lastActivityAt:Math.max(0,Number(row.lastActivityAt)||0),
@@ -9520,7 +9538,7 @@ async function confirmationDashboardServer(request, env, url) {
     sum.submitted += Number(row.submittedDisplayTotal) || 0;
     sum.submittedConfirmed += Number(row.submitted) || 0;
     sum.submittedManualAdjustment += Number(row.submittedManualAdjustment) || 0;
-    for (const key of ['interval1','interval2','interval3','created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','elapsedMs']) sum[key] += Number(row[key]) || 0;
+    for (const key of ['interval1','interval2','interval3','created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs']) sum[key] += Number(row[key]) || 0;
     if (row.connected) { sum.connectedAgents++; if (row.awayTimingAvailable) sum.awayTimingAgents++; }
     if (row.attendanceStatus==='timed_in') sum.timedInAgents++;
     if (row.liveNow) sum.liveAgents++;
@@ -9528,15 +9546,15 @@ async function confirmationDashboardServer(request, env, url) {
     if (row.delayedNow) sum.delayedAgents++;
     if (row.timeOutRecorded) sum.timeOutRecordedAgents++;
     return sum;
-  }, {interval1:0,interval2:0,interval3:0,submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,activeMs:0,idleMs:0,awayMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0});
+  }, {interval1:0,interval2:0,interval3:0,submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,activeMs:0,idleMs:0,awayMs:0,searchingMs:0,graceMs:0,unverifiedMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0});
   const podMap = new Map();
   for (const row of rows) {
-    if (!podMap.has(row.pod)) podMap.set(row.pod,{pod:row.pod,podLabel:row.podLabel,agents:[],totals:{interval1:0,interval2:0,interval3:0,submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,activeMs:0,idleMs:0,awayMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0}});
+    if (!podMap.has(row.pod)) podMap.set(row.pod,{pod:row.pod,podLabel:row.podLabel,agents:[],totals:{interval1:0,interval2:0,interval3:0,submitted:0,submittedConfirmed:0,submittedManualAdjustment:0,created:0,blurred:0,deleted:0,noMatch:0,activeMs:0,idleMs:0,awayMs:0,searchingMs:0,graceMs:0,unverifiedMs:0,elapsedMs:0,connectedAgents:0,awayTimingAgents:0,liveAgents:0,otherWorkflowLiveAgents:0,delayedAgents:0,timeOutRecordedAgents:0,timedInAgents:0}});
     const group=podMap.get(row.pod); group.agents.push(row);
     group.totals.submitted+=Number(row.submittedDisplayTotal)||0;
     group.totals.submittedConfirmed+=Number(row.submitted)||0;
     group.totals.submittedManualAdjustment+=Number(row.submittedManualAdjustment)||0;
-    for(const key of ['interval1','interval2','interval3','created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','elapsedMs'])group.totals[key]+=Number(row[key])||0;
+    for(const key of ['interval1','interval2','interval3','created','blurred','deleted','noMatch','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs'])group.totals[key]+=Number(row[key])||0;
     if(row.connected){group.totals.connectedAgents++;if(row.awayTimingAvailable)group.totals.awayTimingAgents++;}
     if(row.attendanceStatus==='timed_in')group.totals.timedInAgents++;
     if(row.liveNow)group.totals.liveAgents++;
@@ -9761,10 +9779,10 @@ function qcMetricRowServer(agent,job,daily,target,podLabel){
  // M2.9.53: Cap displayed score, not the measured task pace or source timing.
  const efficiencyPercent=secondsPerTask&&target?qcMetricCapPercentServer(target.secondsPerTask/secondsPerTask*100):null;
  const grade=efficiencyPercent===null?null:efficiencyPercent>=100?'A':efficiencyPercent>=80?'B':efficiencyPercent>=60?'C':efficiencyPercent>=40?'D':'F';
- const presenceActiveMs=coverageSafeMsServer(row.activeMs),idleMs=coverageSafeMsServer(row.idleMs),awayMs=coverageSafeMsServer(row.awayMs);
+ const presenceActiveMs=coverageSafeMsServer(row.activeMs),idleMs=coverageSafeMsServer(row.idleMs),awayMs=coverageSafeMsServer(row.awayMs),searchingMs=coverageSafeMsServer(row.searchingMs);
  const awayTimingAvailable=row.awayTimingAvailable===true;
  const focusedIdleMs=awayTimingAvailable?Math.max(0,idleMs-awayMs):idleMs;
- return {created:coverageSafeCountServer(row.created),blurred:coverageSafeCountServer(row.blurred),deleted:coverageSafeCountServer(row.deleted),noMatch:coverageSafeCountServer(row.noMatch),productMatched:coverageSafeCountServer(row.productMatched),manualAdjustment:Number(row.submittedManualAdjustment)||0,name:agent.name,pod:agent.pod,podLabel,job,submitted,measuredTasks:valid?measuredTasks:0,measuredActiveMs:valid?activeMs:0,secondsPerTask,target,efficiencyPercent,grade,reason:!daily?'Not synced':!samePod?'POD assignment changed for this report':!valid?'No completed tasks with timing':!target?'POD target not set':'',presenceActiveMs,idleMs,awayMs,focusedIdleMs,awayTimingAvailable,trackerState:cleanText(row.trackerState||'',32),lastSyncAtMs:Number(row.serverUpdatedAtMs)||0};
+ return {searchingMs,created:coverageSafeCountServer(row.created),blurred:coverageSafeCountServer(row.blurred),deleted:coverageSafeCountServer(row.deleted),noMatch:coverageSafeCountServer(row.noMatch),productMatched:coverageSafeCountServer(row.productMatched),manualAdjustment:Number(row.submittedManualAdjustment)||0,name:agent.name,pod:agent.pod,podLabel,job,submitted,measuredTasks:valid?measuredTasks:0,measuredActiveMs:valid?activeMs:0,secondsPerTask,target,efficiencyPercent,grade,reason:!daily?'Not synced':!samePod?'POD assignment changed for this report':!valid?'No completed tasks with timing':!target?'POD target not set':'',presenceActiveMs,idleMs,awayMs,focusedIdleMs,awayTimingAvailable,trackerState:cleanText(row.trackerState||'',32),lastSyncAtMs:Number(row.serverUpdatedAtMs)||0};
 }
 
 function qcMetricCapPercentServer(value){return typeof value==='number'&&Number.isFinite(value)?Math.max(0,Math.min(100,value)):null;}
@@ -10364,18 +10382,18 @@ export default {
       }
       if (url.pathname.startsWith('/api/workforce/roster/')) return securityHeaders(await handleWorkforceRosterApi(request, env, url));
       if (url.pathname === '/api/workforce/governance/qc-tracker-download' && request.method === 'GET') {
-        const assetUrl = new URL('/downloads/TrinoTime-QC-Tracker-v2.2.62.zip', request.url);
+        const assetUrl = new URL('/downloads/TrinoTime-QC-Tracker-STAGING-v2.2.63.zip', request.url);
         const asset = await env.ASSETS.fetch(new Request(assetUrl.toString(), { method:'GET' }));
         if (!asset.ok) fail(503,'QC_TRACKER_PACKAGE_UNAVAILABLE','The official QC Tracker package is temporarily unavailable.');
         const headers = new Headers(asset.headers);
         headers.set('content-type','application/zip');
-        headers.set('content-disposition','attachment; filename="TrinoTime-QC-Tracker-v2.2.62.zip"');
+        headers.set('content-disposition','attachment; filename="TrinoTime-QC-Tracker-STAGING-v2.2.63.zip"');
         headers.set('cache-control','no-cache, no-transform');
         headers.set('x-content-type-options','nosniff');
         headers.set('cross-origin-resource-policy','same-origin');
         headers.set('x-robots-tag','noindex, noarchive');
-        headers.set('x-trinotime-package','qc-tracker-v2.2.62-staging');
-        headers.set('x-trinotime-sha256','b329bbc9b3982ed2c8b6f4a07cccddf62abc9865fedd47c6cc804e04882cba06');
+        headers.set('x-trinotime-package','qc-tracker-v2.2.63-staging');
+        headers.set('x-trinotime-sha256','d081e3bbe2a8bd0fe68ecaa177d64503eaf61e4405b188a90ef22a35aaee6d8d');
         return securityHeaders(new Response(asset.body, { status:200, headers }));
       }
       if (url.pathname.startsWith('/api/workforce/governance/')) return securityHeaders(await handleWorkforceGovernanceApi(request, env, url));

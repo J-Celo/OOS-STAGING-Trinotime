@@ -66,7 +66,7 @@
     "qa:production:hourly-rate:ux18p45": "node scripts/production-hourly-rate-editor-ux18p45.test.mjs",
     "qa:production:sync-guardian:ux18p46": "node scripts/production-sync-guardian-ux18p46.test.mjs",
     "qa:staging:ux18p46": "node scripts/staging-parity-ux18p46-qa.mjs",
-    "qa:staging:tracker:offline": "node ../tracker/tests/confirmation-queue-receipt-race.test.mjs && node ../tracker/tests/automatic-transition-acceptance.test.mjs && node ../tracker/tests/release-readiness-acceptance.test.mjs",
+    "qa:staging:tracker:offline": "node ../tests/activity-integrity-grace-acceptance.test.mjs && node ../tests/automatic-transition-acceptance.test.mjs && node ../tests/confirmation-queue-receipt-race.test.mjs && node ../tests/coverage-multi-submit-ledger-acceptance.test.mjs && node ../tests/multi-submit-ledger-acceptance.test.mjs && node ../tests/release-readiness-acceptance.test.mjs && node ../tests/search-presence-dual-monitor-acceptance.test.mjs && node ../tests/submit-control-capture-regression.test.mjs && node ../tests/sync-nonstarvation-acceptance.test.mjs && node scripts/staging-tracker-parity-v2263.test.mjs && node ../tests/staging-owner-performance-v2263.test.mjs",
     "qa:staging:biobreak:scroll": "node scripts/staging-biobreak-scroll-hotfix.test.mjs"
   },
   "dependencies": {

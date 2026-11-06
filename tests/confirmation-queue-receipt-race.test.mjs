@@ -4,11 +4,11 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import vm from 'node:vm';
 
-const source = readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../confirmation.js'),'utf8');
+const source = readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../tracker/confirmation.js'),'utf8');
 function cut(a,b){const i=source.indexOf(a),j=source.indexOf(b,i);assert(i>=0&&j>i,`Missing source section ${a}`);return source.slice(i,j);}
 const helperCode=cut('  function storePending()', '  function build()');
 const scanCode=cut('  async function scan()', '  function confirmationControlLabel');
-const modeCode=cut("  document.addEventListener('tt-qc-mode-change'", '  let scanWake=null;');
+const modeCode=cut("  document.addEventListener('tt-qc-mode-change'", '  let scanWake=null, lastMutationScanAt=0;');
 let now=Date.now(),serial=0,events=[],calls=[],queueVisible=true,navType='navigate',active=true,mode='none';
 const date='2026-10-31', id='check-'+(serial++), shift={status:'active',sessionId:'SHIFT_X',generation:7,reportDate:date};
 const pendingFor=(overrides={})=>({id:'submission-unique-1',jobId:'JOB_7788',taskIndex:2,totalTasks:9,date,
@@ -18,7 +18,7 @@ class FakeDate extends Date {static now(){return now;}}
 const session={};
 const ctx=vm.createContext({
   Date:FakeDate,Number,String,Boolean,Array,Object,Set,Promise,Math,Error,
-  pending:pendingFor(),shiftState:shift,context:{today:date},skipIntent:null,
+  pending:pendingFor(),receiptBacklog:[],backlogProcessing:false,BACKLOG:'test-backlog',BACKLOG_LIMIT:48,shiftState:shift,context:{today:date},skipIntent:null,
   queueReceiptRecoveryAt:0,queueReceiptRecoveryBusy:false, busy:false,
   lastTick:now,message:'',lastAnnouncedJob:'',current:{jobId:'',taskIndex:0,totalTasks:0},
   lastInteraction:now,missingHeaderSince:0,resumePresence:null,presenceInitialized:false,liveHeader:null,
@@ -40,6 +40,7 @@ const ctx=vm.createContext({
   },
   header:()=>null,render:()=>{},clearIdleBoundary:()=>{},
   tick:()=>{},sendStatus:()=>{},hasOpenTask:()=>false,
+  recordPresenceTime:()=>{},updateActivityOwner:()=>{},render:()=>{},refresh:async()=>{},presenceState:'paused',
   lastAnnouncedJob:'',MANAGED_IDLE_MS:300000,
   crypto:{randomUUID:()=>`event-${serial++}`},
   recentConfirmationSubmitPending:null,
@@ -48,7 +49,7 @@ vm.runInContext(helperCode+scanCode+modeCode,ctx);
 let passed=0;
 async function check(title,fn){await fn();passed++; console.log(`PASS ${String(passed).padStart(2)} ${title}`);}
 const count=(t)=>events.filter(e=>e.type===t).length;
-const reset=(p=pendingFor())=>{ctx.pending=p;events=[];calls=[];ctx.skipIntent=null;ctx.failAck=false;ctx.queueReceiptRecoveryBusy=false;ctx.queueReceiptRecoveryAt=0;queueVisible=true;mode='none';navType='navigate';active=true;};
+const reset=(p=pendingFor())=>{ctx.pending=p;ctx.receiptBacklog=[];ctx.backlogProcessing=false;events=[];calls=[];ctx.skipIntent=null;ctx.failAck=false;ctx.queueReceiptRecoveryBusy=false;ctx.queueReceiptRecoveryAt=0;queueVisible=true;mode='none';navType='navigate';active=true;};
 await check('pre-fix failure reproduced: unacknowledged stored intent cannot satisfy verification',async()=>{
   reset();assert.equal(ctx.verifiedConfirmationIntent(ctx.pending),false);
   assert.equal(ctx.recentConfirmationSubmitPending(),false);
@@ -114,7 +115,7 @@ console.log(`PASS confirmation queue receipt race regression: ${passed} syntheti
 
 // Exercise the existing persisted Confirmation task ledger—not an invented
 // counter implementation—under the idempotent pending/confirmed event pair.
-const bg=readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../confirmation-background.js'),'utf8');
+const bg=readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../tracker/confirmation-background.js'),'utf8');
 function bgCut(a,b){const i=bg.indexOf(a),j=bg.indexOf(b,i);assert(i>=0&&j>i,`Missing background section ${a}`);return bg.slice(i,j);}
 let durable={shift:{status:'active',sessionId:'SHIFT_X',generation:7,reportDate:date},data:{dates:{}},pending:{},recent:[]};
 let failWrite=false;
@@ -140,7 +141,7 @@ const bc=vm.createContext({
 });
 vm.runInContext(bgCut('async function applyEvent(event) {','async function leaveMode()'),bc);
 const job='JOB_7788',task=2;
-const bevent=(type,eventId)=>({type,eventId,jobId:job,taskIndex:task,totalTasks:9,timestamp:now,shiftSessionId:'SHIFT_X',shiftGeneration:7});
+const bevent=(type,eventId)=>({type,eventId,jobId:job,taskIndex:task,totalTasks:9,date,timestamp:now,shiftSessionId:'SHIFT_X',shiftGeneration:7});
 await bc.applyEvent(bevent('submit-pending','submission-unique-1-submit-pending'));
 await bc.applyEvent(bevent('submit-pending','submission-unique-1-submit-pending'));
 assert.equal(durable.data.dates[date].summary.submitted,0,'Pending receipt never counts');

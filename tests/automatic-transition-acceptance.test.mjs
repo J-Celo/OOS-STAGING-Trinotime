@@ -6,7 +6,7 @@ import vm from 'node:vm';
 
 // Test the actual content-script implementation with a mocked Augmoto DOM and
 // the existing background event contract. No production access or API calls.
-const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../tracker');
 const source=readFileSync(path.join(root,'confirmation.js'),'utf8');
 const cut=(a,b)=>{const i=source.indexOf(a),j=source.indexOf(b,i);assert.ok(i>=0&&j>i,`Missing ${a}`);return source.slice(i,j);};
 const helpers=cut('  function storePending()', '  function build()');
@@ -20,7 +20,7 @@ const intent=(o={})=>({id:'persisted-intent-A',jobId:'JOB_105',taskIndex:2,total
   pageInstanceId:'DOC_A',...o});
 const ctx=vm.createContext({
   Date:NumberDate,Math,Number,String,Boolean,Array,Object,Set,Promise,Error,
-  PAGE_INSTANCE_ID:'DOC_A',PENDING:'pending',pending:intent(),
+  PAGE_INSTANCE_ID:'DOC_A',PENDING:'pending',BACKLOG:'test-backlog',BACKLOG_LIMIT:48,receiptBacklog:[],backlogProcessing:false,pending:intent(),
   shiftState:shift,context:{today:date},skipIntent:null,
   busy:false,queueReceiptRecoveryAt:0,queueReceiptRecoveryBusy:false,
   transitionReceiptRecoveryAt:0,transitionReceiptRecoveryBusy:false,
@@ -54,7 +54,7 @@ vm.runInContext(helpers+scanCode,ctx);
 let passed=0;
 async function check(title,fn){await fn();console.log('PASS',++passed,title);}
 function reset(options={}){
-  ctx.pending=intent(options);ctx.context={today:date};ctx.shiftState={...shift};ctx.skipIntent=null;
+  ctx.pending=intent(options);ctx.receiptBacklog=[];ctx.backlogProcessing=false;ctx.context={today:date};ctx.shiftState={...shift};ctx.skipIntent=null;
   ctx.current={jobId:'JOB_105',taskIndex:2,totalTasks:5};ctx.lastAnnouncedJob='JOB_105|2|5';
   ctx.transitionReceiptRecoveryAt=0;ctx.transitionReceiptRecoveryBusy=false;
   ctx.queueReceiptRecoveryAt=0;ctx.queueReceiptRecoveryBusy=false;

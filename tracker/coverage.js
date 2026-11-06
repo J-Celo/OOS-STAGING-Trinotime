@@ -6,8 +6,8 @@
   if (window !== window.top) return;
 
   const HUD_ID = 'cat-staging-hud-v2212';
-  const EXT_VERSION = '2.2.62';
-  const BUILD_CHANNEL = 'staging-qa';
+  const EXT_VERSION = '2.2.63';
+  const BUILD_CHANNEL = 'production';
   const MANAGED_IDLE_MINUTES = 5;
   const MANAGED_IDLE_MS = MANAGED_IDLE_MINUTES * 60 * 1000;
 
@@ -19,7 +19,7 @@
   let shiftState = { status:'not_clocked_in', locked:true, reportDate:'' };
   let summary = {
     submitted: 0, created: 0, blurred: 0, deleted: 0, noMatch: 0, productMatched: 0,
-    activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+    activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
     currentJob: '', currentTask: 0, totalTasks: 0,
     pendingSubmission: false, trackerState: 'offline', lastActivityAt: 0,
     idleSinceAt: 0, awaySinceAt: 0, presenceUpdatedAt: 0, idleThresholdMs: MANAGED_IDLE_MS
@@ -42,16 +42,46 @@
   let missingHeaderSince = 0;
   let presenceState = 'idle';
   let awaySinceAt = 0;
+  const searchPresence = window.TrinoTimeSearchPresence?.create('coverage');
+  const integrity = window.TrinoTimeActivityIntegrity?.create('coverage');
   let queueIdleSinceAt = Date.now();
   let resumePresence = null;
   let lastPresenceSentAt = 0;
   let lastPresenceSentState = '';
+  // One shared owner for activity TIME only; Submit events remain independent.
+  let activityOwned = false;
+  const activityCoordinator = window.TrinoTimeWorkflowCoordinator?.create('coverage', (owned,at) => {
+    if (owned === activityOwned) return;
+    if (!owned) {
+      // Settle the previous owner's final interval before the new tab starts.
+      recordPresenceTime(Math.min(Date.now(),at),presenceState);
+      activityOwned = false;
+      lastTick = Date.now();
+      updateLocalPresence('paused');
+    } else {
+      activityOwned = true;
+      lastTick = Date.now();
+      emitPresence(computePresenceState(),true);
+    }
+  });
+  const updateActivityOwner = (urgent = false) => activityCoordinator?.refresh(
+    shiftState?.status === 'active' && settings.enabled && !confirmationRoute(), urgent
+  ).catch(()=>{});
+
 
   // Augmoto permits several agents in one job; even task 2/6 may be the
   // last *available* task for this agent. Save each explicit Submit intent
   // synchronously in the current tab and asynchronously in extension storage.
   // A checkpoint alone is NOT proof of Augmoto acceptance.
   const SUBMIT_CHECKPOINT = 'catPendingSubmitCheckpointV2';
+  const COVERAGE_BACKLOG_KEY = 'catVerifiedSubmitLedgerV1';
+  const COVERAGE_BACKLOG_LIMIT = 48;
+  const PAGE_INSTANCE_ID = crypto.randomUUID();
+  let coverageBacklog = [], coverageBacklogBusy = false;
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(COVERAGE_BACKLOG_KEY) || '[]');
+    if (Array.isArray(saved)) coverageBacklog = saved.slice(0, COVERAGE_BACKLOG_LIMIT);
+  } catch (_) {}
   const LEGACY_SUBMIT_CHECKPOINT = 'catFinalSubmitCheckpointV1';
   const SUBMIT_MAX_AGE_MS = 90 * 1000;
   // Some accepted Augmoto tasks transition slowly. Keep the task/shift-bound
@@ -134,6 +164,57 @@
         !['reload','back_forward'].includes(performance.getEntriesByType('navigation')[0]?.type),
       queueConfirmedAt:sameTab ? Number(cp.queueConfirmedAt)||0 : 0 };
     return true;
+  }
+
+  // Every trusted Submit on a NEW Coverage task gets its own receipt. The
+  // previous task must have visibly advanced after its captured Submit, and a
+  // bounded same-tab ledger retains that earlier receipt until background ACK.
+  // Never turn a click, Skip, reload, or validation error into a count.
+  function persistCoverageBacklog() {
+    try {
+      if (coverageBacklog.length) sessionStorage.setItem(COVERAGE_BACKLOG_KEY, JSON.stringify(coverageBacklog));
+      else sessionStorage.removeItem(COVERAGE_BACKLOG_KEY);
+      return true;
+    } catch (_) { feedback('capture_problem',pending.submit?.id||''); return false; }
+  }
+  function coverageTaskAdvanced(before, after) {
+    return Boolean(before?.jobId && after?.jobId && Number(after.taskIndex)>0 &&
+      (before.jobId!==after.jobId || Number(after.taskIndex)>Number(before.taskIndex)));
+  }
+  function canPromoteCoverageSubmit(p, after, now=Date.now()) {
+    const age=now-Number(p?.at||0);
+    return Boolean(p?.id && p.pageInstanceId===PAGE_INSTANCE_ID && !p.recovered &&
+      Number.isFinite(age) && age>=150 && age<=ACCEPTANCE_WINDOW_MS &&
+      shiftState?.status==='active' && p.sessionId===shiftState.sessionId &&
+      Number(p.generation)===Number(shiftState.generation) &&
+      p.date===shiftState.reportDate && p.deviceId===bridgeState?.deviceId &&
+      submitCheckpoint?.id===p.id && checkpointMatchesShift(submitCheckpoint) &&
+      coverageTaskAdvanced(p,after) &&
+      !(pending.skip?.jobId===p.jobId && Number(pending.skip.taskIndex)===Number(p.taskIndex)) &&
+      !REJECTED_NOTICE.test(document.body?.innerText||document.body?.textContent||''));
+  }
+  async function drainCoverageSubmitLedger() {
+    if(coverageBacklogBusy || !coverageBacklog.length || shiftState?.status!=='active')return;
+    coverageBacklogBusy=true;
+    try {
+      for(const intent of [...coverageBacklog]) {
+        if(!coverageBacklog.includes(intent) || !intent?.id || !coverageTaskAdvanced(intent,intent.observedNext) ||
+           intent.sessionId!==shiftState.sessionId || Number(intent.generation)!==Number(shiftState.generation) ||
+           intent.date!==shiftState.reportDate || intent.deviceId!==bridgeState?.deviceId)continue;
+        try {
+          const result=await send('cat-event',{event:{
+            eventId:`submit-confirmed-${intent.id}`,type:'submit-confirmed',timestamp:Date.now(),
+            date:intent.date,jobId:intent.jobId,taskIndex:intent.taskIndex,totalTasks:intent.totalTasks,
+            confirmedBy:'coverage-queued-task-transition'
+          }});
+          if(!result?.ok || result.frozen || result.skipped)continue;
+          coverageBacklog=coverageBacklog.filter(row=>row!==intent);
+          // If session storage fails here, its old entry remains for an
+          // idempotent replay on reload; the accepted task won't count twice.
+          persistCoverageBacklog();
+        }catch(_){/* Preserve the original receipt for automatic retry. */}
+      }
+    }finally{coverageBacklogBusy=false;}
   }
 
   function recordUnverifiedSubmit(p, reason='no-acceptance-evidence') {
@@ -268,7 +349,11 @@
     // immediately after navigation and strand the acceptance message. The
     // background reconciles a bounded late efficiency sample independently.
     if(verifiedSubmission){try{Promise.resolve(window.TrinoTimeQCEfficiency?.flush()).catch(()=>{});}catch(_) {}}
-    if (!verifiedSubmission && confirmationRoute() && ['cat-event','cat-presence','cat-time'].includes(type)) return Promise.resolve({ok:true, skipped:true});
+    // A single ownership/mode handoff may settle the prior Coverage interval
+    // after Augmoto has already switched its visible route to Confirmation.
+    // This exception applies ONLY to time accounting, never to Submit events.
+    const settledCoverageTime=type==='cat-time'&&payload.activityHandoff===true;
+    if (!verifiedSubmission && confirmationRoute() && ['cat-event','cat-presence','cat-time'].includes(type) && !settledCoverageTime) return Promise.resolve({ok:true, skipped:true});
     try { return chrome.runtime.sendMessage({ type, ...payload }); }
     catch (_) { return Promise.resolve(null); }
   }
@@ -278,24 +363,23 @@
   }
 
   function isAwayNow() {
-    return document.hidden || !document.hasFocus();
+    return searchPresence?.isAway() === true;
   }
 
   function computePresenceState(now = Date.now()) {
     if (shiftState?.status !== 'active') return 'offline';
-    if (!settings.enabled) return 'paused';
-    // The Coverage jobs/queue page is not productive work. While no real
-    // Coverage task is open, focused time is immediate IDLE and hidden/
-    // unfocused time is AWAY. Queue interaction never promotes the Agent to
-    // ACTIVE; only a confirmed task header can do that.
-    if (!hasOpenTask()) return isAwayNow() ? 'away' : 'idle';
-    if (isAwayNow()) return 'away';
-    return now - lastInteraction >= MANAGED_IDLE_MS ? 'idle' : 'active';
+    if (!settings.enabled || !activityOwned || confirmationRoute()) return 'paused';
+    // Queue time is SEARCHING only inside a bounded, interaction-aware window.
+    // It is never counted as productive task time or as idle/away.
+    searchPresence?.sync(hasOpenTask(),true);
+    integrity?.sync(hasOpenTask(), true, hasOpenTask()?`${current.jobId}|${current.taskIndex}`:'', `${shiftState?.sessionId||''}|${shiftState?.generation||''}`);
+    const base = isAwayNow() ? 'away' : !hasOpenTask() ? (searchPresence?.state(now)||'idle') : now-lastInteraction>=MANAGED_IDLE_MS?'unverified':'active';
+    return integrity?.state(base, {hasTask:hasOpenTask(),visible:!document.hidden,focused:document.hasFocus(),osAway:isAwayNow()},now) || base;
   }
 
   function presencePayload(state = computePresenceState(), now = Date.now()) {
     const idleSinceAt = state === 'idle'
-      ? (hasOpenTask() ? Math.max(0, lastInteraction + MANAGED_IDLE_MS) : Math.max(0, queueIdleSinceAt || now))
+      ? (hasOpenTask() ? Math.max(0, lastInteraction + MANAGED_IDLE_MS) : Math.max(0, searchPresence?.idleSince(now) || queueIdleSinceAt || now))
       : 0;
     const currentAwaySince = state === 'away' ? (awaySinceAt || now) : 0;
     return {
@@ -320,7 +404,7 @@
     summary.trackerState = state;
     summary.lastActivityAt = lastInteraction;
     summary.idleSinceAt = state === 'idle'
-      ? (hasOpenTask() ? Math.max(0, lastInteraction + MANAGED_IDLE_MS) : Math.max(0, queueIdleSinceAt || now))
+      ? (hasOpenTask() ? Math.max(0, lastInteraction + MANAGED_IDLE_MS) : Math.max(0, searchPresence?.idleSince(now) || queueIdleSinceAt || now))
       : 0;
     summary.awaySinceAt = state === 'away' ? (awaySinceAt || now) : 0;
     summary.presenceUpdatedAt = now;
@@ -366,11 +450,14 @@
   function noteActivity(event) {
     if (isHudEvent(event)) return;
     if (event && event.isTrusted === false) return;
+    updateActivityOwner();
     const was = computePresenceState();
-    lastInteraction = Date.now();
+    if(['grace','unverified'].includes(presenceState)&&integrity?.isMeaningful(event,hasOpenTask()))recordPresenceTime(Date.now(),presenceState);
+    searchPresence?.record(event,hasOpenTask(),shiftState?.status==='active');
+    if (integrity?.record(event,hasOpenTask(),shiftState?.status==='active')) lastInteraction = Date.now();
     awaySinceAt = 0;
     const next = computePresenceState();
-    if (hasOpenTask() && (was === 'idle' || was === 'away' || presenceState === 'idle' || presenceState === 'away')) {
+    if (next !== was || next !== presenceState) {
       emitPresence(next, true);
     } else {
       // Queue/list interaction is still IDLE. Do not allow scrolling, clicking
@@ -381,7 +468,10 @@
   }
 
   function handleVisibilityOrFocus() {
+    recordPresenceTime(Date.now(),presenceState);
+    updateActivityOwner(true);
     scheduleScan(100);
+    searchPresence?.poll(true).then(()=>emitPresence(computePresenceState(),true)).catch(()=>{});
     if (isAwayNow()) {
       if (!awaySinceAt) awaySinceAt = Date.now();
       clearIdleBoundary();
@@ -951,6 +1041,8 @@
   }
 
   document.addEventListener('tt-qc-mode-change', e => {
+    recordPresenceTime(Date.now(),presenceState,true);
+    updateActivityOwner(true);
     if(e.detail?.previous==='coverage'&&e.detail.mode!=='coverage'){
       clearIdleBoundary();
       // A final Coverage Submit can navigate straight to Augmoto Home/Jobs and
@@ -962,6 +1054,7 @@
   });
   function scan() {
     scanTimer = null;
+    if(coverageBacklog.length)drainCoverageSubmitLedger().catch(()=>{});
     const routeMismatch=confirmationRoute();
     const earlyText=document.body?.innerText||document.body?.textContent||'';
     if(pending.submit && !coverageLandingVisible(earlyText))pending.submit.queueSeenAt=0;
@@ -1153,26 +1246,91 @@
     });
   }
 
-  function realHeaderAction(el, name) {
-    if (!(el instanceof Element) || lower(label(el)) !== name || disabled(el)) return false;
+  // Coverage Submit may have an accessible text variant or a duplicate
+  // unrelated action elsewhere on the page. Only capture a unique real task
+  // toolbar/header action; never use an arbitrary duplicate or a dialog.
+  function coverageSubmitLabel(el) {
+    if (!el) return false;
+    const labels = [label(el), el.getAttribute?.('aria-label'), el.getAttribute?.('title'), el.value];
+    return labels.some(raw => /^(?:submit|submit task|submit & next|submit and next)(?:\s*\(enter\))?$/i.test(clean(raw)));
+  }
+  function coverageSubmitLocation(el) {
     const r = el.getBoundingClientRect();
     const vw = Math.max(1, innerWidth), vh = Math.max(1, innerHeight);
-    if (r.width < 20 || r.height < 16) return false;
-    const inOriginalHeader = r.top <= Math.min(360, vh * .5) && r.left >= vw * .5;
+    if (r.width < 20 || r.height < 16) return '';
+    if (el.closest?.('[role="dialog"],[aria-modal="true"],.modal')) return '';
+    if (el.closest?.('header,[role="toolbar"],[data-testid*="task"],[class*="task-header"],[class*="TaskHeader"]')) return 'toolbar';
+    if (nearbyHeaderControl(el, 'skip') || nearbyHeaderControl(el, 'exit')) return 'near-actions';
+    if (r.top <= Math.min(360, vh * .5) && r.left >= vw * .5) return 'header';
+    return '';
+  }
+  function realHeaderAction(el, name) {
+    if (!(el instanceof Element) || disabled(el)) return false;
     if (name === 'submit') {
-      // An active, shift-bound Augmoto task, plus an unambiguous exact-label
-      // Submit, is more reliable than requiring Skip and Exit in a fixed order.
-      if (!(current.jobId && current.taskIndex && shiftState?.status === 'active')) return false;
-      const submits = Array.from(document.querySelectorAll('button,[role="button"],input[type="submit"]'))
-        .filter(btn => lower(label(btn)) === 'submit' && !disabled(btn) &&
-          btn.getBoundingClientRect().width >= 20 && btn.getBoundingClientRect().height >= 16);
-      if (submits.length !== 1 || submits[0] !== el) return false;
-      // A second form/dialog must not be mistaken for Augmoto's task control.
-      if (el.closest?.('[role="dialog"],[aria-modal="true"],.modal')) return false;
-      const inTaskToolbar = Boolean(el.closest?.('header,[role="toolbar"],[data-testid*="task"],[class*="task-header"],[class*="TaskHeader"]'));
-      return inOriginalHeader || inTaskToolbar || nearbyHeaderControl(el, 'skip') || nearbyHeaderControl(el, 'exit');
+      const activeHeader=headerState(document.body?.innerText||document.body?.textContent||'');
+      if (!(activeHeader?.jobId && activeHeader?.taskIndex && shiftState?.status === 'active') || !coverageSubmitLabel(el)) return false;
+      const loc = coverageSubmitLocation(el);
+      if (!loc) return false;
+      const all = Array.from(document.querySelectorAll('button,[role="button"],input[type="submit"]'))
+        .filter(btn => !disabled(btn) && coverageSubmitLabel(btn) && coverageSubmitLocation(btn));
+      if (!all.includes(el)) return false;
+      // A single active Submit is authoritative. If multiple are visible,
+      // require the clicked control to be the only one in a task-specific
+      // toolbar or next to the real Skip/Exit task controls.
+      if (all.length === 1) return true;
+      const taskSpecific = all.filter(btn => ['toolbar','near-actions'].includes(coverageSubmitLocation(btn)));
+      return taskSpecific.length === 1 && taskSpecific[0] === el;
     }
-    return inOriginalHeader;
+    if (lower(label(el)) !== name) return false;
+    const r=el.getBoundingClientRect();
+    return r.width >= 20 && r.height >= 16 && r.top <= Math.min(360,Math.max(1,innerHeight)*.5) && r.left >= Math.max(1,innerWidth)*.5;
+  }
+
+  function captureCoverageSubmit(el) {
+    if (!realHeaderAction(el, 'submit')) return false;
+    // Capture-phase DOM evidence is fresher than the previous scan's `current`.
+    // A fast labeler may already see and Submit the next task before a scan.
+    const observed=headerState(document.body?.innerText||document.body?.textContent||'');
+    if(!observed?.jobId || !observed.taskIndex || !observed.totalTasks ||
+       !shiftState?.sessionId || shiftState.status!=='active')return false;
+    if (submitPending()) {
+      const old=pending.submit;
+      if(old.jobId===observed.jobId && Number(old.taskIndex)===Number(observed.taskIndex))return true;
+      if(coverageBacklog.length>=COVERAGE_BACKLOG_LIMIT || !canPromoteCoverageSubmit(old,observed)){
+        feedback('capture_problem',old.id);return false;
+      }
+      coverageBacklog.push({...old,observedNext:{...observed},transitionObservedAt:Date.now()});
+      if(!persistCoverageBacklog()){
+        coverageBacklog.pop();persistCoverageBacklog();return false;
+      }
+      // The older receipt is now independently durable in this tab, so a
+      // previous background response cannot block capturing the next task.
+      pending.submit=null;
+      setTimeout(()=>drainCoverageSubmitLedger().catch(()=>{}),0);
+    }
+    current.jobId=observed.jobId;
+    current.taskIndex=observed.taskIndex;
+    current.totalTasks=observed.totalTasks;
+    const attempt = {id:eventId('coverage-submit'), at:Date.now(),
+      jobId:observed.jobId,taskIndex:observed.taskIndex,totalTasks:observed.totalTasks,
+      queueEligible:true,pageInstanceId:PAGE_INSTANCE_ID,
+      date:shiftState.reportDate,sessionId:shiftState.sessionId,
+      generation:Number(shiftState.generation),deviceId:bridgeState?.deviceId||''};
+    pending.submit=attempt;
+    saveSubmitCheckpoint(attempt);
+    feedback('captured',attempt.id,attempt.at);
+    chrome.runtime.sendMessage({type:'cat-submit-attempt',attempt:{
+      id:attempt.id,at:attempt.at,jobId:attempt.jobId,taskIndex:attempt.taskIndex,
+      totalTasks:attempt.totalTasks,date:shiftState.reportDate,sessionId:shiftState.sessionId,
+      generation:shiftState.generation,deviceId:bridgeState?.deviceId||''
+    }}).then(result=>{if(!result?.ok)feedback('capture_problem',attempt.id);}).catch(()=>{
+      feedback('capture_problem',attempt.id);
+    });
+    pending.skip=null;
+    emitAction('submit-pending');
+    scheduleScan(120);
+    setTimeout(()=>{if(pending.submit)scheduleScan(0);},850);
+    return true;
   }
 
   function clickIntent(event) {
@@ -1189,29 +1347,7 @@
     // Synchronous capture-phase handler: Augmoto may navigate immediately
     // after its own Submit handler. Never wait for the DOM scan, efficiency
     // queue, task transition, or service-worker acknowledgment to preserve intent.
-    if (realHeaderAction(el, 'submit')) {
-      if (!current.jobId || !current.taskIndex || !shiftState?.sessionId || shiftState.status!=='active') return;
-      if (submitPending() && pending.submit.jobId===current.jobId && pending.submit.taskIndex===current.taskIndex) return;
-      const attempt = {id:eventId('coverage-submit'), at:Date.now(),
-        jobId:current.jobId,taskIndex:current.taskIndex,totalTasks:current.totalTasks,queueEligible:true};
-      pending.submit=attempt;
-      saveSubmitCheckpoint(attempt);
-      feedback('captured',attempt.id,attempt.at);
-      // Extension-local audit record; this message NEVER increments a count.
-      // Arrival in background is queued and written before returning success.
-      chrome.runtime.sendMessage({type:'cat-submit-attempt',attempt:{
-        id:attempt.id,at:attempt.at,jobId:attempt.jobId,taskIndex:attempt.taskIndex,
-        totalTasks:attempt.totalTasks,date:shiftState.reportDate,sessionId:shiftState.sessionId,
-        generation:shiftState.generation,deviceId:bridgeState?.deviceId||''
-      }}).then(result=>{if(!result?.ok)feedback('capture_problem',attempt.id);}).catch(()=>{
-        feedback('capture_problem',attempt.id);
-      });
-      pending.skip=null;
-      emitAction('submit-pending');
-      scheduleScan(120);
-      setTimeout(()=>{if(pending.submit)scheduleScan(0);},850);
-      return;
-    }
+    if (captureCoverageSubmit(el)) return;
     scan(); // Non-Submit annotation actions still flush prior DOM changes.
     const l = lower(label(el));
     const railNoMatch = railNoMatchIntent(el);
@@ -1255,15 +1391,33 @@
     }
   }
 
+  function recordPresenceTime(at, state, activityHandoff = false) {
+    const start=lastTick;
+    const delta=Math.min(60000,Math.max(0,at-start));
+    lastTick=at;
+    if(delta<250 || shiftState?.status!=='active' || !settings.enabled || !activityOwned)return;
+    // When a hidden tab's timer is throttled, split a late sample at the
+    // original 30s deadline rather than crediting the whole gap as GRACE.
+    const deadline=state==='grace'?integrity?.graceDeadlineAt():0;
+    const grace=state==='grace'?(deadline?Math.min(delta,Math.max(0,Math.min(at,deadline)-Math.max(start,at-60000))):delta):0;
+    const unverified=state==='unverified'?delta:(state==='grace'?delta-grace:0);
+    send('cat-time',{activityHandoff,payload:{...presencePayload(state,at),elapsedMs:delta,
+      activeMs:state==='active'?delta:0,idleMs:state==='idle'||state==='away'?delta:0,
+      awayMs:state==='away'?delta:0,searchingMs:state==='searching'?delta:0,
+      graceMs:grace,unverifiedMs:unverified}}).catch(()=>{});
+  }
+
   function tick() {
     if (!settings.enabled) return;
-    // Tracking is deliberately independent of HUD visibility/size. This
-    // low-frequency recovery scan also catches missed React mutations while
-    // the HUD is minimized.
-    scheduleScan(0);
+    // Recover missed React mutations while visible. Hidden tabs continue
+    // processing pending Submits, but don't parse the whole page unnecessarily.
+    if(!document.hidden || submitPending() || coverageBacklog.length) scheduleScan(0);
     const now = Date.now();
-    const delta = Math.min(60000, Math.max(0, now - lastTick));
-    lastTick = now;
+    updateActivityOwner();
+    if (!activityOwned) {lastTick=now;return;}
+    // Timing is settled separately on blur/focus so a 10-second Discord check
+    // is not silently booked as verified ACTIVE work by a later 15s tick.
+
     if (!hasOpenTask() && !queueIdleSinceAt) queueIdleSinceAt = now;
 
     if (isAwayNow()) {
@@ -1271,15 +1425,9 @@
     } else {
       awaySinceAt = 0;
     }
+    searchPresence?.poll().then(s=>{ if(s==='idle'||s==='locked')emitPresence(computePresenceState(),true); }).catch(()=>{});
     const state = computePresenceState(now);
-    const presence = presencePayload(state, now);
-    send('cat-time', { payload: {
-      ...presence,
-      elapsedMs: delta,
-      activeMs: state === 'active' ? delta : 0,
-      idleMs: state === 'idle' || state === 'away' ? delta : 0,
-      awayMs: state === 'away' ? delta : 0
-    } }).catch(() => {});
+    recordPresenceTime(now, presenceState==='grace' ? 'grace' : state);
     updateLocalPresence(state, now);
     refreshContext(false);
     if (state === 'active') scheduleIdleBoundary();
@@ -1393,10 +1541,13 @@
     const bridgeAgentName = esc(bridgeState?.actor?.name || '');
     const stateLabel = shiftStatus==='completed' ? 'SHIFT COMPLETE' : shiftStatus==='not_clocked_in' ? 'TIME IN REQUIRED' : String(state || 'ready').toUpperCase();
     const currentIdle = state === 'idle' ? Math.max(0, Date.now() - (Number(summary.idleSinceAt) || (lastInteraction + MANAGED_IDLE_MS))) : 0;
-    const stateExtra = shiftStatus==='completed' ? 'Final totals locked · Time In again to start a new session' : shiftStatus==='not_clocked_in' ? 'Tracker waits for TrinoTime Time In' : state === 'idle' ? `Idle ${fmt(currentIdle)}` : state === 'away' ? 'Away' : state === 'active' ? 'Working' : stateLabel;
+    const stateExtra = shiftStatus==='completed' ? 'Final totals locked · Time In again to start a new session' : shiftStatus==='not_clocked_in' ? 'Tracker waits for TrinoTime Time In' : state === 'idle' ? `Idle ${fmt(currentIdle)}` : state === 'away' ? 'Away' : state === 'searching' ? 'Finding a store · search allowance' : state === 'grace' ? 'Work-tool transition · 30s allowance' : state === 'unverified' ? 'Activity not verified · no automatic penalty' : state === 'active' ? 'Working' : stateLabel;
     const stateColors = {
       active: { bg: '#E7F6EE', fg: '#177245', dot: '#1CA86A' },
       idle: { bg: '#FFF4DB', fg: '#9A6700', dot: '#F0B429' },
+      searching: { bg: '#E9F4FF', fg: '#1C5AA6', dot: '#2B8CEE' },
+      grace: { bg: '#E9F4FF', fg: '#1C5AA6', dot: '#2B8CEE' },
+      unverified: { bg: '#FFF4DB', fg: '#9A6700', dot: '#F0B429' },
       away: { bg: '#EEF2F7', fg: '#445269', dot: '#94A3B8' },
       ready: { bg: '#E8F0FF', fg: '#1F5FBF', dot: '#3B82F6' },
       submitting: { bg: '#E8F0FF', fg: '#1F5FBF', dot: '#3B82F6' },
@@ -1555,6 +1706,9 @@
   function installObserver() {
     if (observer || !document.documentElement) return;
     observer = new MutationObserver(muts => {
+      // Never skip a pending Submit: acceptance evidence is essential.
+      // Otherwise a hidden/non-Coverage tab has no reason to rescan the DOM.
+      if((document.hidden || confirmationRoute()) && !submitPending() && !coverageBacklog.length)return;
       captureAcceptedNoticeFromMutations(muts);
       for (const m of muts) {
         const node = m.target.nodeType === 1 ? m.target : m.target.parentElement;
@@ -1581,12 +1735,24 @@
   }
   window.addEventListener('popstate', handleCoverageHistoryChange, true);
   document.addEventListener('click', clickIntent, true);
+  // Native keyboard/form submissions may bypass the button's click listener.
+  // Require the browser's trusted submit event and its actual submitter. The
+  // same-task guard above deduplicates click+submit from one user action.
+  document.addEventListener('submit', event => {
+    if (event?.isTrusted === false || !event.submitter || isHudEvent(event)) return;
+    captureCoverageSubmit(event.submitter);
+  }, true);
   document.addEventListener('keydown', keyIntent, true);
+  for (const e of ['input','change']) document.addEventListener(e, noteActivity, true);
   for (const e of ['pointerdown', 'scroll', 'touchstart']) document.addEventListener(e, noteActivity, { capture: true, passive: true });
   document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+  window.addEventListener('pagehide',()=>{recordPresenceTime(Date.now(),presenceState,true);},true);
   window.addEventListener('focus', handleVisibilityOrFocus, true);
   window.addEventListener('focus', () => { send('cat-refresh-shift').then(()=>refreshContext(false)).catch(()=>{}); }, true);
   window.addEventListener('blur', handleVisibilityOrFocus, true);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden || submitPending() || coverageBacklog.length)scheduleScan(60);
+  });
 
   const boot = async () => {
     installObserver();
@@ -1594,8 +1760,11 @@
     // second, DOM scan last. Never let a page reload scan from an all-zero shell.
     await hydrateLocalCoverageSnapshot();
     await refreshContext(false);
+    searchPresence?.poll(true).catch(()=>{});
     lastTick = Date.now();
+    updateActivityOwner(true);
     tickTimer = setInterval(tick, 15000);
+    setInterval(() => { if(coverageBacklog.length)drainCoverageSubmitLedger().catch(()=>{}); }, 2500);
     scheduleScan(100);
     setTimeout(() => { if (!hasOpenTask()) emitPresence(computePresenceState(), true); }, 350);
   };

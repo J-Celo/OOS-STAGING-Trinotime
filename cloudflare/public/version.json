@@ -1,6 +1,6 @@
 {
   "version": "3.0.4",
-  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106",
   "ready": false,
   "update_policy": "per-release-fingerprint-self-heal-plus-automatic-monthly-operational-rollover",
   "service_worker_cache_policy": "network-only-app-shell",
@@ -238,7 +238,7 @@
   "staging": {
     "environment": "staging-qa",
     "sourceParity": "UX18P46",
-    "trackerVersion": "2.2.62",
+    "trackerVersion": "2.2.63",
     "productionDataShared": false
   },
   "bio_break_scroll_fix": "2026-11-01-scroller-centering-preserved"

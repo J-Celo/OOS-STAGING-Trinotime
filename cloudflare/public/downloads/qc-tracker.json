@@ -1,11 +1,11 @@
 {
-  "build": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "build": "TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106",
   "environment": "STAGING QA",
-  "version": "2.2.62",
-  "filename": "TrinoTime-QC-Tracker-v2.2.62.zip",
+  "version": "2.2.63",
+  "filename": "TrinoTime-QC-Tracker-STAGING-v2.2.63.zip",
   "downloadPath": "/api/workforce/governance/qc-tracker-download",
-  "sha256": "b329bbc9b3982ed2c8b6f4a07cccddf62abc9865fedd47c6cc804e04882cba06",
+  "sha256": "d081e3bbe2a8bd0fe68ecaa177d64503eaf61e4405b188a90ef22a35aaee6d8d",
   "packageType": "isolated staging QA extension source",
   "installMode": "chrome-load-unpacked",
-  "notes": "Staging-origin port of reviewed v2.3.11 Confirmation recovery; independent from Web Store, no production connection"
+  "notes": "Staging-isolated feature parity with Production Tracker v2.3.20. Load unpacked in dedicated test browser profile; not Web Store."
 }

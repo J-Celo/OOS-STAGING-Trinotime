@@ -33,7 +33,7 @@ async function refresh(){
 $('qaRecoveryBackup').onclick=async()=>{
  try{
   const {data,counts}=await state();
-  const file={type:'TrinoTime PRODUCTION Tracker local backup (no bridge tokens)',savedAt:new Date().toISOString(),extensionVersion:'2.3.10',counts,storage:data};
+  const file={type:'TrinoTime PRODUCTION Tracker local backup (no bridge tokens)',savedAt:new Date().toISOString(),extensionVersion:'2.3.20',counts,storage:data};
   const blob=new Blob([JSON.stringify(file,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='TrinoTime-Tracker-PRODUCTION-private-backup-'+Date.now()+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
   exported=true;$('qaRecoveryConsent').disabled=false;

@@ -3,9 +3,9 @@
   if (window !== window.top || window.__confirmationTrackerV1) return;
   window.__confirmationTrackerV1 = true;
 
-  const ID='cft-confirmation-staging-hud', PENDING='cft-pending-submit-v1';
-  const EXT_VERSION = '2.2.62', MANAGED_IDLE_MINUTES=5, MANAGED_IDLE_MS=MANAGED_IDLE_MINUTES*60*1000;
-  let context=null, shiftState={status:'not_clocked_in',locked:true,reportDate:''}, pending=null, skipIntent=null, busy=false, root, body, toggle, message='', expanded=true, liveHeader=null, lastAnnouncedJob='', missingHeaderSince=0;
+  const ID='cft-confirmation-staging-hud', PENDING='cft-pending-submit-v1', BACKLOG='cft-submit-ledger-v1', BACKLOG_LIMIT=48;
+  const EXT_VERSION = '2.2.63', MANAGED_IDLE_MINUTES=5, MANAGED_IDLE_MS=MANAGED_IDLE_MINUTES*60*1000;
+  let context=null, shiftState={status:'not_clocked_in',locked:true,reportDate:''}, pending=null, receiptBacklog=[], backlogProcessing=false, skipIntent=null, busy=false, root, body, toggle, message='', expanded=true, liveHeader=null, lastAnnouncedJob='', missingHeaderSince=0;
   let current={jobId:'',taskIndex:0,totalTasks:0};
   // A confirmed Submit intent can outlive its first page when Augmoto makes
   // a full-document return to the queue. Re-send only its stable pending ID
@@ -16,10 +16,26 @@
   // from a restored/reloaded click. It never authorizes a count on its own.
   const PAGE_INSTANCE_ID=crypto.randomUUID();
   let transitionReceiptRecoveryAt=0,transitionReceiptRecoveryBusy=false;
+  // A live server/storage refresh is needed for changes, not every DOM poll.
+  // Storage onChanged and explicit Submit paths still refresh promptly.
+  let lastContextRefreshAt=0;
+  const searchPresence = window.TrinoTimeSearchPresence?.create('confirmation');
+  const integrity = window.TrinoTimeActivityIntegrity?.create('confirmation');
   let lastInteraction=Date.now(), lastTick=Date.now(), idleBoundaryTimer=null, presenceState='idle', awaySinceAt=0, queueIdleSinceAt=Date.now(), resumePresence=null, presenceInitialized=false, lastPresenceSentAt=0, lastPresenceSentState='';
+  let activityOwned=false;
+  // Only the shared activity owner records elapsed time. All Submit receipts
+  // still travel through their original workflow independently.
+  const activityCoordinator=window.TrinoTimeWorkflowCoordinator?.create('confirmation',(owned,at)=>{
+    if(owned===activityOwned)return;
+    if(!owned){recordPresenceTime(Math.min(Date.now(),at),presenceState);activityOwned=false;lastTick=Date.now();updateLocalPresence('paused');}
+    else {activityOwned=true;lastTick=Date.now();emitPresence(computePresenceState(),true);}
+  });
+  const updateActivityOwner=(urgent=false)=>activityCoordinator?.refresh(shiftState?.status==='active'&&route(),urgent).catch(()=>{});
+
 
   // A browser restart must not upgrade an unacknowledged Submit into verified evidence.
   try { pending=JSON.parse(sessionStorage.getItem(PENDING)||'null'); } catch (_) {}
+  try { const saved=JSON.parse(sessionStorage.getItem(BACKLOG)||'[]'); receiptBacklog=Array.isArray(saved)?saved.slice(0,BACKLOG_LIMIT):[]; } catch (_) {}
   window.TrinoTimeConfirmationReportDate=()=>context?.today;
   const send=(type,extra={})=>chrome.runtime.sendMessage({type,...extra});
   const route=()=>! /\/jobs\/JOB_[^/]+\/coverage(?:-beta)?(?:\/|$)/i.test(location.pathname)&&window.TrinoTimeQCMode?.get()==='confirmation';
@@ -62,19 +78,20 @@
     return m?{jobId:m[1].toUpperCase(),taskIndex:Number(m[2]),totalTasks:Number(m[3])}:null;
   }
   function hasOpenTask(){return Boolean(current.jobId&&current.taskIndex);}
-  function isAwayNow(){return document.hidden||!document.hasFocus();}
+  function isAwayNow(){return searchPresence?.isAway()===true;}
   function computePresenceState(now=Date.now()){
     if(shiftState?.status!=='active')return 'offline';
-    if(!route())return 'paused';
-    if(!hasOpenTask())return isAwayNow()?'away':'idle';
-    if(isAwayNow())return 'away';
-    return now-lastInteraction>=MANAGED_IDLE_MS?'idle':'active';
+    if(!route()||!activityOwned)return 'paused';
+    searchPresence?.sync(hasOpenTask(),true);
+    integrity?.sync(hasOpenTask(),true,hasOpenTask()?`${current.jobId}|${current.taskIndex}`:'',`${shiftState?.sessionId||''}|${shiftState?.generation||''}`);
+    const base=isAwayNow()?'away':!hasOpenTask()?(searchPresence?.state(now)||'idle'):now-lastInteraction>=MANAGED_IDLE_MS?'unverified':'active';
+    return integrity?.state(base,{hasTask:hasOpenTask(),visible:!document.hidden,focused:document.hasFocus(),osAway:isAwayNow()},now)||base;
   }
   function presencePayload(state=computePresenceState(),now=Date.now()){
     return {
       timestamp:now,date:reportDate(),jobId:current.jobId,taskIndex:current.taskIndex,totalTasks:current.totalTasks,
       trackerState:state,lastActivityAt:lastInteraction,
-      idleSinceAt:state==='idle'?(hasOpenTask()?Math.max(0,lastInteraction+MANAGED_IDLE_MS):Math.max(0,queueIdleSinceAt||now)):0,
+      idleSinceAt:state==='idle'?(hasOpenTask()?Math.max(0,lastInteraction+MANAGED_IDLE_MS):Math.max(0,searchPresence?.idleSince(now)||queueIdleSinceAt||now)):0,
       awaySinceAt:state==='away'?(awaySinceAt||now):0,presenceUpdatedAt:now,idleThresholdMs:MANAGED_IDLE_MS,
       pageVisible:!document.hidden,pageFocused:document.hasFocus()
     };
@@ -83,7 +100,7 @@
     presenceState=state;
     if(context?.summary){
       const s=context.summary;s.trackerState=state;s.lastActivityAt=lastInteraction;
-      s.idleSinceAt=state==='idle'?(hasOpenTask()?Math.max(0,lastInteraction+MANAGED_IDLE_MS):Math.max(0,queueIdleSinceAt||now)):0;
+      s.idleSinceAt=state==='idle'?(hasOpenTask()?Math.max(0,lastInteraction+MANAGED_IDLE_MS):Math.max(0,searchPresence?.idleSince(now)||queueIdleSinceAt||now)):0;
       s.awaySinceAt=state==='away'?(awaySinceAt||now):0;s.presenceUpdatedAt=now;s.idleThresholdMs=MANAGED_IDLE_MS;
     }
     if(paint)render();
@@ -105,25 +122,45 @@
   function isHudEvent(event){return event?.target instanceof Element&&Boolean(event.target.closest('#'+ID));}
   function noteActivity(event){
     if(!route()||isHudEvent(event)||event?.isTrusted===false)return;
-    const was=computePresenceState();lastInteraction=Date.now();awaySinceAt=0;const next=computePresenceState();
-    if(hasOpenTask()&&(was==='idle'||was==='away'||presenceState==='idle'||presenceState==='away'))emitPresence(next,true);
+    updateActivityOwner();
+    const was=computePresenceState();if(['grace','unverified'].includes(presenceState)&&integrity?.isMeaningful(event,hasOpenTask()))recordPresenceTime(Date.now(),presenceState);searchPresence?.record(event,hasOpenTask(),shiftState?.status==='active');if(integrity?.record(event,hasOpenTask(),shiftState?.status==='active'))lastInteraction=Date.now();awaySinceAt=0;const next=computePresenceState();
+    if(next!==was||next!==presenceState)emitPresence(next,true);
     else updateLocalPresence(next,Date.now(),false);
     scheduleIdleBoundary();
   }
   function handleVisibilityOrFocus(){
+    recordPresenceTime(Date.now(),presenceState);
+    updateActivityOwner(true);
     if(!route()){clearIdleBoundary();return;}
+    if(!document.hidden)scan().catch(()=>{});
+    searchPresence?.poll(true).then(()=>emitPresence(computePresenceState(),true)).catch(()=>{});
     if(isAwayNow()){if(!awaySinceAt)awaySinceAt=Date.now();clearIdleBoundary();emitPresence('away',true);return;}
     awaySinceAt=0;if(!hasOpenTask()&&(presenceState==='away'||!queueIdleSinceAt))queueIdleSinceAt=Date.now();
     emitPresence(computePresenceState(),true);scheduleIdleBoundary();
   }
+  function recordPresenceTime(at,state){
+    const start=lastTick,delta=Math.min(60000,Math.max(0,at-start));lastTick=at;
+    if(delta<250||shiftState?.status!=='active'||!context||!activityOwned)return;
+    const deadline=state==='grace'?integrity?.graceDeadlineAt():0;
+    const grace=state==='grace'?(deadline?Math.min(delta,Math.max(0,Math.min(at,deadline)-Math.max(start,at-60000))):delta):0;
+    const unverified=state==='unverified'?delta:(state==='grace'?delta-grace:0);
+    send('cft-time',{payload:{...presencePayload(state,at),elapsedMs:delta,
+      activeMs:state==='active'?delta:0,idleMs:state==='idle'||state==='away'?delta:0,
+      awayMs:state==='away'?delta:0,searchingMs:state==='searching'?delta:0,
+      graceMs:grace,unverifiedMs:unverified}}).catch(()=>{});
+  }
+
   function tick(){
     const now=Date.now();
-    if(!route()||!context){lastTick=now;return;}
-    const delta=Math.min(60000,Math.max(0,now-lastTick));lastTick=now;
+    updateActivityOwner();
+    if(!route()||!context||!activityOwned){lastTick=now;return;}
+    // Work-tool transitions are settled separately to preserve short GRACE periods.
+
     if(!hasOpenTask()&&!queueIdleSinceAt)queueIdleSinceAt=now;
     if(isAwayNow()){if(!awaySinceAt)awaySinceAt=now;}else awaySinceAt=0;
-    const state=computePresenceState(now),presence=presencePayload(state,now);
-    send('cft-time',{payload:{...presence,elapsedMs:delta,activeMs:state==='active'?delta:0,idleMs:state==='idle'||state==='away'?delta:0,awayMs:state==='away'?delta:0}}).catch(()=>{});
+    searchPresence?.poll().then(s=>{if(s==='idle'||s==='locked')emitPresence(computePresenceState(),true);}).catch(()=>{});
+    const state=computePresenceState(now);
+    recordPresenceTime(now,presenceState==='grace'?'grace':state);
     updateLocalPresence(state,now);if(state==='active')scheduleIdleBoundary();
   }
   function initPresenceFromContext(){
@@ -148,7 +185,72 @@
     const totalSeconds=Math.floor((Number(ms)||0)/1000),h=Math.floor(totalSeconds/3600),m=Math.floor((totalSeconds%3600)/60),sec=totalSeconds%60;
     return h?`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${m}:${String(sec).padStart(2,'0')}`;
   }
-  function storePending(){if(pending)sessionStorage.setItem(PENDING,JSON.stringify(pending));else sessionStorage.removeItem(PENDING);}
+  function storePending(){
+    // Synchronous persistence before a new Submit can replace an older intent.
+    // Existing v2.3.x single-pending storage remains readable for upgrades.
+    try {
+      if(pending)sessionStorage.setItem(PENDING,JSON.stringify(pending));else sessionStorage.removeItem(PENDING);
+      if(receiptBacklog.length)sessionStorage.setItem(BACKLOG,JSON.stringify(receiptBacklog));
+      else sessionStorage.removeItem(BACKLOG);
+      return true;
+    }catch(error){message='Submit ledger storage unavailable; counts unchanged.';return false;}
+  }
+  function matchingShiftIntent(intent,now=Date.now(),maxAge=120000){
+    const started=Number(intent?.startedAt||0), age=now-started;
+    return Boolean(intent?.id && intent?.jobId && Number(intent.taskIndex)>0 &&
+      Number(intent.totalTasks)>=Number(intent.taskIndex) && Number.isFinite(started) &&
+      age>=0 && age<=maxAge && shiftState?.status==='active' &&
+      String(intent.date||'')===String(reportDate()) &&
+      String(intent.shiftSessionId||'')===String(shiftState?.sessionId||'') &&
+      Number(intent.shiftGeneration)===Number(shiftState?.generation));
+  }
+  function taskAdvancedAfterSubmit(intent,next){
+    return Boolean(next?.jobId && intent?.jobId &&
+      ((String(next.jobId)===String(intent.jobId) && Number(next.taskIndex)>Number(intent.taskIndex)) ||
+       String(next.jobId)!==String(intent.jobId)));
+  }
+  function canQueuePreviousSubmit(intent,next,now=Date.now()){
+    if(!matchingShiftIntent(intent,now) || !next ||
+       intent.pageInstanceId!==PAGE_INSTANCE_ID || !taskAdvancedAfterSubmit(intent,next) ||
+       now-Number(intent.startedAt)<150 ||
+       (skipIntent && String(skipIntent.jobId)===String(intent.jobId) && Number(skipIntent.taskIndex)===Number(intent.taskIndex)))return false;
+    const text=document.body?.innerText||document.body?.textContent||'';
+    return !/submission failed|unable to submit|required field|failed to submit/i.test(text);
+  }
+  async function drainSubmissionLedger(){
+    if(backlogProcessing || !receiptBacklog.length || !context || shiftState?.status!=='active')return;
+    backlogProcessing=true;
+    try{
+      // One acknowledged item at a time. Never drop a record on a message error,
+      // background restart or failed chrome.storage.local write.
+      for(const intent of [...receiptBacklog]){
+        if(!receiptBacklog.includes(intent))continue;
+        if(!matchingShiftIntent(intent,Date.now(),Infinity) || !intent.observedNext ||
+           !taskAdvancedAfterSubmit(intent,intent.observedNext)){
+          // Old-shift entries remain quarantined, not replayed into a new shift.
+          if(String(intent.shiftSessionId||'')!==String(shiftState?.sessionId||'') ||
+             Number(intent.shiftGeneration)!==Number(shiftState?.generation) ||
+             String(intent.date||'')!==String(reportDate()))continue;
+          // An observed successful transition must NOT be discarded because
+          // the network was unavailable for several minutes. Retain it until
+          // the same shift safely acknowledges it; other-shift data is inert.
+          continue;
+        }
+        try{
+          if(intent.ready!==true){
+            const ack=await event('submit-pending',intent);
+            if(!ack?.ok || ack.frozen)continue;
+            intent.date=ack.date||intent.date;intent.ready=true;
+            if(!storePending())continue;
+          }
+          await event('submit-confirmed',{...intent,confirmedBy:'queued-verified-task-transition'});
+          receiptBacklog=receiptBacklog.filter(x=>x!==intent);
+          storePending();
+          message='Submission counted.';
+        }catch(_){/* Keep original ID for guarded automatic retry. */}
+      }
+    }finally{backlogProcessing=false;}
+  }
   // An accepted Confirmation Submit can return to Jobs (even before the last
   // numbered task when other labelers took the rest). That is not Exit/Skip.
   // Only a recent, explicitly captured and background-accepted Submit can count.
@@ -275,7 +377,7 @@
     if(!route())await send('cft-mode-leave').catch(()=>{});
     return true;
   }
-  async function event(type,p){if(type==='submit-confirmed'){try{Promise.resolve(window.TrinoTimeQCEfficiency?.flush()).catch(()=>{});}catch(_){}}const r=await send('cft-event',{event:{...p,type,eventId:p.id+'-'+type,timestamp:Date.now()}});if(!r?.ok||r?.frozen)throw new Error(r?.error||(r?.frozen?'Shift not active; submission not accepted.':'Counter unavailable'));return r;}
+  async function event(type,p){if(type==='submit-confirmed' && p?.confirmedBy!=='queued-verified-task-transition'){try{Promise.resolve(window.TrinoTimeQCEfficiency?.flush()).catch(()=>{});}catch(_){}}const r=await send('cft-event',{event:{...p,type,eventId:p.id+'-'+type,timestamp:Date.now()}});if(!r?.ok||r?.frozen)throw new Error(r?.error||(r?.frozen?'Shift not active; submission not accepted.':'Counter unavailable'));return r;}
   function build(){
     if(root||!document.body)return;
     root=document.createElement('aside');root.id=ID;root.setAttribute('aria-label','Confirmation Activity Tracker');
@@ -296,7 +398,7 @@
     const shiftStatus=String(shiftState?.status||context.shift?.status||'not_clocked_in');
     const bridgeName=context.bridge?.actor?.name||'Agent',status=shiftStatus==='completed'?'Final totals locked · Time In again to start a new session':shiftStatus==='not_clocked_in'?'Tracker waits for TrinoTime Time In':message||(pending?'Waiting for submission…':context.sync?.lastError||(context.bridge?`Connected · ${bridgeName}`:'Not connected'));
     const state=shiftStatus==='active'?String(s.trackerState||presenceState||'idle').toLowerCase():'offline',focusedIdle=Math.max(0,(Number(s.idleMs)||0)-(Number(s.awayMs)||0));
-    const stateTone=state==='active'?{bg:'#E7F6EE',fg:'#177245',dot:'#1CA86A'}:state==='idle'?{bg:'#FFF4DB',fg:'#9A6700',dot:'#F0B429'}:state==='away'?{bg:'#EEF2F7',fg:'#445269',dot:'#94A3B8'}:{bg:'#EEF2F7',fg:'#445269',dot:'#94A3B8'};
+    const stateTone=state==='grace'?{bg:'#E9F4FF',fg:'#1C5AA6',dot:'#2B8CEE'}:state==='unverified'?{bg:'#FFF4DB',fg:'#9A6700',dot:'#F0B429'}:state==='searching'?{bg:'#E9F4FF',fg:'#1C5AA6',dot:'#2B8CEE'}:state==='active'?{bg:'#E7F6EE',fg:'#177245',dot:'#1CA86A'}:state==='idle'?{bg:'#FFF4DB',fg:'#9A6700',dot:'#F0B429'}:state==='away'?{bg:'#EEF2F7',fg:'#445269',dot:'#94A3B8'}:{bg:'#EEF2F7',fg:'#445269',dot:'#94A3B8'};
     const stateLabel=shiftStatus==='completed'?'SHIFT COMPLETE':shiftStatus==='not_clocked_in'?'TIME IN REQUIRED':state==='active'?'ACTIVE':state==='idle'?'IDLE':state==='away'?'AWAY':state.toUpperCase();
     const syncAge=context.sync?.lastSyncAt?Math.max(0,Date.now()-Number(context.sync.lastSyncAt)):Infinity;
     const syncLabel=context.bridge?(context.sync?.lastError?'SYNC ERROR':syncAge<30000?'LIVE':'SYNC'):'LOCAL';
@@ -309,7 +411,7 @@
       body.innerHTML=`
         <div data-tt-micro-content style="height:44px;box-sizing:border-box;display:flex;align-items:center;padding:5px 66px 5px 8px;background:linear-gradient(180deg,#ffffff 0%,#f7f9fc 100%);">
           <div style="display:flex;flex-direction:column;justify-content:center;gap:5px;min-width:0;width:100%;overflow:hidden;">
-            <span data-tt-title title="${fullLabel}" style="display:block;overflow:hidden;text-overflow:ellipsis;font:850 10px/1 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.03em;color:#0F2E6D;">CONFIRM <span style="color:#C2410C;font-size:7px;letter-spacing:0">STG</span></span>
+            <span data-tt-title title="${fullLabel}" style="display:block;overflow:hidden;text-overflow:ellipsis;font:850 10px/1 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.03em;color:#0F2E6D;">CONFIRM <span style="color:#C2410C;font-size:7px;letter-spacing:0">PROD</span></span>
             <span style="display:flex;align-items:center;gap:4px;min-width:0;white-space:nowrap;font:750 9px/1 system-ui,-apple-system,Segoe UI,sans-serif;color:${stateTone.fg};">
               <span style="width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:${stateTone.dot};"></span>
               <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;">${esc(miniState)} · ${esc(miniSync)}</span>
@@ -323,7 +425,7 @@
       <div style="padding:9px 9px 7px;background:linear-gradient(180deg,#ffffff 0%,#f7f9fc 100%);border-bottom:1px solid rgba(15,23,42,.08)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:7px;padding-right:0;">
           <div style="min-width:0;display:flex;flex-direction:column;gap:5px;">
-            <span data-tt-title style="font:800 11px/1 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.09em;color:#0F2E6D;white-space:nowrap;">CONFIRMATION <span style="color:#c2410c;font-size:8px;letter-spacing:.04em">STG</span></span>
+            <span data-tt-title style="font:800 11px/1 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.09em;color:#0F2E6D;white-space:nowrap;">CONFIRMATION <span style="color:#c2410c;font-size:8px;letter-spacing:.04em">PROD</span></span>
             <div style="display:flex;gap:5px;align-items:center;">
               <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 6px;border-radius:999px;background:${stateTone.bg};color:${stateTone.fg};font:800 9px/1.1 system-ui,-apple-system,Segoe UI,sans-serif;"><span style="width:6px;height:6px;border-radius:999px;background:${stateTone.dot};"></span>${stateLabel}</span>
               <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 6px;border-radius:999px;background:${syncTone.bg};color:${syncTone.fg};font:800 9px/1.1 system-ui,-apple-system,Segoe UI,sans-serif;"><span style="width:6px;height:6px;border-radius:999px;background:${syncTone.dot};"></span>${syncLabel}</span>
@@ -347,16 +449,24 @@
           </div>
           <div style="text-align:right;flex:none;">
             <div style="color:#334155;font:700 8px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;">Active ${fmt(s.activeMs||0)}</div>
+            <div style="margin-top:2px;color:#1C5AA6;font:700 8px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;">Search ${fmt(s.searchingMs||0)}</div>
+            <div style="margin-top:2px;color:#1C5AA6;font:700 8px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;">Grace ${fmt(s.graceMs||0)}</div>
+            <div style="margin-top:2px;color:#9A6700;font:700 8px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;" title="Not verified by Augmoto interactions; not proof of misconduct">Unverified ${fmt(s.unverifiedMs||0)}</div>
             <div style="margin-top:2px;color:#64748B;font:700 8px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;">Idle ${fmt(focusedIdle)}</div>
             <div style="margin-top:2px;color:#64748B;font:700 8px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;">Away ${fmt(s.awayMs||0)}</div>
           </div>
         </div>
       </div>`;
   }
-  async function refresh(){context=await send('cft-context');if(!context?.summary)throw Error('Counter unavailable');shiftState=context.shift||shiftState;if(shiftState?.status!=='active'){pending=null;skipIntent=null;storePending();presenceState='offline';}initPresenceFromContext();window.TrinoTimeQCEfficiency?.prime();render();}
+  async function refresh(){context=await send('cft-context');if(!context?.summary)throw Error('Counter unavailable');lastContextRefreshAt=Date.now();shiftState=context.shift||shiftState;if(shiftState?.status!=='active'){pending=null;skipIntent=null;storePending();presenceState='offline';}initPresenceFromContext();window.TrinoTimeQCEfficiency?.prime();render();}
   async function scan(){
     if(busy)return;busy=true;
+    // Keep the fast Submit/transition paths but don't continuously fetch and
+    // repaint an unchanged context on every heartbeat or DOM mutation.
+    const taskSignatureBeforeScan=lastAnnouncedJob;
+    const hadPendingReceipt=Boolean(pending||receiptBacklog.length);
     try{
+      if(receiptBacklog.length)await drainSubmissionLedger();
       if(pending?.jobId && !pending.ready)await restoreConfirmationQueueReceipt();
       if(pending?.jobId && recentConfirmationSubmitPending() && !header()){
         await verifyConfirmationQueueLanding();
@@ -368,7 +478,9 @@
           await event('submit-cancelled',pending).catch(()=>{});
           pending=null;storePending();
         }
-        lastTick=Date.now();clearIdleBoundary();render();return;
+        lastTick=Date.now();clearIdleBoundary();
+        if(root&&!root.hidden)render();
+        return;
       }
       if(shiftState?.status!=='active'){pending=null;skipIntent=null;liveHeader=null;lastAnnouncedJob='';missingHeaderSince=0;resumePresence=null;current={jobId:'',taskIndex:0,totalTasks:0};presenceState='offline';lastTick=Date.now();clearIdleBoundary();storePending();render();return;}
       const h=header();
@@ -376,11 +488,13 @@
         const previous={...current};
         // If the pending receipt's first acknowledgment was interrupted,
         // re-acknowledge it automatically only after a verified task change.
-        if(pending?.ready===false)await restoreConfirmationTransitionReceipt(previous,h);
+        if(pending?.ready===false)await restoreConfirmationTransitionReceipt(
+          pending?.pageInstanceId===PAGE_INSTANCE_ID ? {jobId:pending.jobId,taskIndex:pending.taskIndex} : previous,h);
         liveHeader=h;missingHeaderSince=0;const signature=`${h.jobId}|${h.taskIndex}|${h.totalTasks}`;
         const sameJobAdvanced=previous.jobId&&previous.taskIndex&&previous.jobId===h.jobId&&Number(h.taskIndex)>Number(previous.taskIndex);
         const pendingMatchesCurrent=Boolean(verifiedConfirmationIntent(pending)&&
-          String(pending.jobId)===String(previous.jobId)&&Number(pending.taskIndex)===Number(previous.taskIndex));
+          ((String(pending.jobId)===String(previous.jobId)&&Number(pending.taskIndex)===Number(previous.taskIndex)) ||
+           (pending.pageInstanceId===PAGE_INSTANCE_ID && taskAdvancedAfterSubmit(pending,h))));
         const pendingAdvancedSameJob=pendingMatchesCurrent&&h.jobId===pending.jobId&&Number(h.taskIndex)>Number(pending.taskIndex);
         const pendingAdvancedToNewJob=pendingMatchesCurrent&&Boolean(h.jobId)&&h.jobId!==pending.jobId;
         const skipWasExplicit=skipIntent&&skipIntent.jobId===previous.jobId&&Number(skipIntent.taskIndex)===Number(previous.taskIndex)&&Date.now()-Number(skipIntent.at||0)<15000;
@@ -390,15 +504,16 @@
         // loading gap between those states, so the explicit pending Submit is
         // authoritative here; HUD expansion/minimization is irrelevant.
         if(pendingMatchesCurrent&&(pendingAdvancedSameJob||pendingAdvancedToNewJob)){
+          const intent=pending;
           if(skipWasExplicit){
-            await event('submit-cancelled',pending).catch(()=>{});
+            await event('submit-cancelled',intent).catch(()=>{});
             await event('skip-confirmed',{...previous,date:reportDate(),id:crypto.randomUUID(),trackerState:computePresenceState(),lastActivityAt:lastInteraction,idleThresholdMs:MANAGED_IDLE_MS}).catch(()=>{});
             skipIntent=null;
           }else{
-            await event('submit-confirmed',{...pending,confirmedBy:pendingAdvancedToNewJob?'new-job-transition':'task-advance'});
+            await event('submit-confirmed',{...intent,confirmedBy:pendingAdvancedToNewJob?'new-job-transition':'task-advance'});
             message='Submission counted.';
           }
-          pending=null;storePending();
+          if(pending===intent){pending=null;storePending();}
         }else if(sameJobAdvanced&&!pending){
           if(skipWasExplicit){
             await event('skip-confirmed',{...previous,date:reportDate(),id:crypto.randomUUID(),trackerState:computePresenceState(),lastActivityAt:lastInteraction,idleThresholdMs:MANAGED_IDLE_MS}).catch(()=>{});
@@ -452,7 +567,12 @@
         if(success||finalSuccess){await event('submit-confirmed',pending);pending=null;storePending();message='Submission counted.';}
         else if(failed||Date.now()-pending.startedAt>120000){await event('submit-cancelled',pending);pending=null;storePending();message=failed?'Submission failed; count unchanged.':'Submission could not be verified; count unchanged.';}
       }
-      await refresh();
+      // A changed task, Submit receipt, or real storage update always wins.
+      // Otherwise a bounded refresh keeps the HUD fresh without hammering
+      // chrome.storage, DOM layout, and the background worker every 500ms.
+      if(!context || hadPendingReceipt || pending || receiptBacklog.length ||
+         lastAnnouncedJob!==taskSignatureBeforeScan ||
+         Date.now()-lastContextRefreshAt>=4000) await refresh();
     }catch(error){message=error.message;render();}finally{busy=false;}
   }
   function confirmationControlLabel(button){
@@ -462,7 +582,13 @@
     return '';
   }
   function isConfirmationSubmitControl(button){
-    return /^(?:submit|submit task|submit job|submit confirmation|submit & next|submit and next)$/i.test(confirmationControlLabel(button));
+    if (!button) return false;
+    // Visible child icons/badges can override an exact accessible "Submit"
+    // label; check each source rather than returning the first nonempty text.
+    const labels=[button.innerText,button.textContent,button.value,
+      button.getAttribute?.('aria-label'),button.getAttribute?.('title')];
+    return labels.some(raw => /^(?:submit|submit task|submit job|submit confirmation|submit & next|submit and next)(?:\s*\(enter\))?$/i.test(
+      String(raw||'').replace(/\s+/g,' ').trim()));
   }
   document.addEventListener('click',async e=>{
     // As with Coverage, only genuine user actions may arm a Submit receipt.
@@ -474,13 +600,32 @@
     await captureExplicitConfirmationSubmit();
   },true);
   async function captureExplicitConfirmationSubmit(){
-    if(pending||!context||!route()||shiftState?.status!=='active')return;
+    if(!context||!route()||shiftState?.status!=='active')return;
     const h=header();if(!h)return;
-    pending={...h,date:context.today,id:crypto.randomUUID(),pageInstanceId:PAGE_INSTANCE_ID,startedAt:Date.now(),ready:false,
+    if(pending){
+      // A second click on the SAME task is not a new submission. Only a
+      // different task visibly reached after a trusted Submit can proceed.
+      if(String(pending.jobId)===String(h.jobId) && Number(pending.taskIndex)===Number(h.taskIndex))return;
+      if(receiptBacklog.length>=BACKLOG_LIMIT || !canQueuePreviousSubmit(pending,h)){
+        message='Previous Submit still verifying; no new count recorded.';render();return;
+      }
+      const previous=pending;
+      receiptBacklog.push({...previous,observedNext:{...h},transitionObservedAt:Date.now()});
+      pending=null;
+      if(!storePending()){
+        // No silent loss on storage failure; revert to the original receipt.
+        receiptBacklog.pop();pending=previous;storePending();return;
+      }
+      // Do not await a slow old task acknowledgment before capturing the next.
+      setTimeout(()=>drainSubmissionLedger().catch(()=>{}),0);
+    }
+    const intent={...h,date:reportDate(),id:crypto.randomUUID(),pageInstanceId:PAGE_INSTANCE_ID,startedAt:Date.now(),ready:false,
       shiftSessionId:shiftState?.sessionId||'',shiftGeneration:Number(shiftState?.generation)||0};
-    storePending();render();
+    pending=intent;
+    if(!storePending()){pending=null;storePending();return;}
+    render();
     try{
-      const p=pending,r=await event('submit-pending',p);
+      const p=intent,r=await event('submit-pending',p);
       if(pending===p){pending.date=r.date||pending.date;pending.ready=Boolean(r.ok);storePending();setTimeout(()=>scan().catch(()=>{}),0);}
     }catch(error){
       // A service-worker restart or interrupted message can occur even if
@@ -493,24 +638,30 @@
   // A keyboard Enter/form submit may not produce a click on custom workflows.
   // This captures the same explicit user intent without double-counting it.
   document.addEventListener('submit',e=>{
-    if(e?.isTrusted===false||!route()||!context||pending)return;
+    if(e?.isTrusted===false||!route()||!context)return;
     const button=e.submitter;
     if(!button||button.closest('[role="dialog"],dialog')||!isConfirmationSubmitControl(button))return;
     captureExplicitConfirmationSubmit().catch(()=>{});
   },true);
   document.addEventListener('keydown',noteActivity,true);
+  for(const e of ['input','change'])document.addEventListener(e,noteActivity,true);
   for(const name of ['pointerdown','scroll','touchstart'])document.addEventListener(name,noteActivity,{capture:true,passive:true});
   document.addEventListener('visibilitychange',handleVisibilityOrFocus);
+  window.addEventListener('pagehide',()=>{recordPresenceTime(Date.now(),presenceState);},true);
   window.addEventListener('focus',handleVisibilityOrFocus,true);window.addEventListener('focus',()=>send('cft-refresh-shift').then(()=>refresh()).catch(()=>{}),true);window.addEventListener('blur',handleVisibilityOrFocus,true);
   (async()=>{
     // Same continuity rule as Coverage: restore persisted state before the first
     // DOM scan so refresh never paints or tracks from a blank local session.
     await hydrateLocalConfirmationSnapshot();
+    searchPresence?.poll(true).catch(()=>{});
     try{const c=await send('cft-context');if(c?.summary){context=c;shiftState=c.shift||shiftState;expanded=c?.settings?.hudExpanded!==false;presenceInitialized=false;initPresenceFromContext();}}catch(_){}
     await scan();
+    updateActivityOwner(true);
     setTimeout(()=>{if(route()&&!hasOpenTask())emitPresence(computePresenceState(),true);},350);
   })().catch(()=>{});
   document.addEventListener('tt-qc-mode-change',e=>{
+    recordPresenceTime(Date.now(),presenceState);
+    updateActivityOwner(true);
     if(e.detail?.previous==='confirmation'&&e.detail.mode!=='confirmation'){
       // Leave the final Submit armed until a verified queue transition. A
       // routine route change must not silently discard a submitted last task.
@@ -524,17 +675,28 @@
     }
     if(e.detail?.mode==='confirmation'){presenceInitialized=false;lastTick=Date.now();refresh().then(()=>scan()).catch(()=>{});}else{render();scan();}
   });
-  let scanWake=null;
+  // DOM changes are the fast path. Coalesce bursts without resetting the
+  // deadline on each React mutation (which could starve a real transition).
+  let scanWake=null, lastMutationScanAt=0;
   try{
     const observer=new MutationObserver(muts=>{
       if(!route())return;
+      if(document.hidden&&!pending&&!receiptBacklog.length)return;
+      // Avoid inspecting a second mutation batch while one scan is queued.
+      if(scanWake!==null)return;
       if(muts.some(m=>!(m.target instanceof Element&&m.target.closest?.('#'+ID)))){
-        if(scanWake)clearTimeout(scanWake);
-        scanWake=setTimeout(()=>{scanWake=null;scan();},90);
+        const delay=Math.max(90,300-(Date.now()-lastMutationScanAt));
+        scanWake=setTimeout(()=>{scanWake=null;lastMutationScanAt=Date.now();scan();},delay);
       }
     });
     observer.observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['disabled','aria-disabled','class','style']});
   }catch(_){}
-  setInterval(scan,500);setInterval(tick,15000);
+  // Safety fallback for pages that change without observer-visible mutations.
+  // Submit verification still gets the immediate event and mutation scans.
+  setInterval(()=>{
+    if((document.hidden||!route())&&!pending&&!receiptBacklog.length)return;
+    scan();
+  },1500);
+  setInterval(tick,15000);
   chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'&&(changes.cftSettingsV2||changes.cftConfirmationDataV2||changes.cftSyncStateV2||changes.cftTrinoTimeBridgeV2||changes.cftShiftSessionV1))refresh().then(()=>scan()).catch(()=>{});});
 })();

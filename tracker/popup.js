@@ -88,8 +88,8 @@ function setConnectState(connected){
  button.dataset.connected=connected?'true':'false';
  button.classList.toggle('isConnected',connected);
  label.textContent=connected?CONNECTED_LABEL:CONNECT_LABEL;
- button.title=connected?'Reconnect both STAGING QA bridges when needed.':'Connect Coverage and Confirmation to TrinoTime STAGING QA.';
- setConnectionVisual(connected?'connected':'disconnected',connected?'Connected to both':'Not connected',connected?'CONNECTED':'CONNECT', 'Coverage + Confirmation · STAGING QA');
+ button.title=connected?'Reconnect both production bridges when needed.':'Connect Coverage and Confirmation to TrinoTime production.';
+ setConnectionVisual(connected?'connected':'disconnected',connected?'Connected to both':'Not connected',connected?'CONNECTED':'CONNECT', 'Coverage + Confirmation · production');
 }
 
 async function refreshConnectionState({announce=true}={}){
@@ -106,14 +106,14 @@ async function refreshConnectionState({announce=true}={}){
   const both=coverageConnected&&confirmationConnected&&identitiesMatch;
   setConnectState(both);
   if(both){
-   setConnectionVisual('connected','Connected to both','CONNECTED',`Agent · ${coverageAgent||confirmationAgent||'signed in'} · STAGING QA`);
+   setConnectionVisual('connected','Connected to both','CONNECTED',`Agent · ${coverageAgent||confirmationAgent||'signed in'} · production`);
   }else if(coverageConnected&&confirmationConnected&&!identitiesMatch){
    setConnectionVisual('error','Account mismatch','CHECK', 'Reconnect both workflows with the same TrinoTime Agent account');
   }else if(coverageConnected||confirmationConnected){
    setConnectionVisual('partial','Connection incomplete','PARTIAL',`Coverage ${coverageConnected?'connected':'not connected'} · Confirmation ${confirmationConnected?'connected':'not connected'}`);
   }
   renderSyncHealth(coverage,confirmation);
-  // STAGING QA Submit journey: captured clicks are not completed tasks.
+  // Production Submit journey: captured clicks are not completed tasks.
   // Only per-task, verified server receipts may be labeled acknowledged.
   try {
    const key='catSubmitAttemptsV2259';
@@ -164,7 +164,7 @@ async function refreshConnectionState({announce=true}={}){
   return both;
  }catch(_){
   setConnectState(false);
-  setConnectionVisual('error','Unable to check connection','RETRY','Open TrinoTime STAGING QA and try Connect both');
+  setConnectionVisual('error','Unable to check connection','RETRY','Open TrinoTime production and try Connect both');
   renderSyncHealth(null,null);
   if(announce)$('status').textContent='Connection check failed. Your local Tracker data is preserved.';
   return false;
@@ -184,10 +184,10 @@ $('connect').onclick=async()=>{
  const button=$('connect');
  const wasConnected=button.dataset.connected==='true';
  button.disabled=true;
- $('status').textContent=wasConnected?'Refreshing both TrinoTime STAGING QA connections…':'Connecting Coverage and Confirmation to TrinoTime STAGING QA…';
+ $('status').textContent=wasConnected?'Refreshing both TrinoTime production connections…':'Connecting Coverage and Confirmation to TrinoTime production…';
  try{
   const a=await chrome.runtime.sendMessage({type:'cat-pair-trinotime'});if(!a?.ok)throw Error(a?.error||'Coverage connection failed');
-  const b=await chrome.runtime.sendMessage({type:'cft-pair-trinotime'});if(!b?.ok)throw Error('STAGING QA Coverage connected. Confirmation: '+(b?.error||'connection failed'));
+  const b=await chrome.runtime.sendMessage({type:'cft-pair-trinotime'});if(!b?.ok)throw Error('production Coverage connected. Confirmation: '+(b?.error||'connection failed'));
   await refreshConnectionState({announce:true});
  }catch(e){
   $('status').textContent=e.message;

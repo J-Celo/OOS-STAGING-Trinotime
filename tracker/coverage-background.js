@@ -20,18 +20,19 @@ const CAT = Object.freeze({
 const AUGMOTO = 'https://labeling-tools.augmoto.com';
 const TRINOTIME = 'https://oostrinotime-staging-qa.trinoadmin.workers.dev';
 const BUILD_CHANNEL = 'staging-qa';
-const EXT_VERSION = '2.2.62';
+const EXT_VERSION = '2.2.63';
 const MAX_DAYS = 45;
 const MAX_RECENT_EVENTS = 4000;
 const MANAGED_IDLE_MINUTES = 5;
 const MANAGED_IDLE_MS = MANAGED_IDLE_MINUTES * 60 * 1000;
 const SUMMARY_PENDING_KEY = '__summary__';
-const VALID_TRACKER_STATES = new Set(['active', 'idle', 'away', 'paused', 'ready', 'offline', 'unknown']);
+const VALID_TRACKER_STATES = new Set(['active', 'idle', 'away', 'searching', 'grace', 'unverified', 'paused', 'ready', 'offline', 'unknown']);
 
 let writeChain = Promise.resolve();
 let syncInFlight = null;
 let lastSyncAttemptAt = 0;
 let syncWakeTimer = null;
+let syncWakeDueAt = 0;
 let syncFollowUpRequested = false;
 let syncBackoffUntil = 0;
 let syncFailureCount = 0;
@@ -88,7 +89,7 @@ function cleanSettings(raw) {
 function blankSummary() {
   return {
     submitted: 0, created: 0, blurred: 0, deleted: 0, noMatch: 0, productMatched: 0,
-    activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+    activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
     currentJob: '', currentTask: 0, totalTasks: 0,
     pendingSubmission: false, trackerState: 'offline',
     lastActivityAt: 0, idleSinceAt: 0, awaySinceAt: 0, presenceUpdatedAt: 0,
@@ -114,12 +115,14 @@ function ensureJob(day, jobId, totalTasks = 0, ts = Date.now()) {
   if (!day.jobs[jobId]) {
     day.jobs[jobId] = {
       jobId, submitted: 0, created: 0, blurred: 0, deleted: 0, noMatch: 0, productMatched: 0,
-      activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+      activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
       lastTask: 0, totalTasks: num(totalTasks, 100000), status: 'active', firstSeenAt: ts, lastSeenAt: ts
     };
   }
   const j = day.jobs[jobId];
   j.awayMs = num(j.awayMs);
+  j.searchingMs = num(j.searchingMs);
+  j.graceMs = num(j.graceMs); j.unverifiedMs = num(j.unverifiedMs);
   j.totalTasks = Math.max(num(j.totalTasks, 100000), num(totalTasks, 100000));
   j.lastSeenAt = Math.max(epochMs(j.lastSeenAt), epochMs(ts));
   return j;
@@ -131,7 +134,7 @@ function ensureTask(day, jobId, taskIndex, totalTasks = 0, ts = Date.now()) {
     day.tasks[key] = {
       jobId, taskIndex: num(taskIndex, 100000), totalTasks: num(totalTasks, 100000),
       created: 0, blurred: 0, deleted: 0, noMatch: 0, productMatched: 0,
-      activeMs: 0, idleMs: 0, awayMs: 0, elapsedMs: 0,
+      activeMs: 0, idleMs: 0, awayMs: 0, searchingMs: 0, graceMs: 0, unverifiedMs: 0, elapsedMs: 0,
       submitted: false, skipped: false, status: 'active',
       trackerState: 'active', lastActivityAt: ts, idleSinceAt: 0, awaySinceAt: 0, idleThresholdMs: MANAGED_IDLE_MS,
       startedAt: ts, endedAt: 0, updatedAt: ts
@@ -140,6 +143,8 @@ function ensureTask(day, jobId, taskIndex, totalTasks = 0, ts = Date.now()) {
   const t = day.tasks[key];
   t.noMatchAreas = t.noMatchAreas && typeof t.noMatchAreas === 'object' && !Array.isArray(t.noMatchAreas) ? t.noMatchAreas : {};
   t.awayMs = num(t.awayMs);
+  t.searchingMs = num(t.searchingMs);
+  t.graceMs = num(t.graceMs); t.unverifiedMs = num(t.unverifiedMs);
   t.totalTasks = Math.max(num(t.totalTasks, 100000), num(totalTasks, 100000));
   t.idleThresholdMs = MANAGED_IDLE_MS;
   t.updatedAt = Math.max(epochMs(t.updatedAt), epochMs(ts));
@@ -280,12 +285,12 @@ function shiftIsActive(core) { return core?.shift?.status === 'active' && Boolea
 function reportDateForCore(core, ts = Date.now()) { return core?.shift?.reportDate || dateKey(ts); }
 function localSummaryHasActivity(summary) {
   const s=summary||{};
-  return ['submitted','created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','elapsedMs'].some(k=>num(s[k])>0);
+  return ['submitted','created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs'].some(k=>num(s[k])>0);
 }
 function applyAuthoritativeCoverageSummary(day, remote) {
   if (!remote || typeof remote !== 'object') return;
   const s=day.summary={...blankSummary(),...day.summary};
-  for (const key of ['submitted','created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','elapsedMs','currentTask','totalTasks','lastActivityAt','idleSinceAt','awaySinceAt','presenceUpdatedAt','clientSequence']) {
+  for (const key of ['submitted','created','blurred','deleted','noMatch','productMatched','activeMs','idleMs','awayMs','searchingMs','graceMs','unverifiedMs','elapsedMs','currentTask','totalTasks','lastActivityAt','idleSinceAt','awaySinceAt','presenceUpdatedAt','clientSequence']) {
     if (remote[key] !== undefined) s[key]=num(remote[key],Number.MAX_SAFE_INTEGER);
   }
   s.submittedManualAdjustment=Number.isFinite(Number(remote.submittedManualAdjustment))?Math.trunc(Number(remote.submittedManualAdjustment)):0;
@@ -460,6 +465,10 @@ async function diag(state, message, extra = {}) {
 }
 
 function applyPresenceFields(target, source, ts) {
+  // A delayed outgoing-tab packet may still carry its final elapsed time,
+  // but must not overwrite a newer foreground tab's presence header.
+  const incomingAt = epochMs(source.presenceUpdatedAt || ts);
+  if (epochMs(target.presenceUpdatedAt) > incomingAt) return;
   const state = trackerState(source.trackerState, target.trackerState || 'unknown');
   const lastActivityAt = epochMs(source.lastActivityAt || target.lastActivityAt || ts);
   const explicitIdleSinceAt = epochMs(source.idleSinceAt);
@@ -488,19 +497,23 @@ async function applyEvent(event) {
     const ti = num(event.taskIndex || s.currentTask, 100000);
     const tt = num(event.totalTasks || s.totalTasks, 100000);
 
-    if (jobId) { s.currentJob = jobId; s.currentTask = ti; s.totalTasks = tt || s.totalTasks; }
-    applyPresenceFields(s, { ...event, lastActivityAt: event.lastActivityAt || ts }, ts);
+    // An older queued receipt must update its OWN task, never rewind the
+    // active header or turn a delayed acknowledgment into fresh activity.
+    const receiptEvent = ['submit-pending','submit-cancelled','submit-confirmed'].includes(String(event.type||''));
+    if (jobId && !receiptEvent) { s.currentJob = jobId; s.currentTask = ti; s.totalTasks = tt || s.totalTasks; }
+    if (!receiptEvent) applyPresenceFields(s, { ...event, lastActivityAt: event.lastActivityAt || ts }, ts);
 
     const job = jobId ? ensureJob(day, jobId, tt, ts) : null;
     const task = jobId && ti ? ensureTask(day, jobId, ti, tt, ts) : null;
-    if (task) applyPresenceFields(task, event, ts);
+    if (task && !receiptEvent) applyPresenceFields(task, event, ts);
 
     let countedSubmission = false;
     let deltaKey = '';
     switch (String(event.type || '')) {
       case 'task-start':
         if (task) {
-          task.status = 'active'; task.updatedAt = ts;
+          // A delayed task-start must not reopen an already submitted task.
+          if (!task.submitted) task.status = 'active'; task.updatedAt = ts;
           job.lastTask = Math.max(num(job.lastTask), ti); job.status = 'active';
           pendingAdd(core.pending, date, taskKey(jobId, ti));
         }
@@ -598,11 +611,14 @@ async function applyEvent(event) {
         break;
       }
       case 'submit-pending':
-        s.pendingSubmission = true;
-        if (task) { task.status = 'active'; task.updatedAt = ts; pendingAdd(core.pending, date, taskKey(jobId, ti)); }
+        // A delayed pending receipt must never reopen a verified task.
+        if (task && !task.submitted) task.submitPending = true;
+        s.pendingSubmission = Object.values(day.tasks).some(t=>t.submitPending===true);
+        if (task) { if (!task.submitted) task.status = 'active'; task.updatedAt = ts; pendingAdd(core.pending, date, taskKey(jobId, ti)); }
         break;
       case 'submit-cancelled':
-        s.pendingSubmission = false;
+        if (task) task.submitPending = false;
+        s.pendingSubmission = Object.values(day.tasks).some(t=>t.submitPending===true);
         if (task) { task.updatedAt = ts; pendingAdd(core.pending, date, taskKey(jobId, ti)); }
         break;
       case 'submit-confirmed':
@@ -612,7 +628,8 @@ async function applyEvent(event) {
           s.submitted++; if (job) job.submitted++;
           countedSubmission = true;
         }
-        s.pendingSubmission = false;
+        if (task) task.submitPending = false;
+        s.pendingSubmission = Object.values(day.tasks).some(t=>t.submitPending===true);
         pendingAdd(core.pending, date, taskKey(jobId, ti));
         break;
       case 'skip-confirmed':
@@ -805,7 +822,7 @@ async function applyPresence(payload) {
     const core = await readCore(); if(!shiftIsActive(core))return {ok:true,frozen:true,shift:core.shift};
     const ts = epochMs(payload.timestamp) || Date.now(), date=reportDateForCore(core,ts);
     const day = ensureDate(core.data, date), s = day.summary;
-    const jobId=String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000);
+    const jobId=payload.trackerState==='searching'?'':String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000);
     if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;} applyPresenceFields(s,payload,ts);
     const job=jobId?ensureJob(day,jobId,tt,ts):null,task=jobId&&ti?ensureTask(day,jobId,ti,tt,ts):null;
     if(job)job.lastSeenAt=ts;if(task){applyPresenceFields(task,payload,ts);task.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}
@@ -818,12 +835,12 @@ async function applyTime(payload) {
   return queue(async () => {
     const core=await readCore();if(!shiftIsActive(core))return {ok:true,frozen:true,shift:core.shift};
     const ts=epochMs(payload.timestamp)||Date.now(),date=reportDateForCore(core,ts),day=ensureDate(core.data,date),s=day.summary;
-    const jobId=String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000);
-    const active=num(payload.activeMs,60000),idle=num(payload.idleMs,60000),away=num(payload.awayMs,60000),elapsed=num(payload.elapsedMs,60000);
-    if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;}s.activeMs+=active;s.idleMs+=idle;s.awayMs+=away;s.elapsedMs+=elapsed;applyPresenceFields(s,payload,ts);
+    const jobId=payload.trackerState==='searching'?'':String(payload.jobId||s.currentJob||''),ti=num(payload.taskIndex||s.currentTask,100000),tt=num(payload.totalTasks||s.totalTasks,100000);
+    const active=num(payload.activeMs,60000),idle=num(payload.idleMs,60000),away=num(payload.awayMs,60000),searching=num(payload.searchingMs,60000),grace=num(payload.graceMs,60000),unverified=num(payload.unverifiedMs,60000),elapsed=num(payload.elapsedMs,60000);
+    if(jobId){s.currentJob=jobId;s.currentTask=ti;s.totalTasks=tt||s.totalTasks;}s.activeMs+=active;s.idleMs+=idle;s.awayMs+=away;s.searchingMs=num(s.searchingMs)+searching;s.graceMs=num(s.graceMs)+grace;s.unverifiedMs=num(s.unverifiedMs)+unverified;s.elapsedMs+=elapsed;applyPresenceFields(s,payload,ts);
     const j=jobId?ensureJob(day,jobId,tt,ts):null,t=jobId&&ti?ensureTask(day,jobId,ti,tt,ts):null;
-    if(j){j.activeMs+=active;j.idleMs+=idle;j.awayMs+=away;j.elapsedMs+=elapsed;j.lastTask=Math.max(num(j.lastTask),ti);j.lastSeenAt=ts;}
-    if(t){t.activeMs+=active;t.idleMs+=idle;t.awayMs+=away;t.elapsedMs+=elapsed;applyPresenceFields(t,payload,ts);t.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}
+    if(j){j.activeMs+=active;j.idleMs+=idle;j.awayMs+=away;j.searchingMs=num(j.searchingMs)+searching;j.graceMs=num(j.graceMs)+grace;j.unverifiedMs=num(j.unverifiedMs)+unverified;j.elapsedMs+=elapsed;j.lastTask=Math.max(num(j.lastTask),ti);j.lastSeenAt=ts;}
+    if(t){t.activeMs+=active;t.idleMs+=idle;t.awayMs+=away;t.searchingMs=num(t.searchingMs)+searching;t.graceMs=num(t.graceMs)+grace;t.unverifiedMs=num(t.unverifiedMs)+unverified;t.elapsedMs+=elapsed;applyPresenceFields(t,payload,ts);t.updatedAt=ts;pendingAdd(core.pending,date,taskKey(jobId,ti));}
     pendingAdd(core.pending,date,SUMMARY_PENDING_KEY);day.updatedAt=ts;s.clientSequence=num(s.clientSequence)+1;
     await chrome.storage.local.set({[CAT.data]:core.data,[CAT.pendingTasks]:core.pending});scheduleSyncSoon(1200);return {ok:true};
   });
@@ -954,6 +971,7 @@ async function recoverCurrentShift(){
   if(recoveryInProgress)return {ok:false,error:'Recovery is already running.'};
   recoveryInProgress=true;
   if(syncWakeTimer){clearTimeout(syncWakeTimer);syncWakeTimer=null;}
+  syncWakeDueAt=0;
   try{
     if(syncInFlight)await syncInFlight.catch(()=>{});
     const core=await readCore();
@@ -1121,13 +1139,25 @@ async function reserveSyncSnapshot(expected,force) {
     return latest;
   });
 }
+// Coalesce fast task events without repeatedly postponing synchronization.
+// The earliest scheduled wake wins; newer events may expedite it, never starve it.
+// A failed transport still obeys existing retry backoff. Chrome's minute alarm
+// remains the fallback if the service worker is suspended.
 function scheduleSyncSoon(delayMs=900) {
   const delay=Math.max(200,Math.min(60000,Number(delayMs)||700));
   if(syncInFlight){syncFollowUpRequested=true;return;}
+  const now=Date.now();
+  const minGap=Math.max(0,500-(now-lastSyncAttemptAt));
+  const backoff=Math.max(0,syncBackoffUntil-now);
+  const dueAt=now+Math.max(delay,minGap,backoff);
+  if(syncWakeTimer && syncWakeDueAt && syncWakeDueAt<=dueAt)return;
   if(syncWakeTimer)clearTimeout(syncWakeTimer);
-  const minGap=Math.max(0,500-(Date.now()-lastSyncAttemptAt));
-  const backoff=Math.max(0,syncBackoffUntil-Date.now());
-  syncWakeTimer=setTimeout(()=>{syncWakeTimer=null;syncDirty(false).catch(()=>{});},Math.max(delay,minGap,backoff));
+  syncWakeDueAt=dueAt;
+  syncWakeTimer=setTimeout(()=>{
+    syncWakeTimer=null;syncWakeDueAt=0;
+    if(Date.now()<syncBackoffUntil){scheduleSyncSoon(200);return;}
+    syncDirty(false).catch(()=>{});
+  },Math.max(0,dueAt-Date.now()));
 }
 // v2.3.8: One guarded, read-only server proof for same-device sequence repair.
 // A proof never acknowledges local tasks. The next ordinary sync must still
@@ -1171,6 +1201,7 @@ async function syncDirty(force=false) {
   if((await chrome.storage.local.get('ttQaRecoveryFreezeV1')).ttQaRecoveryFreezeV1)return {ok:false,recovering:true,qaHandoff:true};
   if(syncInFlight){syncFollowUpRequested=true;return syncInFlight;}
   if(syncWakeTimer){clearTimeout(syncWakeTimer);syncWakeTimer=null;}
+  syncWakeDueAt=0;
   let attemptContext=null;
   syncInFlight=(async()=>{
     lastSyncAttemptAt=Date.now();
@@ -1358,6 +1389,17 @@ async function clearToday() {
   return { ok: false, error: 'Managed Coverage mode does not allow Agents to clear today’s tracked activity.' };
 }
 
+// Re-check the fallback alarm whenever Chrome revives the extension worker.
+// Chrome may clear alarms across some browser restarts; a one-minute fallback
+// limits network load while normal event-driven uploads remain much faster.
+chrome.alarms.get('cat-sync').then(existing => {
+  if (!existing) return chrome.alarms.create('cat-sync', {periodInMinutes:1});
+}).catch(() => {});
+
+const availabilityWake = TrinoTimeAvailabilityCore.create({
+  readCore, refreshShift: refreshShiftState, sync: () => syncDirty(false)
+});
+
 chrome.runtime.onInstalled.addListener(async () => {
   await ensureDevice();
   const r = await chrome.storage.local.get(CAT.settings);
@@ -1368,7 +1410,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   syncStoreMappingMetadata().catch(()=>{});
   try {
     const tabs = await chrome.tabs.query({ url: `${AUGMOTO}/*` });
-    await Promise.allSettled(tabs.filter(t => t.id).map(t => chrome.scripting.executeScript({ target: { tabId: t.id }, files: ['job-mode.js','task-efficiency.js','hud-appearance.js','store-intelligence.js','coverage.js','confirmation.js'] })));
+    await Promise.allSettled(tabs.filter(t => t.id).map(t => chrome.scripting.executeScript({ target: { tabId: t.id }, files: ['tracker-availability.js','search-presence.js','activity-integrity.js','workflow-coordinator.js','job-mode.js','task-efficiency.js','hud-appearance.js','store-intelligence.js','coverage.js','confirmation.js'] })));
   } catch (_) {}
 });
 chrome.runtime.onStartup.addListener(() => {
@@ -1383,6 +1425,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message || !String(message.type || '').startsWith('cat-')) return;
   const run = async () => {
     switch (message.type) {
+      case 'cat-availability-resume':
+        if (!sender?.tab?.id || !String(sender.url || '').startsWith(`${AUGMOTO}/`)) return {ok:false, denied:true};
+        return availabilityWake(message.reason === 'online' ? 'online' : 'resume');
       case 'cat-context': return context();
       case 'cat-mode-leave': return leaveMode();
       case 'cat-efficiency-time': return applyEfficiencyTime(message.payload||{});

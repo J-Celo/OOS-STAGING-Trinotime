@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
+const root=new URL('../../',import.meta.url);
+const load=(p)=>readFileSync(new URL(p,root),'utf8');
+const m=JSON.parse(load('tracker/manifest.json'));
+const w=load('cloudflare/src/worker.js');
+const current=JSON.parse(load('cloudflare/public/downloads/qc-tracker-current.json'));
+const url='https://oostrinotime-staging-qa.trinoadmin.workers.dev';
+assert.equal(m.version,'2.2.63');
+assert.match(m.name,/STAGING/);
+assert(m.permissions.includes('idle'));
+assert(m.host_permissions.includes(`${url}/*`));
+assert(!JSON.stringify(m).includes('https://oos.trinotime.com'));
+for(const mode of ['coverage','confirmation']) {
+  const b=load(`tracker/${mode}-background.js`), t=load(`tracker/${mode}.js`);
+  assert(b.includes(`const TRINOTIME = '${url}'`));
+  assert(b.includes("BUILD_CHANNEL = 'staging-qa'"));
+  assert(!b.includes('https://oos.trinotime.com'));
+  for(const state of ['searching','grace','unverified'])assert(b.includes(state));
+  assert(t.includes('workflow-coordinator')||t.includes('TrinoTimeWorkflowCoordinator'));
+  assert(t.includes('submit-confirmed'));
+}
+assert(w.includes('TRINOBOT_LINK_CONFIRM_ENABLED')&&w.includes('/api/workforce/trinobot/link/preview'));
+assert(w.includes("'searching','grace','unverified'"));
+assert(w.includes('searchingMs')&&w.includes('graceMs')&&w.includes('unverifiedMs'));
+assert(!w.includes('https://oos.trinotime.com'));
+const z=readFileSync(new URL('cloudflare/public/downloads/'+current.file,root));
+assert.equal(createHash('sha256').update(z).digest('hex'),current.sha256);
+assert(w.includes(current.sha256));
+assert(w.includes(current.file));
+const safe=JSON.parse(load('cloudflare/wrangler.staging.jsonc'));
+assert.equal(safe.name,'oostrinotime-staging-qa');
+assert.equal(safe.vars.FIREBASE_PROJECT_ID,'trinotime-staging-qa');
+console.log('PASS staging Tracker v2.2.63: production v2.3.20 behavior parity, new presence fields, staging-only endpoints, stable package checksum');

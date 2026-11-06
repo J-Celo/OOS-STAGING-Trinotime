@@ -1,6 +1,6 @@
 {
   "version": "1.1.76",
-  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-BIO-SCROLL-20261101",
+  "build_fingerprint": "TT-3.0.4-RC2-STAGING-UX18P46-TRACKER-2.2.63-20261106",
   "ready": false,
   "update_policy": "network-only-legacy-migration-notice-with-official-site-guidance",
   "service_worker_cache_policy": "network-only-app-shell",

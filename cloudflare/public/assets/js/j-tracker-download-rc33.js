@@ -1,14 +1,14 @@
 (() => {
   'use strict';
   if (window.__ttTrackerDownloadBuild) return;
-  window.__ttTrackerDownloadBuild = 'RC2-STAGING-TRACKER-ZIP-2.2.62-20261024';
+  window.__ttTrackerDownloadBuild = 'RC2-STAGING-TRACKER-ZIP-2.2.63-20261024';
 
   // STAGING ONLY: link to the existing governed staging ZIP endpoint, not the
   // production Chrome Web Store listing. Keep the installed unpacked extension
   // and its local pending work; do not treat the ZIP as an auto-update.
   const TRACKER_ENV = 'STAGING QA';
   const TRACKER_DOWNLOAD_PATH = '/api/workforce/governance/qc-tracker-download';
-  let trackerVersion = '2.2.62'; // Offline fallback; update from staging-only release feed.
+  let trackerVersion = '2.2.63'; // Offline fallback; update from staging-only release feed.
   const linkIcon = () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"></path><path d="M5 17v3h14v-3"></path></svg>';
 
   function decorateLink(link, type) {
